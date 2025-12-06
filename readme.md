@@ -2,6 +2,42 @@
 
 An open source VTT powered by the Godot game engine. Supports a wide variety of game systems and plugins with a rich Python based scripting system.
 
+## Roadmap
+
+### Finished
+
+- Map Serialization
+- Layer Serialization
+- Blocker Serialization
+- Tile Group Serialization
+- Stamp Serialization
+- Actor Serialization
+- Asset Log Serialization
+- Handout Serialization
+
+### In Progress
+
+### Short Term
+
+- Add testing with xUnit
+- JSON validation
+- Iron Python 3 Integration w/ App Boundary
+- Make HTTPS requests
+- TCP stuff
+- Effect Serialization
+- Event Serialization
+- Importing Projects
+
+### Long Term
+
+- Server
+- Accessibility Filters/Shaders
+- Localization Logic
+- Deasync Detection
+- Package Manager
+- Module CDN
+- Legal stuff re P2E, DnD 5/5.5E, Lancer, Blades in the Dark, etc. Supporting DnD is a *low* priority.
+
 ## User Settings
 
 The user settings are global to all the user's games.
