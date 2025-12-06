@@ -1,0 +1,13 @@
+{
+    "undo": {
+        "key": "z",
+        "modifier?": "ctrl"
+    },
+    "redo": {
+        "key": "y",
+        "modifier?": "ctrl"
+    },
+    "move_mode": {
+        "key": "m"
+    }
+}

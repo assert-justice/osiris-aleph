@@ -1,0 +1,15 @@
+{
+    "main_volume": 1,
+    "music_volume": 1,
+    "ambiance_volume": 1,
+    "sfx_volume": 1,
+    "font_override?": null,
+    "use_high_contrast_filter?": null,
+    "debug_color_blind_filter?": null,
+    "map_background_color_override?": null,
+    "map_border_color_override?": null,
+    "grid_color_override?": null,
+    "grid_width_override?": null,
+    "disable_effects?": false,
+    "#notes": ""
+}
