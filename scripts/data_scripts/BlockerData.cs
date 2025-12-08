@@ -2,11 +2,20 @@
 using System.Text.Json.Nodes;
 using Godot;
 
+public enum BlockerStatus
+{
+    Wall,
+    Open,
+    Closed,
+    Locked,
+}
+
 public class BlockerData(JsonObject obj)
 {
+    static string[] blockerStatus = ["wall", "open", "closed", "locked"];
     public Vector2I Start = JsonUtils.ObjGetVec2I(obj, "start", Vector2I.Zero);
     public Vector2I End = JsonUtils.ObjGetVec2I(obj, "end", Vector2I.Zero);
-    public string Status = JsonUtils.ObjGetString(obj, "status", "wall");
+    public BlockerStatus Status = (BlockerStatus)JsonUtils.ObjGetEnum(obj, "status", blockerStatus, 0);
     public bool Opaque = JsonUtils.ObjGetBool(obj, "opaque?", true);
     public bool BlocksProjectiles = JsonUtils.ObjGetBool(obj, "blocks_projectiles?", true);
 
@@ -15,7 +24,7 @@ public class BlockerData(JsonObject obj)
         JsonObject obj = [];
         obj["start"] = Start.ToString();
         obj["end"] = End.ToString();
-        obj["status"] = Status;
+        obj["status"] = blockerStatus[(int)Status];
         obj["opaque?"] = Opaque;
         obj["blocks_projectiles?"] = BlocksProjectiles;
         return obj;
