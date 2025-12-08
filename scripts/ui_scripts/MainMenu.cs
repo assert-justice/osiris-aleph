@@ -6,7 +6,7 @@ public partial class MainMenu : Control
     public override void _Ready()
     {
         base._Ready();
-        var data = new BlockerData([]);
+        var data = new HandoutData([]);
         GD.Print(data.Serialize().ToJsonString());
     }
 }
