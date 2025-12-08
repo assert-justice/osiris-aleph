@@ -17,9 +17,10 @@ An open source VTT powered by the Godot game engine. Supports a wide variety of 
 
 ### In Progress
 
+- Add testing framework
+
 ### Short Term
 
-- Add testing with xUnit
 - JSON validation
 - Iron Python 3 Integration w/ App Boundary
 - Make HTTPS requests

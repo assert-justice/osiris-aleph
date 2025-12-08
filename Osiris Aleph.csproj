@@ -5,4 +5,8 @@
     <EnableDynamicLoading>true</EnableDynamicLoading>
     <RootNamespace>OsirisAleph</RootNamespace>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="MSTest" Version="3.2.0" />
+    <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" Version="17.10.1" />
+</ItemGroup>
 </Project>
