@@ -75,4 +75,36 @@ public class BlockerDataTest
         string testString = testNode.ToJsonString();
         Assert.IsTrue(exampleStr == testString);
     }
+    [TestMethod]
+    public void WallGlass()
+    {
+        string str = TestUtils.ReadExample("blocker_data/blocker_data_wall_glass.json");
+        var exampleNode = JsonNode.Parse(str);
+        string exampleStr = exampleNode.ToJsonString();
+        BlockerData blocker = new([])
+        {
+            End = new(10, 0),
+            Opaque = false,
+        };
+        var testNode = blocker.Serialize();
+        string testString = testNode.ToJsonString();
+        Assert.IsTrue(exampleStr == testString);
+    }
+    [TestMethod]
+    public void Portcullis()
+    {
+        string str = TestUtils.ReadExample("blocker_data/blocker_data_portcullis.json");
+        var exampleNode = JsonNode.Parse(str);
+        string exampleStr = exampleNode.ToJsonString();
+        BlockerData blocker = new([])
+        {
+            End = new(10, 0),
+            Status = BlockerStatus.Locked,
+            Opaque = false,
+            BlocksProjectiles = false,
+        };
+        var testNode = blocker.Serialize();
+        string testString = testNode.ToJsonString();
+        Assert.IsTrue(exampleStr == testString);
+    }
 }
