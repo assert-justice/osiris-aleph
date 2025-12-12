@@ -1,0 +1,12 @@
+{
+    "stamp_id": "guid",
+    "stamp_type": "enum: text, image, token",
+    "rect": "rect2i",
+    "angle": "float",
+    "auras?": ["area_schema.json"],
+    "vision_radius?": "float",
+    "light_radius?": "float",
+    "light_color?": "color",
+    "texture_filename?": "string",
+    "stretch_mode?": "enum: scale, tile, keep, keep_centered, keep_aspect, keep_aspect_centered, keep_aspect_covered"
+}

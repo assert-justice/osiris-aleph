@@ -1,0 +1,5 @@
+{
+    "display_name": "string",
+    "is_player_visible": "bool",
+    "stamps": ["schema: stamp_image_schema.json, stamp_text_schema.json, stamp_token_schema.json"]
+}

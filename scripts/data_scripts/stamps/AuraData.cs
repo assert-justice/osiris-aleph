@@ -11,11 +11,10 @@ public enum AuraShape
 public class AuraData(JsonObject obj)
 {
     static string[] matchers = ["circle", "square"];
-    public Color? FillColor = JsonUtils.ObjGetColorNullable(obj, "fill_color?");
-    public Color? OutlineColor = JsonUtils.ObjGetColorNullable(obj, "outline_color?");
-    public AuraShape Shape = (AuraShape)JsonUtils.ObjGetEnum(obj, "shape", matchers, 0);
-    public string Name = JsonUtils.ObjGetString(obj, "display_name?", "");
-    public AuraProperties Properties = new(JsonUtils.ObjGetObj(obj, "properties"));
+    public Color? FillColor = RojaUtils.ObjGetColorNullable(obj, "fill_color?");
+    public Color? OutlineColor = RojaUtils.ObjGetColorNullable(obj, "outline_color?");
+    public AuraShape Shape = (AuraShape)RojaUtils.ObjGetEnum(obj, "shape", matchers, 0);
+    public string Name = RojaUtils.ObjGetString(obj, "display_name?", "");
 
     public JsonObject Serialize()
     {
@@ -30,7 +29,6 @@ public class AuraData(JsonObject obj)
         }
         obj["shape"] = matchers[(int)Shape];
         obj["display_name"] = Name;
-        obj["aura_properties"] = Properties.Serialize();
         return obj;
     }
 }

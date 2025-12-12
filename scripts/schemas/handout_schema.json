@@ -1,0 +1,8 @@
+{
+    "handout_id": "guid",
+    "display_name?": "string",
+    "texture_filename?": "string",
+    "text?": "string",
+    "visible_to": ["guid"],
+    "gm_text?": "string"
+}

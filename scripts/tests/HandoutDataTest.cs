@@ -7,12 +7,12 @@ public class HandoutDataTest
     [TestMethod]
     public void Empty()
     {
-        string str = TestUtils.ReadExample("handout_data/empty.json");
+        string str = TestUtils.ReadFile("scripts/tests/example_files/handout_data/empty.json");
         var exampleNode = JsonNode.Parse(str);
         string exampleStr = exampleNode.ToJsonString();
         HandoutData handout = new([])
         {
-            Id = JsonUtils.ObjGetGuid(exampleNode.AsObject(), "handout_id")
+            Id = RojaUtils.ObjGetGuid(exampleNode.AsObject(), "handout_id")
         };
         var testNode = handout.Serialize();
         string testString = testNode.ToJsonString();

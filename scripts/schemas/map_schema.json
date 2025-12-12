@@ -1,0 +1,28 @@
+{
+    "map_id": "guid",
+    "display_name": "string",
+    "size": "vec2i",
+    "cell_width": "int",
+    "users_present": [
+        "guid"
+    ],
+    "state?": "dynamic",
+    "fog_enabled?": "bool",
+    "background_color?": "color",
+    "border_color?": "color",
+    "show_grid?": "bool",
+    "grid_color?": "color",
+    "grid_width?": "int",
+    "blockers": [
+        "schema: blocker_schema.json"
+    ],
+    "tile_data": [
+        {
+            "bitfield": "int",
+            "tiles": [
+                "vec2i"
+            ]
+        }
+    ],
+    "layers": ["schema: layer_schema.json"]
+}

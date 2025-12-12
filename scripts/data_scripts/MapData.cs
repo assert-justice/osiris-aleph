@@ -6,21 +6,21 @@ using Godot;
 
 public class MapData(JsonObject obj)
 {
-    public Guid MapId = JsonUtils.ObjGetGuid(obj, "map_id");
-    public string DisplayName = JsonUtils.ObjGetString(obj, "display_name", "New Map");
-    public Vector2I Size = JsonUtils.ObjGetVec2I(obj, "size", new(20, 10));
-    public int CellWidth = JsonUtils.ObjGetInt(obj, "cell_width", 128);
-    public List<Guid> UsersPresent = [.. JsonUtils.ObjGetArray(obj, "users_present").Select(n => JsonUtils.NodeToGuid(n))];
-    public JsonObject State = JsonUtils.ObjGetObj(obj, "state?");
-    public bool FogEnabled = JsonUtils.ObjGetBool(obj, "fog_enabled?", false);
-    public Color BackgroundColor = JsonUtils.ObjGetColor(obj, "background_color?", Colors.Gray);
-    public Color BorderColor = JsonUtils.ObjGetColor(obj, "border_color?", Colors.Gray);
-    public bool ShowGrid = JsonUtils.ObjGetBool(obj, "show_grid?", true);
-    public Color GridColor = JsonUtils.ObjGetColor(obj, "grid_color?", Colors.White);
-    public float GridWidth = JsonUtils.ObjGetFloat(obj, "grid_width?", 2);
-    public List<BlockerData> Blockers = [.. JsonUtils.ObjGetArray(obj, "blockers").Select(o => new BlockerData(o.AsObject()))];
-    public Dictionary<Vector2I, ulong> TileData = TileGroupData.DeserializeAll(JsonUtils.ObjGetObj(obj, "tiles"));
-    public List<LayerData> Layers = [.. JsonUtils.ObjGetArray(obj, "layers").Select(o => new LayerData(o.AsObject()))];
+    public Guid MapId = RojaUtils.ObjGetGuid(obj, "map_id");
+    public string DisplayName = RojaUtils.ObjGetString(obj, "display_name", "New Map");
+    public Vector2I Size = RojaUtils.ObjGetVec2I(obj, "size", new(20, 10));
+    public int CellWidth = RojaUtils.ObjGetInt(obj, "cell_width", 128);
+    public List<Guid> UsersPresent = [.. RojaUtils.ObjGetArray(obj, "users_present").Select(n => RojaUtils.NodeToGuid(n))];
+    public JsonObject State = RojaUtils.ObjGetObj(obj, "state?");
+    public bool FogEnabled = RojaUtils.ObjGetBool(obj, "fog_enabled?", false);
+    public Color BackgroundColor = RojaUtils.ObjGetColor(obj, "background_color?", Colors.Gray);
+    public Color BorderColor = RojaUtils.ObjGetColor(obj, "border_color?", Colors.Gray);
+    public bool ShowGrid = RojaUtils.ObjGetBool(obj, "show_grid?", true);
+    public Color GridColor = RojaUtils.ObjGetColor(obj, "grid_color?", Colors.White);
+    public float GridWidth = RojaUtils.ObjGetFloat(obj, "grid_width?", 2);
+    public List<BlockerData> Blockers = [.. RojaUtils.ObjGetArray(obj, "blockers").Select(o => new BlockerData(o.AsObject()))];
+    public Dictionary<Vector2I, ulong> TileData = TileGroupData.DeserializeAll(RojaUtils.ObjGetObj(obj, "tiles"));
+    public List<LayerData> Layers = [.. RojaUtils.ObjGetArray(obj, "layers").Select(o => new LayerData(o.AsObject()))];
     public JsonObject Serialize()
     {
         JsonObject obj = [];

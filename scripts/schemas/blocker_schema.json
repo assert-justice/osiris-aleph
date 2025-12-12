@@ -1,0 +1,7 @@
+{
+    "start": "Vector2I",
+    "end": "Vector2I",
+    "status": "enum: wall, open, closed, locked",
+    "opaque?": "bool",
+    "blocks_projectiles?": "bool"
+}

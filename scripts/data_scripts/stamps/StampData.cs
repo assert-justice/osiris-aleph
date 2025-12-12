@@ -5,17 +5,21 @@ using System.Linq;
 using System.Text.Json.Nodes;
 using Godot;
 
-public abstract class StampData(JsonObject obj, StampType stampType)
+public abstract class StampData(JsonObject obj)
 {
-    public readonly Guid Id = JsonUtils.ObjGetGuid(obj, "stamp_id");
+    public readonly Guid Id = RojaUtils.ObjGetGuid(obj, "stamp_id");
     // public StampType Type = (StampType)JsonUtils.ObjGetEnum(obj, "type", StampTypeLookup, 0);
-    public readonly StampType Type = stampType;
-    public Rect2I Rect = JsonUtils.ObjGetRect2I(obj, "rect", new(Vector2I.Zero, Vector2I.One));
-    public float Angle = JsonUtils.ObjGetFloat(obj, "angle", 0);
-    public List<AuraData> Auras = [.. JsonUtils.ObjGetArray(obj, "auras?").Select(o => new AuraData(o.AsObject()))];
-    public float VisionRadius = JsonUtils.ObjGetFloat(obj, "vision_radius?", 0);
-    public float LightRadius = JsonUtils.ObjGetFloat(obj, "light_radius?", 0);
-    public Color LightColor = JsonUtils.ObjGetColor(obj, "light_color?", Colors.White);
+    protected StampType _Type;
+    public StampType Type
+    {
+        get => _Type;
+    }
+    public Rect2I Rect = RojaUtils.ObjGetRect2I(obj, "rect", new(Vector2I.Zero, Vector2I.One));
+    public float Angle = RojaUtils.ObjGetFloat(obj, "angle", 0);
+    public List<AuraData> Auras = [.. RojaUtils.ObjGetArray(obj, "auras?").Select(o => new AuraData(o.AsObject()))];
+    public float VisionRadius = RojaUtils.ObjGetFloat(obj, "vision_radius?", 0);
+    public float LightRadius = RojaUtils.ObjGetFloat(obj, "light_radius?", 0);
+    public Color LightColor = RojaUtils.ObjGetColor(obj, "light_color?", Colors.White);
 
     protected JsonObject BaseSerializer()
     {

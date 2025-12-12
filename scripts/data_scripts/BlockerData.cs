@@ -13,11 +13,11 @@ public enum BlockerStatus
 public class BlockerData(JsonObject obj)
 {
     static string[] blockerStatus = ["wall", "open", "closed", "locked"];
-    public Vector2I Start = JsonUtils.ObjGetVec2I(obj, "start", Vector2I.Zero);
-    public Vector2I End = JsonUtils.ObjGetVec2I(obj, "end", Vector2I.Zero);
-    public BlockerStatus Status = (BlockerStatus)JsonUtils.ObjGetEnum(obj, "status", blockerStatus, 0);
-    public bool Opaque = JsonUtils.ObjGetBool(obj, "opaque?", true);
-    public bool BlocksProjectiles = JsonUtils.ObjGetBool(obj, "blocks_projectiles?", true);
+    public Vector2I Start = RojaUtils.ObjGetVec2I(obj, "start", Vector2I.Zero);
+    public Vector2I End = RojaUtils.ObjGetVec2I(obj, "end", Vector2I.Zero);
+    public BlockerStatus Status = (BlockerStatus)RojaUtils.ObjGetEnum(obj, "status", blockerStatus, 0);
+    public bool Opaque = RojaUtils.ObjGetBool(obj, "opaque?", true);
+    public bool BlocksProjectiles = RojaUtils.ObjGetBool(obj, "blocks_projectiles?", true);
 
     public JsonObject Serialize()
     {

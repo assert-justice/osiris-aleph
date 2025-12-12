@@ -5,12 +5,12 @@ using System.Text.Json.Nodes;
 
 public class HandoutData(JsonObject obj)
 {
-    public Guid Id = JsonUtils.ObjGetGuid(obj, "handout_id");
-    public string DisplayName = JsonUtils.ObjGetString(obj, "display_name?", "Mysterious Note");
-    public string TextureFilename = JsonUtils.ObjGetString(obj, "texture_filename?", "");
-    public string Text = JsonUtils.ObjGetString(obj, "text?", "");
-    public Guid[] VisibleTo = [.. JsonUtils.ObjGetArray(obj, "visible_to").Select(o => JsonUtils.NodeToGuid(o))];
-    public string GmText = JsonUtils.ObjGetString(obj, "gm_text?", "");
+    public Guid Id = RojaUtils.ObjGetGuid(obj, "handout_id");
+    public string DisplayName = RojaUtils.ObjGetString(obj, "display_name?", "Mysterious Note");
+    public string TextureFilename = RojaUtils.ObjGetString(obj, "texture_filename?", "");
+    public string Text = RojaUtils.ObjGetString(obj, "text?", "");
+    public Guid[] VisibleTo = [.. RojaUtils.ObjGetArray(obj, "visible_to").Select(o => RojaUtils.NodeToGuid(o))];
+    public string GmText = RojaUtils.ObjGetString(obj, "gm_text?", "");
 
     public JsonObject Serialize()
     {

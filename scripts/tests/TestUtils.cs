@@ -3,9 +3,9 @@ using System.IO;
 
 public static class TestUtils
 {
-    public static string ReadExample(string filename)
+    public static string ReadFile(string filename)
     {
-        string filepath = $"../../../../../scripts/tests/example_files/{filename}";
+        string filepath = $"../../../../../{filename}";
         return File.ReadAllText(filepath);
     }
 }

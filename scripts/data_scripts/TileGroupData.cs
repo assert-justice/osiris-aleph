@@ -13,7 +13,7 @@ public static class TileGroupData
         foreach (var (key, val) in temp)
         {
             var bf = ulong.Parse(key);
-            var ls = val.AsArray().Select(JsonUtils.NodeToVec2I);
+            var ls = val.AsArray().Select(RojaUtils.NodeToVec2I);
             foreach (var coord in ls)
             {
                 if (tileData.ContainsKey(coord))

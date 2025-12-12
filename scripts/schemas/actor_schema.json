@@ -1,0 +1,9 @@
+{
+    "actor_id": "guid",
+    "display_name?": "string",
+    "controlled_by": ["guid"],
+    "portrait_filename?": "string",
+    "token_filename?": "string",
+    "stats": "dynamic",
+    "description?": "string"
+}

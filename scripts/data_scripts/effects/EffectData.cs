@@ -4,10 +4,10 @@ using System.Text.Json.Nodes;
 
 public abstract class EffectData(JsonObject obj, EffectType type)
 {
-    public readonly Guid Id = JsonUtils.ObjGetGuid(obj, "effect_type");
+    public readonly Guid Id = RojaUtils.ObjGetGuid(obj, "effect_type");
     public readonly EffectType Type = type;
-    public readonly Guid SourceId = JsonUtils.ObjGetGuid(obj, "source_id");
-    public readonly Guid ScriptId = JsonUtils.ObjGetGuid(obj, "script_id");
+    public readonly Guid SourceId = RojaUtils.ObjGetGuid(obj, "source_id");
+    public readonly Guid ScriptId = RojaUtils.ObjGetGuid(obj, "script_id");
 
     protected JsonObject BaseSerializer()
     {

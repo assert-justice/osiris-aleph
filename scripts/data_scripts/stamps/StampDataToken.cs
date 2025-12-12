@@ -2,12 +2,19 @@
 using System;
 using System.Text.Json.Nodes;
 
-public class StampDataToken(JsonObject obj, StampType stampType) : StampData(obj, stampType)
+public class StampDataToken: StampData
 {
-    public Guid ActorId = JsonUtils.ObjGetGuid(obj, "actor_id");
-    public bool IsUnique = JsonUtils.ObjGetBool(obj, "is_unique", false);
-    public JsonObject Stats = JsonUtils.ObjGetObj(obj, "stats?"); // Todo: only use local stats when IsUnique is false. If IsUnique is true then queries should be redirected to the relevant actor object.
+    public Guid ActorId;
+    public bool IsUnique;
+    public JsonObject Stats; // Todo: only use local stats when IsUnique is false. If IsUnique is true then queries should be redirected to the relevant actor object.
 
+    public StampDataToken(JsonObject obj) : base(obj)
+    {
+        _Type = StampType.Token;
+        ActorId = RojaUtils.ObjGetGuid(obj, "actor_id");
+        IsUnique = RojaUtils.ObjGetBool(obj, "is_unique", false);
+        Stats = RojaUtils.ObjGetObj(obj, "stats?");
+    }
     public override JsonObject Serialize()
     {
         JsonObject obj = BaseSerializer();

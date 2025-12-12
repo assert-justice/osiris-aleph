@@ -7,12 +7,12 @@ public class ActorDataTest
     [TestMethod]
     public void Empty()
     {
-        string str = TestUtils.ReadExample("actor_data/empty.json");
+        string str = TestUtils.ReadFile("scripts/tests/example_files/actor_data/empty.json");
         var exampleNode = JsonNode.Parse(str);
         string exampleStr = exampleNode.ToJsonString();
         ActorData actor = new([])
         {
-            Id = JsonUtils.ObjGetGuid(exampleNode.AsObject(), "actor_id")
+            Id = RojaUtils.ObjGetGuid(exampleNode.AsObject(), "actor_id")
         };
         var testNode = actor.Serialize();
         string testString = testNode.ToJsonString();

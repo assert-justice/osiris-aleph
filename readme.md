@@ -14,14 +14,23 @@ An open source VTT powered by the Godot game engine. Supports a wide variety of 
 - Actor Serialization
 - Asset Log Serialization
 - Handout Serialization
+- Add testing framework
+- Write tests for blockers
+- Write tests for handouts
+- Write tests for actors
 
 ### In Progress
 
-- Add testing framework
+- JSON validation
 
 ### Short Term
 
-- JSON validation
+- Write (more) tests for blockers
+- Write (more) tests for handouts
+- Write (more) tests for actors
+- Write tests for maps
+- Write tests for stamps
+- Write tests for auras
 - Iron Python 3 Integration w/ App Boundary
 - Make HTTPS requests
 - TCP stuff

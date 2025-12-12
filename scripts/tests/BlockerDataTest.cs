@@ -7,7 +7,7 @@ public class BlockerDataTest
     [TestMethod]
     public void Empty()
     {
-        string str = TestUtils.ReadExample("blocker_data/empty.json");
+        string str = TestUtils.ReadFile("scripts/tests/example_files/blocker_data/empty.json");
         var exampleNode = JsonNode.Parse(str);
         string exampleStr = exampleNode.ToJsonString();
         BlockerData blocker = new([]);
@@ -19,7 +19,7 @@ public class BlockerDataTest
     [TestMethod]
     public void Wall()
     {
-        string str = TestUtils.ReadExample("blocker_data/wall.json");
+        string str = TestUtils.ReadFile("scripts/tests/example_files/blocker_data/wall.json");
         var exampleNode = JsonNode.Parse(str);
         string exampleStr = exampleNode.ToJsonString();
         BlockerData blocker = new([])
@@ -33,7 +33,7 @@ public class BlockerDataTest
     [TestMethod]
     public void Open()
     {
-        string str = TestUtils.ReadExample("blocker_data/door_open.json");
+        string str = TestUtils.ReadFile("scripts/tests/example_files/blocker_data/door_open.json");
         var exampleNode = JsonNode.Parse(str);
         string exampleStr = exampleNode.ToJsonString();
         BlockerData blocker = new([])
@@ -48,7 +48,7 @@ public class BlockerDataTest
     [TestMethod]
     public void Closed()
     {
-        string str = TestUtils.ReadExample("blocker_data/door_closed.json");
+        string str = TestUtils.ReadFile("scripts/tests/example_files/blocker_data/door_closed.json");
         var exampleNode = JsonNode.Parse(str);
         string exampleStr = exampleNode.ToJsonString();
         BlockerData blocker = new([])
@@ -63,7 +63,7 @@ public class BlockerDataTest
     [TestMethod]
     public void Locked()
     {
-        string str = TestUtils.ReadExample("blocker_data/door_locked.json");
+        string str = TestUtils.ReadFile("scripts/tests/example_files/blocker_data/door_locked.json");
         var exampleNode = JsonNode.Parse(str);
         string exampleStr = exampleNode.ToJsonString();
         BlockerData blocker = new([])
@@ -78,7 +78,7 @@ public class BlockerDataTest
     [TestMethod]
     public void WallGlass()
     {
-        string str = TestUtils.ReadExample("blocker_data/wall_glass.json");
+        string str = TestUtils.ReadFile("scripts/tests/example_files/blocker_data/wall_glass.json");
         var exampleNode = JsonNode.Parse(str);
         string exampleStr = exampleNode.ToJsonString();
         BlockerData blocker = new([])
@@ -93,7 +93,7 @@ public class BlockerDataTest
     [TestMethod]
     public void Portcullis()
     {
-        string str = TestUtils.ReadExample("blocker_data/portcullis.json");
+        string str = TestUtils.ReadFile("scripts/tests/example_files/blocker_data/portcullis.json");
         var exampleNode = JsonNode.Parse(str);
         string exampleStr = exampleNode.ToJsonString();
         BlockerData blocker = new([])

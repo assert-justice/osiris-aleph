@@ -1,0 +1,11 @@
+{
+    "shape": "enum: circle, square",
+    "display_name?": "string",
+    "size": "float",
+    "color?": "color",
+    "outline_color?": "color",
+    "on_entered?": "string",
+    "on_exited?": "string",
+    "on_stay?": "string",
+    "#note": ""
+}

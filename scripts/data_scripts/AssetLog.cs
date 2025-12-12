@@ -12,7 +12,7 @@ public class AssetLog
         List<KeyValuePair<string, JsonNode>> temp = [.. obj];
         foreach (var (filename, ls) in temp)
         {
-            HashSet<Guid> ids = [.. ls.AsArray().Select(v => JsonUtils.NodeToGuid(v))];
+            HashSet<Guid> ids = [.. ls.AsArray().Select(v => RojaUtils.NodeToGuid(v))];
             Logs.Add(filename, ids);
         }
     }
