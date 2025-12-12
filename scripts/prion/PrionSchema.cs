@@ -54,7 +54,7 @@ namespace Prion
             }
             return TryGenerateSchemaNode(value, out result);
         }
-        public static bool TryFromString(string value, out PrionNode node)
+        public static new bool TryFromString(string value, out PrionNode node)
         {
             node = new PrionError("schema parsing not yet implemented");
             return false;

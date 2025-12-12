@@ -17,10 +17,15 @@ namespace Prion
         {
             throw new System.NotImplementedException();
         }
-
-        public override bool TryAs<T>(out T result)
+        public static new bool TryFromString(string value, out PrionNode node)
         {
-            throw new System.NotImplementedException();
+            node = new PrionError("array string parsing not yet implemented");
+            return false;
+        }
+        public static new bool TryFromJson(JsonNode jsonNode, out PrionNode node)
+        {
+            node = new PrionError("array json parsing not yet implemented");
+            return false;
         }
     }
 }

@@ -22,10 +22,5 @@ namespace Prion
         {
             return [.. Messages];
         }
-        public static bool TryFromString(string value, out PrionNode node)
-        {
-            node = new PrionError("error parsing not yet implemented");
-            return false;
-        }
     }
 }

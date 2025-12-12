@@ -6,91 +6,118 @@ namespace Prion
     public abstract class PrionNode(PrionType type)
     {
         public readonly PrionType Type = type;
-        public static PrionNode FromString(string value)
+        public static bool TryFromString(string value, out PrionNode node)
         {
             switch (value)
             {
                 case "null":
-                    return new PrionNull();
+                    node = new PrionNull();
+                    return true;
                 case "true":
-                    return new PrionBoolean(true);
+                    node = new PrionBoolean(true);
+                    return true;
                 case "false":
-                    return new PrionBoolean(false);
+                    node = new PrionBoolean(false);
+                    return true;
                 default:
                     break;
             }
-            if (value.StartsWith('[')){return new PrionError("Parsing arrays not yet implemented");}
+            if (value.StartsWith('[')){
+                return PrionArray.TryFromString(value, out node);
+                // prionNode = new PrionError("Parsing arrays not yet implemented");
+                // return false;
+            }
             else if (value.StartsWith("bitfield:"))
             {
-                PrionBitfield.TryFromString(value, out PrionNode node);
-                return node;
+                return PrionBitfield.TryFromString(value, out node);
             }
             else if (value.StartsWith("color:"))
             {
-                PrionColor.TryFromString(value, out PrionNode node);
-                return node;
+                return PrionColor.TryFromString(value, out node);
             }
             else if (value.StartsWith('{'))
             {
-                PrionDict.TryFromString(value, out PrionNode node);
-                return node;
+                return PrionDict.TryFromString(value, out node);
             }
             else if (value.StartsWith("dynamic:"))
             {
-                PrionDynamic.TryFromString(value, out PrionNode node);
-                return node;
+                return PrionDynamic.TryFromString(value, out node);
             }
             else if (value.StartsWith("enum:"))
             {
-                PrionEnum.TryFromString(value, out PrionNode node);
-                return node;
+                return PrionEnum.TryFromString(value, out node);
             }
             else if (value.StartsWith("error:"))
             {
-                PrionError.TryFromString(value, out PrionNode node);
-                return node;
+                node = new PrionError(value[6..].Trim());
+                return true;
             }
             else if (value.StartsWith("f32:"))
             {
-                PrionF32.TryFromString(value, out PrionNode node);
-                return node;
+                return PrionF32.TryFromString(value, out node);
             }
             else if (value.StartsWith("guid:"))
             {
-                PrionGuid.TryFromString(value, out PrionNode node);
-                return node;
+                return PrionGuid.TryFromString(value, out node);
             }
             else if (value.StartsWith("i32:"))
             {
-                PrionI32.TryFromString(value, out PrionNode node);
-                return node;
+                return PrionI32.TryFromString(value, out node);
             }
             else if (value.StartsWith("rect2i:"))
             {
-                PrionRect2I.TryFromString(value, out PrionNode node);
-                return node;
+                return PrionRect2I.TryFromString(value, out node);
             }
             else if (value.StartsWith("schema:"))
             {
-                PrionSchema.TryFromString(value, out PrionNode node);
-                return node;
+                return PrionSchema.TryFromString(value, out node);
             }
             else if (value.StartsWith("schema_file:"))
             {
-                PrionSchema.TryFromString(value, out PrionNode node);
-                return node;
+                return PrionSchema.TryFromString(value, out node);
             }
-            else if (value.StartsWith("union:"))
-            {
-                PrionUnion.TryFromString(value, out PrionNode node);
-                return node;
-            }
+            // else if (value.StartsWith("union:"))
+            // {
+            //     return PrionUnion.TryFromString(value, out node);
+            // }
             else if (value.StartsWith("vector2i:"))
             {
-                PrionVector2I.TryFromString(value, out PrionNode node);
-                return node;
+                return PrionVector2I.TryFromString(value, out node);
             }
-            return new PrionString(value);
+            node = new PrionString(value);
+            return true;
+        }
+        public static bool TryFromJson(JsonNode jsonNode, out PrionNode prionNode)
+        {
+            var kind = jsonNode.GetValueKind();
+            switch (kind)
+            {
+                case System.Text.Json.JsonValueKind.Undefined:
+                case System.Text.Json.JsonValueKind.Null:
+                    prionNode = new PrionNull();
+                    return true;
+                case System.Text.Json.JsonValueKind.True:
+                case System.Text.Json.JsonValueKind.False:
+                    prionNode = new PrionBoolean(kind == System.Text.Json.JsonValueKind.True);
+                    return true;
+                case System.Text.Json.JsonValueKind.Array:
+                    return PrionArray.TryFromJson(jsonNode, out prionNode);
+                case System.Text.Json.JsonValueKind.Number:
+                    return PrionF32.TryFromJson(jsonNode, out prionNode);
+                case System.Text.Json.JsonValueKind.Object:
+                    return PrionDict.TryFromJson(jsonNode, out prionNode);
+                case System.Text.Json.JsonValueKind.String:
+                    if(!jsonNode.AsValue().TryGetValue(out string str))
+                    {
+                        // should be unreachable.
+                        prionNode = new PrionError("Oof");
+                        return false;
+                    }
+                    return TryFromString(str, out prionNode);
+                default:
+                    prionNode = new PrionError("Failed to match Json Node kind");
+                    return false;
+            }
         }
         public abstract override string ToString();
         public abstract JsonNode ToJson();

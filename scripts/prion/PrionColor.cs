@@ -15,7 +15,7 @@ namespace Prion
         {
             throw new System.NotImplementedException();
         }
-        public static bool TryFromString(string value, out PrionNode node)
+        public static new bool TryFromString(string value, out PrionNode node)
         {
             node = new PrionError("color parsing not yet implemented");
             return false;
