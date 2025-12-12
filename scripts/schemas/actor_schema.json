@@ -1,9 +1,13 @@
 {
-    "actor_id": "guid",
-    "display_name?": "string",
-    "controlled_by": ["guid"],
-    "portrait_filename?": "string",
-    "token_filename?": "string",
-    "stats": "dynamic",
-    "description?": "string"
+    "name": "actor",
+    "version" : "0.1.0",
+    "data":{
+        "actor_id": "guid",
+        "display_name?": "string",
+        "controlled_by": ["guid"],
+        "portrait_filename?": "string",
+        "token_filename?": "string",
+        "stats": "dynamic",
+        "description?": "string"
+    }
 }

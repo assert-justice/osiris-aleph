@@ -215,7 +215,7 @@ namespace Prion
         }
         static bool TryGenerateSchemaString(PrionString str, out PrionNode result)
         {
-            result = new PrionNull();
+            result = str;
             switch (str.Text)
             {
                 case "bitfield":
@@ -230,9 +230,18 @@ namespace Prion
                 case "vector2i":
                     return true;
                 default:
+                    if(str.Text.StartsWith("enum:")) return TryGenerateSchemaEnum(str.Text, out result);
                     result = new PrionError($"Invalid string in place of schema type, found {str.Text}");
                     return false;
             }
+        }
+        static bool TryGenerateSchemaEnum(string str, out PrionNode result)
+        {
+            // slice off "enum:"
+            str = str[5..];
+            string[] options = [.. str.Split(',').Select(s => s.Trim())];
+            result = new PrionEnum(options);
+            return true;
         }
     }
 }

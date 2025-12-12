@@ -1,8 +1,12 @@
 {
-    "handout_id": "guid",
-    "display_name?": "string",
-    "texture_filename?": "string",
-    "text?": "string",
-    "visible_to": ["guid"],
-    "gm_text?": "string"
+    "name": "aura",
+    "version": "0.1.0",
+    "data": {
+        "handout_id": "guid",
+        "display_name?": "string",
+        "texture_filename?": "string",
+        "text?": "string",
+        "visible_to": ["guid"],
+        "gm_text?": "string"
+    }
 }
