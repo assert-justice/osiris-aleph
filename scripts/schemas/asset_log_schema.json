@@ -1,0 +1,10 @@
+{
+    "name": "asset log",
+    "version": "0.1.0",
+    "data": [
+        {
+            "filename": "string",
+            "owners": ["guid"]
+        }
+    ]
+}

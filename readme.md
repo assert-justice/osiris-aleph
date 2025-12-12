@@ -18,13 +18,15 @@ An open source VTT powered by the Godot game engine. Supports a wide variety of 
 - Write tests for blockers
 - Write tests for handouts
 - Write tests for actors
+- Start Prion library
 
 ### In Progress
 
-- JSON validation
+- Finish Prion library
 
 ### Short Term
 
+- Write tests for Prion
 - Write (more) tests for blockers
 - Write (more) tests for handouts
 - Write (more) tests for actors
