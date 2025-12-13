@@ -154,6 +154,34 @@ namespace Prion
                 value >>= 1;
             }
         }
+        public string ToHexString()
+        {
+            int rem = Data.Count % 4;
+            if(rem > 0) EnsureCapacity(Data.Count + 4 - rem);
+            int numChars = Data.Count / 4;
+            var sb = new StringBuilder(numChars + 2);
+            sb.Append("0x");
+            for (int i = 0; i < numChars; i++)
+            {
+                int idx = numChars - 1 - i;
+                ulong n = GetRange(idx * 4, 4);
+                char c = HexChars[(int)n];
+                sb.Append(c);
+            }
+            return sb.ToString();
+        }
+        public string ToBinaryString()
+        {
+            var sb = new StringBuilder(Data.Count + 2);
+            sb.Append("0b");
+            for (int i = 0; i < Data.Count; i++)
+            {
+                int idx = Data.Count - 1 - i;
+                bool val = Data[idx];
+                sb.Append(val ? '1' : '0');
+            }
+            return sb.ToString();
+        }
         void EnsureCapacity(int capacity)
         {
             if(capacity < 0) return;
@@ -172,22 +200,6 @@ namespace Prion
                 value >>= 1;
             }
             return res;
-        }
-        string ToHexString()
-        {
-            int rem = Data.Count % 4;
-            if(rem > 0) EnsureCapacity(Data.Count + 4 - rem);
-            int numChars = Data.Count / 4;
-            var sb = new StringBuilder(numChars);
-            sb.Append("0x");
-            for (int i = 0; i < numChars; i++)
-            {
-                int idx = numChars - 1 - i;
-                ulong n = GetRange(idx * 4, 4);
-                char c = HexChars[(int)n];
-                sb.Append(c);
-            }
-            return sb.ToString();
         }
     }
 }
