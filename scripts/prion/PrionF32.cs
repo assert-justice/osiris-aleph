@@ -2,15 +2,14 @@ using System.Text.Json.Nodes;
 
 namespace Prion
 {
-    public class PrionF32 : PrionNode
+    public class PrionF32(float value) : PrionNode(PrionType.F32)
     {
-        public PrionF32() : base(PrionType.F32){}
+        public float Value = value;
 
         public override JsonNode ToJson()
         {
             throw new System.NotImplementedException();
         }
-
         public override string ToString()
         {
             throw new System.NotImplementedException();

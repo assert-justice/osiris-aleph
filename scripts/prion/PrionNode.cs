@@ -89,6 +89,11 @@ namespace Prion
         }
         public static bool TryFromJson(JsonNode jsonNode, out PrionNode prionNode)
         {
+            if(jsonNode is null)
+            {
+                prionNode = new PrionNull();
+                return true;
+            }
             var kind = jsonNode.GetValueKind();
             switch (kind)
             {
@@ -103,7 +108,14 @@ namespace Prion
                 case System.Text.Json.JsonValueKind.Array:
                     return PrionArray.TryFromJson(jsonNode, out prionNode);
                 case System.Text.Json.JsonValueKind.Number:
-                    return PrionF32.TryFromJson(jsonNode, out prionNode);
+                    if(!jsonNode.AsValue().TryGetValue(out float value))
+                    {
+                        // should be unreachable.
+                        prionNode = new PrionError("Oof");
+                        return false;
+                    }
+                    prionNode = new PrionF32(value);
+                    return true;
                 case System.Text.Json.JsonValueKind.Object:
                     return PrionDict.TryFromJson(jsonNode, out prionNode);
                 case System.Text.Json.JsonValueKind.String:
