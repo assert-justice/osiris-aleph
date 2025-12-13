@@ -8,7 +8,6 @@ namespace Prion
         Boolean,
         Color,
         Dict,
-        Dynamic,
         Enum,
         Error,
         F32,

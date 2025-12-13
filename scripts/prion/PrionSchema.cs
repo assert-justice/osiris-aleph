@@ -71,7 +71,6 @@ namespace Prion
             {
                 case PrionType.Boolean:
                 case PrionType.Color:
-                case PrionType.Dynamic:
                 case PrionType.F32:
                 case PrionType.Guid:
                 case PrionType.I32:

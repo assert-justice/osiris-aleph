@@ -35,10 +35,6 @@ namespace Prion
             {
                 return PrionDict.TryFromString(value, out node);
             }
-            else if (value.StartsWith("dynamic:"))
-            {
-                return PrionDynamic.TryFromString(value, out node);
-            }
             else if (value.StartsWith("enum:"))
             {
                 return PrionEnum.TryFromString(value, out node);
