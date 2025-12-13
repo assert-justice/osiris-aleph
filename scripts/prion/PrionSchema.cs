@@ -69,7 +69,6 @@ namespace Prion
             }
             switch (node.Type)
             {
-                case PrionType.Bitfield:
                 case PrionType.Boolean:
                 case PrionType.Color:
                 case PrionType.Dynamic:

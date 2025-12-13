@@ -27,10 +27,6 @@ namespace Prion
                 // prionNode = new PrionError("Parsing arrays not yet implemented");
                 // return false;
             }
-            else if (value.StartsWith("bitfield:"))
-            {
-                return PrionBitfield.TryFromString(value, out node);
-            }
             else if (value.StartsWith("color:"))
             {
                 return PrionColor.TryFromString(value, out node);
@@ -75,6 +71,10 @@ namespace Prion
             else if (value.StartsWith("schema_file:"))
             {
                 return PrionSchema.TryFromString(value, out node);
+            }
+            else if (value.StartsWith("ubigint:"))
+            {
+                return PrionUBigInt.TryFromString(value, out node);
             }
             // else if (value.StartsWith("union:"))
             // {
