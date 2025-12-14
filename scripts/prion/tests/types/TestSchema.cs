@@ -17,7 +17,7 @@ namespace Prion.Tests
             }
             PrionNode.TryFromJson(jsonNode, out PrionNode prionNode);
             // Assert.Fail(exampleSchema);
-            PrionSchema.TryFromNode(prionNode, out string error);
+            PrionSchema.TryFromNode(prionNode, out PrionSchema _, out string error);
             if(error != "")
             {
                 Assert.Fail(error);

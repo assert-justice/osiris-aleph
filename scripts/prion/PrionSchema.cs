@@ -1,20 +1,30 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json.Nodes;
 
 namespace Prion
 {
     public class PrionSchema
     {
+        public readonly string Name;
+        public readonly string Version;
         readonly PrionNode SchemaNode;
-        PrionSchema(PrionNode schemaNode)
+        static readonly Dictionary<string, PrionType> StringLookup = [];
+        PrionSchema(string name, string version, PrionNode schemaNode)
         {
+            Name = name;
+            Version = version;
             SchemaNode = schemaNode;
         }
-        public static bool TryFromNode(PrionNode schemaNode, out string error)
+        public bool TryValidate(PrionNode node, out string error)
         {
-            error = "";
+            return TryValidateNode(SchemaNode, node, out error);
+        }
+        public static bool TryFromNode(PrionNode schemaNode, out PrionSchema schema, out string error)
+        {
             // validate node
+            schema = null;
+            string name;
+            string version;
             if(schemaNode.Type != PrionType.Dict)
             {
                 error = $"Top level of a schema must be a Dict. Found '{schemaNode.Type}'";
@@ -31,6 +41,7 @@ namespace Prion
                 error = "Schema name field must be a string.";
                 return false;
             }
+            name = node.ToString();
             if(!dict.Dict.TryGetValue("version", out node))
             {
                 error = "Top level of a schema contain a version field";
@@ -41,6 +52,7 @@ namespace Prion
                 error = "Schema version field must be a string.";
                 return false;
             }
+            version = node.ToString();
             if(!dict.Dict.TryGetValue("data", out node))
             {
                 error = "Top level of a schema contain a data field";
@@ -51,10 +63,15 @@ namespace Prion
                 error = "Schema data field must be a dict.";
                 return false;
             }
-            return TryValidateSchemaDict(node as PrionDict, out error);
+            if(!TryValidateSchemaDict(node as PrionDict, out error))
+            {
+                return false;
+            }
+            schema = new PrionSchema(name, version, node);
+            return true;
         }
 
-        static bool TryValidateSchemaValue(PrionNode node, out string error)
+        static bool TryValidateSchemaNode(PrionNode node, out string error)
         {
             switch (node.Type)
             {
@@ -87,7 +104,7 @@ namespace Prion
             foreach (var (key, value) in dict.Dict)
             {
                 if(key.StartsWith('#')) continue;
-                if(!TryValidateSchemaValue(value, out error)) return false;
+                if(!TryValidateSchemaNode(value, out error)) return false;
             }
             error = "";
             return true;
@@ -99,7 +116,7 @@ namespace Prion
                 error = "Arrays in schemas can only have one element, the schema of all entries";
                 return false;
             }
-            return TryValidateSchemaValue(array.Array[0], out error);
+            return TryValidateSchemaNode(array.Array[0], out error);
         }
         static bool TryValidateSchemaString(string str, out string error)
         {
@@ -121,6 +138,104 @@ namespace Prion
                     error = $"Unhandled string '{str}'";
                     return false;
             }
+        }
+        static bool TryValidateNode(PrionNode schemaNode, PrionNode userNode, out string error)
+        {
+            if(schemaNode.Type == PrionType.String)
+            {
+                string schema = schemaNode.ToString();
+                if(schema.StartsWith("enum:")) return TryValidateEnum(schema, userNode as PrionEnum, out error);
+                else return TryValidateString(schema, userNode, out error);
+            }
+            else if(schemaNode.Type != userNode.Type)
+            {
+                error = $"Mismatched types, expected '{schemaNode.Type}' but found '{userNode.Type}'";
+                return false;
+            }
+            switch (schemaNode.Type)
+            {
+                case PrionType.Array:
+                    return TryValidateArray((schemaNode as PrionArray).Array[0], userNode as PrionArray, out error);
+                case PrionType.Dict:
+                    return TryValidateDict(schemaNode as PrionDict, userNode as PrionDict, out error);
+                default:
+                    break;
+            }
+            error = "";
+            return true;
+        }
+        static bool TryValidateArray(PrionNode schemaNode, PrionArray userArray, out string error)
+        {
+            error = "";
+            foreach (var item in userArray.Array)
+            {
+                if(!TryValidateNode(schemaNode, item, out error)) return false;
+            }
+            return true;
+        }
+        static bool TryValidateDict(PrionDict schemaDict, PrionDict userDict, out string error)
+        {
+            error = "";
+            HashSet<string> keys = [.. schemaDict.Dict.Keys];
+            foreach (var (key, value) in schemaDict.Dict)
+            {
+                keys.Remove(key);
+                bool nullable = key.EndsWith('?');
+                if(!userDict.Dict.TryGetValue(key, out PrionNode node))
+                {
+                    if(nullable) continue;
+                    error = $"Dict is missing key from schema {key}";
+                    return false;
+                }
+                if(nullable && node.Type == PrionType.Null) continue;
+                if(!TryValidateNode(value, node, out error)) return false;
+            }
+            return true;
+        }
+        static bool TryValidateEnum(string schema, PrionEnum userEnum, out string error)
+        {
+            error = "";
+            schema = schema[5..]; // remove "enum:"
+            var optionsArray = schema.Split(',').Select(s => s.Trim()).ToArray();
+            HashSet<string> optionsSet = [.. optionsArray];
+            if(optionsArray.Length != userEnum.Options.Count)
+            {
+                error = "Enum options do not match schema.";
+                return false;
+            }
+            if(optionsArray.Length != optionsSet.Count)
+            {
+                error = "Enum options contain duplicates";
+                return false;
+            }
+            if(optionsSet.Union(userEnum.Options).Count() != optionsArray.Length)
+            {
+                error = "Enum options do not match schema.";
+                return false;
+            }
+            return true;
+        }
+        static bool TryValidateString(string schema, PrionNode userNode, out string error)
+        {
+            if(StringLookup.Count == 0)
+            {
+                StringLookup.Add("boolean", PrionType.Boolean);
+                StringLookup.Add("color", PrionType.Color);
+                StringLookup.Add("f32", PrionType.F32);
+                StringLookup.Add("guid", PrionType.Guid);
+                StringLookup.Add("i32", PrionType.I32);
+                StringLookup.Add("rect2i", PrionType.Rect2I);
+                StringLookup.Add("string", PrionType.String);
+                StringLookup.Add("ubigint", PrionType.UBigInt);
+                StringLookup.Add("vector2i", PrionType.Vector2I);
+            }
+            if(StringLookup[schema] != userNode.Type)
+            {
+                error = $"Mismatched types, expected a '{schema}', received a '{userNode.Type}'.";
+                return false;
+            }
+            error = "";
+            return true;
         }
     }
 }

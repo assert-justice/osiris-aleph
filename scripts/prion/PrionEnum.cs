@@ -39,7 +39,13 @@ namespace Prion
                 node = new PrionError($"enum signature not present at start of string '{value}'.");
                 return false;
             }
-            var options = new HashSet<string>([.. sections[1].Split(',').Select(s => s.Trim())]);
+            var optionStrings = sections[1].Split(',').Select(s => s.Trim()).ToArray();
+            HashSet<string> options = [.. optionStrings];
+            if(optionStrings.Length != options.Count)
+            {
+                node = new PrionError($"enum options contain duplicates.");
+                return false;
+            }
             foreach (var option in options)
             {
                 foreach (char c in option)
