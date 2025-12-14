@@ -17,10 +17,11 @@ namespace Prion.Tests
             int trials = 100;
             for (int idx = 0; idx < trials; idx++)
             {
-                string[] options = GetRandomOptions();
-                int index = Rng.Next(options.Length);
+                HashSet<string> options = GetRandomOptions();
+                int index = Rng.Next(options.Count);
+                string[] optionStrings = [.. options];
                 string res = string.Join(", ", options);
-                res = "enum: " + res + ": " + options[index];
+                res = "enum: " + res + ": " + optionStrings[index];
                 if(!PrionEnum.TryFromString(res, out PrionNode node))
                 {
                     Assert.Fail($"Enum parse failed with error: {node}.");
@@ -39,16 +40,12 @@ namespace Prion.Tests
             }
             return sb.ToString();
         }
-        string[] GetRandomOptions()
+        HashSet<string> GetRandomOptions()
         {
             int length = Rng.Next(1,256);
-            List<string> options = new(length);
-            for (int idx = 0; idx < length; idx++)
-            {
-                options.Add(GetRandomIdent());
-            }
-            options.Sort();
-            return [.. options];
+            HashSet<string> options = new(length);
+            while(options.Count < length) options.Add(GetRandomIdent());
+            return options;
         }
     }
 }
