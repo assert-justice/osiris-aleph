@@ -1,0 +1,27 @@
+[
+    {
+        "filename": "niles_token.png",
+        "owners": [
+            "guid:0e031bde-522c-46f8-ae74-dd52cb71472e"
+        ]
+    },
+    {
+        "filename": "niles_portrait.png",
+        "owners": [
+            "guid:0e031bde-522c-46f8-ae74-dd52cb71472e"
+        ]
+    },
+    {
+        "filename": "dunsten_token.png",
+        "owners": [
+            "guid:9773e7be-aa32-4e0d-bbe5-5d2d7c058c64"
+        ]
+    },
+    {
+        "filename": "dunsten_portrait.png",
+        "owners": [
+            "guid:9773e7be-aa32-4e0d-bbe5-5d2d7c058c64",
+            "guid:e790c4c3-9880-4dbd-8043-2566db9749e5"
+        ]
+    }
+]

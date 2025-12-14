@@ -4,11 +4,8 @@ namespace Prion
 {
     public class PrionString : PrionNode
     {
-        public readonly string Text;
-        public PrionString() : base(PrionType.String)
-        {
-            Text = "";
-        }
+        public readonly string Text = "";
+        public PrionString() : base(PrionType.String){}
         public PrionString(string text) : base(PrionType.String)
         {
             Text = text;
@@ -20,6 +17,10 @@ namespace Prion
         public override string ToString()
         {
             return Text;
+        }
+        public static PrionString FromString(string text)
+        {
+            return new(text);
         }
     }
 }

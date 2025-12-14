@@ -1,7 +1,7 @@
 
 using System;
 
-namespace Prion
+namespace Osiris
 {
     public static class ErrorReporter
     {
