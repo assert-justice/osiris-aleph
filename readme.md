@@ -6,6 +6,19 @@ An open source VTT powered by the Godot game engine. Supports a wide variety of 
 
 ### Finished
 
+- Add testing framework
+- Start Prion library
+- Implement primitives (null, bool, f32, i32, string)
+- Implement UBigInt
+- Implement color
+- Implement enum
+
+### Short Term
+
+- Implement vec2i
+- Implement and test rect2i
+- Implement array
+- Implement dict
 - Map Serialization
 - Layer Serialization
 - Blocker Serialization
@@ -14,22 +27,9 @@ An open source VTT powered by the Godot game engine. Supports a wide variety of 
 - Actor Serialization
 - Asset Log Serialization
 - Handout Serialization
-- Add testing framework
 - Write tests for blockers
 - Write tests for handouts
 - Write tests for actors
-- Start Prion library
-
-### In Progress
-
-- Finish Prion library
-
-### Short Term
-
-- Write tests for Prion
-- Write (more) tests for blockers
-- Write (more) tests for handouts
-- Write (more) tests for actors
 - Write tests for maps
 - Write tests for stamps
 - Write tests for auras

@@ -39,6 +39,7 @@ namespace Prion
         }
         public static new bool TryFromString(string value, out PrionNode node)
         {
+            value = value.Trim();
             if (!value.StartsWith("color:"))
             {
                 node = new PrionError($"color signature not present at start of string '{value}'.");
