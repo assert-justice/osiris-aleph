@@ -19,7 +19,7 @@ namespace Prion
         Null,
         // Rect2,
         Rect2I,
-        Schema,
+        // Schema,
         String,
         // U32,
         // U64,

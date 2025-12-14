@@ -45,7 +45,7 @@ namespace Prion
             PrionDict prionDict = new();
             foreach (var (key, value) in jsonNode.AsObject())
             {
-                if(PrionNode.TryFromJson(value, out PrionNode pNode))
+                if(!PrionNode.TryFromJson(value, out PrionNode pNode))
                 {
                     node = pNode;
                     return false;

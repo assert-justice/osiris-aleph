@@ -24,8 +24,6 @@ namespace Prion
             }
             if (value.StartsWith('[')){
                 return PrionArray.TryFromString(value, out node);
-                // prionNode = new PrionError("Parsing arrays not yet implemented");
-                // return false;
             }
             else if (value.StartsWith("color:"))
             {
@@ -60,22 +58,10 @@ namespace Prion
             {
                 return PrionRect2I.TryFromString(value, out node);
             }
-            else if (value.StartsWith("schema:"))
-            {
-                return PrionSchema.TryFromString(value, out node);
-            }
-            else if (value.StartsWith("schema_file:"))
-            {
-                return PrionSchema.TryFromString(value, out node);
-            }
             else if (value.StartsWith("ubigint:"))
             {
                 return PrionUBigInt.TryFromString(value, out node);
             }
-            // else if (value.StartsWith("union:"))
-            // {
-            //     return PrionUnion.TryFromString(value, out node);
-            // }
             else if (value.StartsWith("vector2i:"))
             {
                 return PrionVector2I.TryFromString(value, out node);

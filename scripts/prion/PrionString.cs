@@ -15,11 +15,11 @@ namespace Prion
         }
         public override JsonNode ToJson()
         {
-            throw new System.NotImplementedException();
+            return JsonNode.Parse($"\"{Text}\"");
         }
         public override string ToString()
         {
-            throw new System.NotImplementedException();
+            return Text;
         }
     }
 }
