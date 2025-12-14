@@ -83,8 +83,8 @@ namespace Prion
                     return TryValidateArray(node as PrionArray, out error);
                 case PrionType.Dict:
                     return TryValidateDict(node as PrionDict, out error);
-                case PrionType.Enum:
-                    return TryValidateEnum(node as PrionEnum, out error);
+                // case PrionType.Enum:
+                //     return TryValidateEnum(node as PrionEnum, out error);
                 case PrionType.Error:
                     error = node as PrionError;
                     return false;
@@ -149,26 +149,26 @@ namespace Prion
             error = new("");
             return true;
         }
-        bool TryValidateEnum(PrionEnum enumNode, out PrionError error)
-        {
-            var schemaOptions = (SchemaNode as PrionEnum).Options;
-            var options = enumNode.Options;
-            if(schemaOptions.Length != options.Length)
-            {
-                error = new("Enum has the wrong number of options.");
-                return false;
-            }
-            for (int idx = 0; idx < schemaOptions.Length; idx++)
-            {
-                if(schemaOptions[idx] != options[idx])
-                {
-                    error = new("Enum options do not match schema.");
-                    return false;
-                }
-            }
-            error = new("");
-            return true;
-        }
+        // bool TryValidateEnum(PrionEnum enumNode, out PrionError error)
+        // {
+        //     var schemaOptions = (SchemaNode as PrionEnum).Options;
+        //     var options = enumNode.Options;
+        //     if(schemaOptions.Length != options.Length)
+        //     {
+        //         error = new("Enum has the wrong number of options.");
+        //         return false;
+        //     }
+        //     for (int idx = 0; idx < schemaOptions.Length; idx++)
+        //     {
+        //         if(schemaOptions[idx] != options[idx])
+        //         {
+        //             error = new("Enum options do not match schema.");
+        //             return false;
+        //         }
+        //     }
+        //     error = new("");
+        //     return true;
+        // }
         // bool TryValidateUnion(PrionUnion union, out PrionError error)
         // {
         //     error = new("");

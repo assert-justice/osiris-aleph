@@ -47,6 +47,7 @@ namespace Prion.Tests
             {
                 options.Add(GetRandomIdent());
             }
+            options.Sort();
             return [.. options];
         }
     }

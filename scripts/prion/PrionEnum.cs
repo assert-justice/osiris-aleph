@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
 
@@ -6,12 +7,12 @@ namespace Prion
 {
     public class PrionEnum: PrionNode
     {
-        public readonly string[] Options;
-        int Index = 0;
-        PrionEnum(string[] options, int index): base((PrionType.Enum))
+        public readonly HashSet<string> Options;
+        string Value;
+        PrionEnum(HashSet<string> options, string value): base((PrionType.Enum))
         {
             Options = options;
-            Index = index;
+            Value = value;
         }
         public override JsonNode ToJson()
         {
@@ -19,8 +20,10 @@ namespace Prion
         }
         public override string ToString()
         {
-            string res = string.Join(", ", Options);
-            return "enum: " + res + ": " + Options[Index];
+            var options = Options.ToList();
+            options.Sort();
+            string res = string.Join(", ", options);
+            return "enum: " + res + ": " + Value;
         }
         public static new bool TryFromString(string value, out PrionNode node)
         {
@@ -36,7 +39,7 @@ namespace Prion
                 node = new PrionError($"enum signature not present at start of string '{value}'.");
                 return false;
             }
-            var options = sections[1].Split(',').Select(s => s.Trim()).ToArray();
+            var options = new HashSet<string>([.. sections[1].Split(',').Select(s => s.Trim())]);
             foreach (var option in options)
             {
                 foreach (char c in option)
@@ -49,13 +52,12 @@ namespace Prion
                 }
             }
             string selected = sections[2];
-            int index = Array.FindIndex(options, s => s == selected);
-            if (index == -1)
+            if (!options.Contains(selected))
             {
-                node = new PrionError($"enum options '{options}' do not contain selected option '{selected}'.");
+                node = new PrionError($"enum options '{string.Join(", ", options)}' do not contain selected option '{selected}'.");
                 return false;
             }
-            node = new PrionEnum(options, index);
+            node = new PrionEnum(options, selected);
             return true;
         }
         public static new bool TryFromJson(JsonNode jsonNode, out PrionNode node)
@@ -81,26 +83,18 @@ namespace Prion
                 return false;
             }
         }
-        public int GetIndex()
-        {
-            return Index;
-        }
         public string GetValue()
         {
-            return Options[Index];
-        }
-        public bool TrySetIndex(int index)
-        {
-            if(index < 0 || index >= Options.Length) return false;
-            Index = index;
-            return true;
+            return Value;
         }
         public bool TrySetValue(string value)
         {
-            int index = Options.ToList().FindIndex(s => s == value);
-            if(index == -1) return false;
-            Index = index;
-            return true;
+            if (Options.Contains(value))
+            {
+                Value = value;
+                return true;
+            }
+            return false;
         }
     }
 }
