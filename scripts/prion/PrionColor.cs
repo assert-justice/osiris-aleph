@@ -41,7 +41,7 @@ namespace Prion
         {
             if (!value.StartsWith("color:"))
             {
-                node = new PrionError($"color signature not present at start of string {value}.");
+                node = new PrionError($"color signature not present at start of string '{value}'.");
                 return false;
             }
             value = value[6..].Trim();
