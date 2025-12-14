@@ -41,13 +41,11 @@ namespace Osiris
             {
                 if(item.Type != PrionType.Dict) return false;
                 var dict = item as PrionDict;
-                if(!dict.Dict.TryGetValue("filename", out PrionNode filenameNode)) return false;
-                if(filenameNode.Type != PrionType.String) return false;
-                string filename = (filenameNode as PrionString).Text;
-                if(!dict.Dict.TryGetValue("owners", out PrionNode ownersNode)) return false;
-                if(ownersNode.Type != PrionType.Array) return false;
+                if(!dict.TryGet("filename", out PrionString filenameNode)) return false;
+                string filename = filenameNode.Text;
+                if(!dict.TryGet("owners", out PrionArray ownersNode)) return false;
                 HashSet<Guid> owners = [];
-                foreach (var ownerNode in (ownersNode as PrionArray).Array)
+                foreach (var ownerNode in ownersNode.Array)
                 {
                     if(ownerNode.Type != PrionType.Guid) return false;
                     owners.Add((ownerNode as PrionGuid).Value);

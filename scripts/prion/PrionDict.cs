@@ -55,5 +55,14 @@ namespace Prion
             node = prionDict;
             return true;
         }
+
+        public bool TryGet<T>(string key, out T value) where T : PrionNode
+        {
+            value = default;
+            if(!Dict.TryGetValue(key, out PrionNode res)) return false;
+            if(res is not T) return false;
+            value = res as T;
+            return true;
+        }
     }
 }

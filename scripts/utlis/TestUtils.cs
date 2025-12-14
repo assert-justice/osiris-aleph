@@ -8,4 +8,9 @@ public static class TestUtils
         string filepath = $"../../../../../{filename}";
         return File.ReadAllText(filepath);
     }
+    public static bool FileExists(string filename)
+    {
+        string filepath = $"../../../../../{filename}";
+        return File.Exists(filepath);
+    }
 }
