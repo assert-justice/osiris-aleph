@@ -22,6 +22,7 @@ namespace Prion.Tests
             ];
             foreach (var item in htmlValues)
             {
+                DoesMatch("color:" + item, "color:" + Expand(item));
                 DoesMatchHtml(item, item);
             }
             foreach (var item in hexValues)
@@ -31,12 +32,14 @@ namespace Prion.Tests
             int trials = 100;
             for (int idx = 0; idx < trials; idx++)
             {
-                string str = "0x" + GetRandomColor();
-                DoesMatchHex(str, Expand(str));
+                string str = GetRandomColor();
+                DoesMatch("color:0x" + str, "color:" + Expand("#" + str));
+                DoesMatchHex("0x" + str, Expand("0x" + str));
             }
             for (int idx = 0; idx < trials; idx++)
             {
                 string str = "#" + GetRandomColor();
+                DoesMatch("color:" + str, "color:" + Expand(str));
                 DoesMatchHtml(str, Expand(str));
             }
         }
@@ -52,15 +55,38 @@ namespace Prion.Tests
             }
             if((node as PrionColor).ToHexString() != expected)
             {
-                Assert.Fail($"input: {input}, expected: {expected}, error: {node}");
+                Assert.Fail($"Mismatch detected input: {input}, expected: {expected}, received: {(node as PrionColor).ToHexString()} error: {node}");
             }
         }
         static void DoesMatchHtml(string input, string expected)
         {
-            Assert.IsTrue(PrionColor.TryFromHtmlString(input, out PrionNode node));
-            Assert.IsTrue(node is PrionColor);
-            Assert.IsTrue((node as PrionColor).ToHtmlString() == expected);
-            Assert.IsTrue((node as PrionColor).ToString() == $"color:{expected}");
+            if(!PrionColor.TryFromHtmlString(input, out PrionNode node))
+            {
+                Assert.Fail($"Failed to parse, input: {input}, expected: {expected}, error: {node}");
+            }
+            if(node is not PrionColor)
+            {
+                Assert.Fail($"input: {input}, expected: {expected}, error: {node}");
+            }
+            if((node as PrionColor).ToHtmlString() != expected)
+            {
+                Assert.Fail($"Mismatch detected, input: {input}, expected: {expected}, error: {node}");
+            }
+        }
+        static void DoesMatch(string input, string expected)
+        {
+            if(!PrionColor.TryFromString(input, out PrionNode node))
+            {
+                Assert.Fail($"Failed to parse, input: {input}, expected: {expected}, error: {node}");
+            }
+            if(node is not PrionColor)
+            {
+                Assert.Fail($"input: {input}, expected: {expected}, error: {node}");
+            }
+            if((node as PrionColor).ToString() != expected)
+            {
+                Assert.Fail($"Mismatch detected input: {input}, expected: {expected}, error: {node}");
+            }
         }
         string GetRandomColor()
         {

@@ -31,7 +31,7 @@ namespace Prion
         }
         public override JsonNode ToJson()
         {
-            throw new System.NotImplementedException();
+            return JsonNode.Parse($"\"{ToString()}\"");
         }
         public override string ToString()
         {
@@ -44,7 +44,7 @@ namespace Prion
                 node = new PrionError($"color signature not present at start of string {value}.");
                 return false;
             }
-            value = value[8..].Trim();
+            value = value[6..].Trim();
             if(value.StartsWith("0x") && TryFromHexString(value, out node)) return true;
             if(value.StartsWith("#") && TryFromHtmlString(value, out node)) return true;
             node = new PrionError($"Invalid color value {value}");
