@@ -5,14 +5,18 @@ namespace Prion
 {
     public class PrionArray : PrionNode
     {
-        public List<PrionNode> Array;
+        public List<PrionNode> Array = [];
         public PrionArray() : base(PrionType.Array){}
 
         public override JsonNode ToJson()
         {
-            throw new System.NotImplementedException();
+            JsonArray array = [];
+            foreach (var item in Array)
+            {
+                array.Add(item.ToJson());
+            }
+            return array;
         }
-
         public override string ToString()
         {
             throw new System.NotImplementedException();
@@ -24,8 +28,33 @@ namespace Prion
         }
         public static new bool TryFromJson(JsonNode jsonNode, out PrionNode node)
         {
-            node = new PrionError("array json parsing not yet implemented");
-            return false;
+            if(jsonNode is null)
+            {
+                node = new PrionError("Invalid json kind. Value cannot be null.");
+                return false;
+            }
+            var kind = jsonNode.GetValueKind();
+            PrionArray prionArray = new();
+            if(kind == System.Text.Json.JsonValueKind.Array)
+            {
+                var array = jsonNode.AsArray();
+                foreach (var item in array)
+                {
+                    if(!PrionNode.TryFromJson(item, out PrionNode pNode))
+                    {
+                        node = pNode;
+                        return false;
+                    }
+                    prionArray.Array.Add(pNode);
+                }
+            }
+            else
+            {
+                node = new PrionError("Invalid json kind");
+                return false;
+            }
+            node = prionArray;
+            return true;
         }
     }
 }
