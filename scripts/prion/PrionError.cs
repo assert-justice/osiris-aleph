@@ -12,7 +12,8 @@ namespace Prion
         }
         public override string ToString()
         {
-            throw new System.NotImplementedException();
+            string res = "error: " + string.Join(',', Messages);
+            return res;
         }
         public void Add(string message)
         {

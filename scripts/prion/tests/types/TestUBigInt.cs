@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Prion.Tests
 {
     [TestClass]
-    public class TestParseJsonBitfield
+    public class TestUBigInt
     {
         readonly Random Rng = new();
         [TestMethod]

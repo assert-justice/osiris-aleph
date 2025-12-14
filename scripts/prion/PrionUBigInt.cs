@@ -63,14 +63,15 @@ namespace Prion
         }
         public static bool TryFromHexString(string value, out PrionNode node)
         {
+            value = value.Trim();
             if (!value.StartsWith("0x"))
             {
-                node = new PrionError($"Hex strings must begin with 0x, found {value}");
+                node = new PrionError($"Hex strings must begin with 0x, found '{value}'");
                 return false;
             }
             var res = new PrionUBigInt();
             value = value[2..].ToLower();
-            res.EnsureCapacity(value.Length - 1);
+            res.EnsureCapacity(value.Length * 4);
             for (int idx = 0; idx < value.Length; idx++)
             {
                 char c = value[value.Length - 1 - idx];
@@ -80,16 +81,18 @@ namespace Prion
                     node = new PrionError($"Found invalid char {c} in hex string");
                     return false;
                 }
-                res.SetRange(idx * 4, 4, (ulong)charValue);
+                byte v = (byte)charValue;
+                res.SetRange(idx * 4, 4, v);
             }
             node = res;
             return true;
         }
         public static bool TryFromBinaryString(string value, out PrionNode node)
         {
+            value = value.Trim();
             if (!value.StartsWith("0b"))
             {
-                node = new PrionError($"Binary strings must begin with 0b, found {value}");
+                node = new PrionError($"Binary strings must begin with 0b, found '{value}'");
                 return false;
             }
             var res = new PrionUBigInt();
@@ -125,6 +128,17 @@ namespace Prion
         public void PushBit(bool value)
         {
             Data.Add(value);
+        }
+        public void PushNibble(byte value)
+        {
+            EnsureCapacity(Data.Count + 4);
+            SetRange(Data.Count, 4, value);
+        }
+        public void PushByte(byte value)
+        {
+            int start = Data.Count;
+            EnsureCapacity(start + 8);
+            SetRange(start, 8, value);
         }
         public ulong GetRange(int offset, int length)
         {
