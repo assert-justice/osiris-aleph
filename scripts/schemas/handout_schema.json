@@ -7,6 +7,7 @@
         "texture_filename?": "string",
         "text?": "string",
         "visible_to": ["guid"],
+        "owners": ["guid"],
         "gm_text?": "string"
     }
 }

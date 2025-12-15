@@ -36,9 +36,10 @@ namespace Osiris
                 TokenFilename = prionDict.GetDefault("token_filename?", ""),
                 Description = prionDict.GetDefault("description?", "They are very mysterious."),
             };
-            if (!prionDict.TryGet("controlled_by", out PrionArray controlledBy)) return false;
-            if(!controlledBy.TryAs(out PrionGuid[] owners)) return false;
-            actor.ControlledBy = [.. owners.Select(o => o.Value)];
+            // if (!prionDict.TryGet("controlled_by", out PrionArray controlledBy)) return false;
+            // if(!controlledBy.TryAs(out PrionGuid[] owners)) return false;
+            // actor.ControlledBy = [.. owners.Select(o => o.Value)];
+            if(!prionDict.TryGetGuidHashSet("controlled_by", out actor.ControlledBy)) return false;
             if(!prionDict.TryGet("stats", out actor.Stats)) return false;
             data = actor as T;
             return true;

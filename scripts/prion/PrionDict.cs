@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Nodes;
 
 namespace Prion
@@ -81,6 +82,14 @@ namespace Prion
         {
             if(!TryGet(key, out PrionString prionString)) return defaultVal;
             return prionString.Text;
+        }
+        public bool TryGetGuidHashSet(string key, out HashSet<Guid> guids)
+        {
+            guids = default;
+            if(!TryGet(key, out PrionArray res)) return false;
+            if(!res.TryAs(out PrionGuid[] prionGuids)) return false;
+            guids = [.. prionGuids.Select(o => o.Value)];
+            return true;
         }
         public void Set(string key, Guid guid)
         {
