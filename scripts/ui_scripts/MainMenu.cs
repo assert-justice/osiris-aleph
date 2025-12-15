@@ -6,6 +6,6 @@ public partial class MainMenu : Control
     public override void _Ready()
     {
         base._Ready();
-        Vm.JintExample();
+        Vm vm = new();
     }
 }
