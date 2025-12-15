@@ -193,6 +193,7 @@ namespace Prion
                     return false;
                 }
                 if(nullable && node.Type == PrionType.Null) continue;
+                if(value is PrionString str && str.Text == "dynamic") continue;
                 if(!TryValidateNode(value, node, out error)) return false;
             }
             return true;
@@ -236,7 +237,7 @@ namespace Prion
             }
             if(StringLookup[schema] != userNode.Type)
             {
-                error = $"Mismatched types, expected a '{schema}', received a '{userNode.Type}'.";
+                error = $"Mismatched types 2, expected a '{schema}', received a '{userNode.Type}'.";
                 return false;
             }
             error = "";

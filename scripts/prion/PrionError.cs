@@ -5,7 +5,7 @@ namespace Prion
 {
     public class PrionError(string message) : PrionNode(PrionType.Error)
     {
-        readonly List<string> Messages = [message];
+        public readonly List<string> Messages = [message];
         public override JsonNode ToJson()
         {
             throw new System.NotImplementedException();

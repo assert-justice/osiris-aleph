@@ -1,4 +1,5 @@
 
+using System;
 using System.Text.Json.Nodes;
 
 namespace Prion
@@ -22,17 +23,17 @@ namespace Prion
                 default:
                     break;
             }
-            if (value.StartsWith('[')){
-                return PrionArray.TryFromString(value, out node);
-            }
-            else if (value.StartsWith("color:"))
+            // if (value.StartsWith('[')){
+            //     return PrionArray.TryFromString(value, out node);
+            // }
+            if (value.StartsWith("color:"))
             {
                 return PrionColor.TryFromString(value, out node);
             }
-            else if (value.StartsWith('{'))
-            {
-                return PrionDict.TryFromString(value, out node);
-            }
+            // else if (value.StartsWith('{'))
+            // {
+            //     return PrionDict.TryFromString(value, out node);
+            // }
             else if (value.StartsWith("enum:"))
             {
                 return PrionEnum.TryFromString(value, out node);
@@ -115,5 +116,22 @@ namespace Prion
         }
         public abstract override string ToString();
         public abstract JsonNode ToJson();
+        public bool TryAs<T>(out T node) where T : PrionNode
+        {
+            node = default;
+            if(this is T res)
+            {
+                node = res;
+                return true;
+            }
+            return false;
+        }
+        public bool TryAs(out Guid guid)
+        {
+            guid = Guid.Empty;
+            if(!TryAs(out PrionGuid prionGuid)) return false;
+            guid = prionGuid.Value;
+            return true;
+        }
     }
 }

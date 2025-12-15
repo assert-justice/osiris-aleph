@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
 
@@ -63,6 +64,31 @@ namespace Prion
             if(res is not T) return false;
             value = res as T;
             return true;
+        }
+        public bool TryGet(string key, out Guid value)
+        {
+            value = default;
+            if(!TryGet(key, out PrionGuid res)) return false;
+            value = res.Value;
+            return true;
+        }
+        public T GetDefault<T>(string key, T defaultVal) where T : PrionNode
+        {
+            if(!TryGet(key, out T value)) return defaultVal;
+            return value;
+        }
+        public string GetDefault(string key, string defaultVal)
+        {
+            if(!TryGet(key, out PrionString prionString)) return defaultVal;
+            return prionString.Text;
+        }
+        public void Set(string key, Guid guid)
+        {
+            Dict[key] = new PrionGuid(guid);
+        }
+        public void Set(string key, string str)
+        {
+            Dict[key] = new PrionString(str);
         }
     }
 }

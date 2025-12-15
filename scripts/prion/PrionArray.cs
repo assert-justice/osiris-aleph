@@ -7,6 +7,10 @@ namespace Prion
     {
         public List<PrionNode> Array = [];
         public PrionArray() : base(PrionType.Array){}
+        public PrionArray(List<PrionNode> array) : base(PrionType.Array)
+        {
+            Array = array;
+        }
 
         public override JsonNode ToJson()
         {
@@ -54,6 +58,18 @@ namespace Prion
                 return false;
             }
             node = prionArray;
+            return true;
+        }
+        public bool TryAs<T>(out T[] res) where T : PrionNode
+        {
+            res = default;
+            List<T> values = [];
+            foreach (var node in Array)
+            {
+                if(!node.TryAs(out T val)) return false;
+                values.Add(val);
+            }
+            res = [.. values];
             return true;
         }
     }

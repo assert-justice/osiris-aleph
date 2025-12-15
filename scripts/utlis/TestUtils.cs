@@ -1,5 +1,7 @@
 
 using System.IO;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Osiris;
 
 public static class TestUtils
 {
@@ -12,5 +14,9 @@ public static class TestUtils
     {
         string filepath = $"../../../../../{filename}";
         return File.Exists(filepath);
+    }
+    public static void Fail()
+    {
+        Assert.Fail(OsirisSystem.GetErrors());
     }
 }

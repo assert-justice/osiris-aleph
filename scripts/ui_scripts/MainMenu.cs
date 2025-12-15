@@ -9,6 +9,10 @@ public partial class MainMenu : Control
     public override void _Ready()
     {
         base._Ready();
+        var data = new Actor();
+        var node = data.ToNode();
+        var str = node.ToJson().ToJsonString();
+        GD.Print(str);
         // FileAccess
         // OsirisFileAccess.SetReader(filepath =>
         // {

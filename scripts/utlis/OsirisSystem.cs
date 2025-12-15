@@ -25,6 +25,7 @@ namespace Osiris
         {
             SchemaManager.Clear();
             SchemaManager.AddSchema<AssetLog>("asset_log_schema.json");
+            SchemaManager.AddSchema<Actor>("actor_schema.json");
         }
         public static void EnterTestMode()
         {
