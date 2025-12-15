@@ -9,15 +9,20 @@ namespace Osiris
         static readonly Dictionary<string, PrionSchema> Schemas = [];
         public static bool TryGetSchema(string filename, out PrionSchema schema)
         {
+            string filepath = "res://scripts/schemas/" + filename;
             if(Schemas.TryGetValue(filename, out schema)) return true;
-            else if (OsirisFileAccess.FileExists("scripts/schemas" + filename))
+            else if (OsirisSystem.FileExists(filepath))
             {
-                string str = OsirisFileAccess.ReadFile("scripts/schemas" + filename);
+                string str = OsirisSystem.ReadFile(filepath);
                 var jsonNode = JsonNode.Parse(str);
-                if(PrionNode.TryFromJson(jsonNode, out PrionNode prionNode))
+                if(!PrionNode.TryFromJson(jsonNode, out PrionNode prionNode)) return false;
+                if(!PrionSchema.TryFromNode(prionNode, out schema, out string error))
                 {
-                    if(PrionSchema.TryFromNode(prionNode, out schema, out string _)) return true;
+                    OsirisSystem.ReportError(error);
+                    return false;
                 }
+                Schemas.Add(filename, schema);
+                return true;
             }
             return false;
         }

@@ -58,12 +58,7 @@ namespace Prion
                 error = "Top level of a schema contain a data field";
                 return false;
             }
-            if(node.Type != PrionType.Dict)
-            {
-                error = "Schema data field must be a dict.";
-                return false;
-            }
-            if(!TryValidateSchemaDict(node as PrionDict, out error))
+            if(!TryValidateSchemaNode(node, out error))
             {
                 return false;
             }

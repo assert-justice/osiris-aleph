@@ -4,7 +4,7 @@ using Godot;
 
 namespace Osiris
 {
-    public static class OsirisFileAccess
+    public static class OsirisSystem
     {
         static Func<string, string> Reader = filepath =>
         {
@@ -18,22 +18,25 @@ namespace Osiris
         };
         static Func<string, bool> Checker = FileAccess.FileExists;
         static readonly Dictionary<string, string> MockFilesystem = [];
+        static Action<string> ErrorReporter = GD.PrintErr;
+        static readonly List<string> ErrorLog = [];
         static bool InTestMode = false;
         public static void EnterTestMode()
         {
+            MockFilesystem.Clear();
             if(InTestMode) return;
             // Reader = TestUtils.ReadFile;
             // Checker = TestUtils.FileExists;
             InTestMode = true;
             Reader = filepath =>
             {
-                if(TestUtils.FileExists(filepath)) return TestUtils.ReadFile(filepath);
+                if(TestUtils.FileExists(ConvertPath(filepath))) return TestUtils.ReadFile(ConvertPath(filepath));
                 if(MockFilesystem.TryGetValue(filepath, out string contents)) return contents;
                 return "";
             };
             Checker = filepath =>
             {
-                if(TestUtils.FileExists(filepath)) return true;
+                if(TestUtils.FileExists(ConvertPath(filepath))) return true;
                 if(MockFilesystem.ContainsKey(filepath)) return true;
                 return false;
             };
@@ -41,6 +44,13 @@ namespace Osiris
             {
                 MockFilesystem.Add(filepath, contents);
             };
+            ErrorLog.Clear();
+            ErrorReporter = s => {};
+        }
+        public static string ConvertPath(string filepath)
+        {
+            if(filepath.StartsWith("res://")) filepath = filepath[6..];
+            return filepath;
         }
         public static string ReadFile(string filename)
         {
@@ -53,6 +63,19 @@ namespace Osiris
         public static bool FileExists(string filename)
         {
             return Checker(filename);
+        }
+        public static void ReportError(string message)
+        {
+            ErrorLog.Add(message);
+            ErrorReporter(message);
+        }
+        public static bool HasErrors()
+        {
+            return ErrorLog.Count > 0;
+        }
+        public static string GetErrors()
+        {
+            return string.Join("\n", ErrorLog);
         }
     }
 }

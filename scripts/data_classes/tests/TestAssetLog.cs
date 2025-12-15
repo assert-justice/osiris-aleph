@@ -11,7 +11,8 @@ namespace Osiris.Tests
         [TestMethod]
         public void Create()
         {
-            OsirisFileAccess.EnterTestMode();
+            OsirisSystem.EnterTestMode();
+            // OsirisSystem.ReportError("bla");
             var zaneUserId = Guid.NewGuid();
             var jasonUserId = Guid.NewGuid();
             var nickUserId = Guid.NewGuid();
@@ -21,10 +22,17 @@ namespace Osiris.Tests
             log.Add("dunsten_token.png", jasonUserId);
             log.Add("dunsten_portrait.png", jasonUserId);
             log.Add("dunsten_portrait.png", nickUserId);
-            var snapshotString = OsirisFileAccess.ReadFile("scripts/schemas/asset_log_example.json");
+            var snapshotString = OsirisSystem.ReadFile("scripts/schemas/asset_log_example.json");
             var jsonNode = JsonNode.Parse(snapshotString);
-            PrionNode.TryFromJson(jsonNode, out PrionNode prionNode);
-            AssetLog.TryFromNode(prionNode, out AssetLog snapshotLog);
+            // OsirisSystem.ReportError("butts");
+            if(!PrionNode.TryFromJson(jsonNode, out PrionNode prionNode))
+            {
+                Assert.Fail("Oops");
+            }
+            if(!AssetLog.TryFromNode(prionNode, out AssetLog _))
+            {
+                Assert.Fail(OsirisSystem.GetErrors());
+            }
         }
     }
 }

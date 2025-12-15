@@ -34,9 +34,16 @@ namespace Osiris
         public static bool TryFromNode(PrionNode node, out AssetLog assetLog)
         {
             assetLog = null;
-            Dictionary<string, HashSet<Guid>> data = [];
+            if(!SchemaManager.TryGetSchema("asset_log_schema.json", out PrionSchema schema)) return false;
+            if(!schema.TryValidate(node, out string error))
+            {
+                OsirisSystem.ReportError(error);
+                OsirisSystem.ReportError("validation failed");
+                return false;
+            }
             if(node.Type != PrionType.Array) return false;
             var arr = node as PrionArray;
+            Dictionary<string, HashSet<Guid>> data = [];
             foreach (var item in arr.Array)
             {
                 if(item.Type != PrionType.Dict) return false;
