@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +5,7 @@ using Prion;
 
 namespace Osiris
 {
-    public class AssetLog : BaseData
+    public class AssetLog : IBaseData
     {
         readonly Dictionary<string, HashSet<Guid>> Data = [];
         public AssetLog(){}
@@ -14,33 +13,10 @@ namespace Osiris
         {
             Data = data;
         }
-        public override PrionNode ToNode(bool validate = true)
+        static bool IBaseData.TryFromNode<T>(PrionNode node, out T res)
         {
-            PrionArray array = new();
-            foreach (var (filename, owners) in Data)
-            {
-                PrionDict dict = new();
-                dict.Dict.Add("filename", PrionString.FromString(filename));
-                PrionArray arr = new();
-                foreach (var owner in owners)
-                {
-                    arr.Array.Add(PrionGuid.FromGuid(owner));
-                }
-                dict.Dict.Add("owners", arr);
-                array.Array.Add(dict);
-            }
-            return array;
-        }
-        public static bool TryFromNode(PrionNode node, out AssetLog assetLog)
-        {
-            assetLog = null;
-            if(!SchemaManager.TryGetSchema("asset_log_schema.json", out PrionSchema schema)) return false;
-            if(!schema.TryValidate(node, out string error))
-            {
-                OsirisSystem.ReportError(error);
-                OsirisSystem.ReportError("validation failed");
-                return false;
-            }
+            res = default;
+            // return true;
             if(node.Type != PrionType.Array) return false;
             var arr = node as PrionArray;
             Dictionary<string, HashSet<Guid>> data = [];
@@ -59,18 +35,27 @@ namespace Osiris
                 }
                 data.Add(filename, owners);
             }
-            assetLog = new(data);
+            // assetLog = new(data);
+            res = new AssetLog(data) as T;
             return true;
         }
-        public static new bool TryFromNode(PrionNode node, out BaseData data)
+
+        public PrionNode ToNode()
         {
-            if(TryFromNode(node, out AssetLog assetLog))
+            PrionArray array = new();
+            foreach (var (filename, owners) in Data)
             {
-                data = assetLog;
-                return true;
+                PrionDict dict = new();
+                dict.Dict.Add("filename", PrionString.FromString(filename));
+                PrionArray arr = new();
+                foreach (var owner in owners)
+                {
+                    arr.Array.Add(PrionGuid.FromGuid(owner));
+                }
+                dict.Dict.Add("owners", arr);
+                array.Array.Add(dict);
             }
-            data = null;
-            return false;
+            return array;
         }
         public bool IsOwner(string filename, Guid userId)
         {

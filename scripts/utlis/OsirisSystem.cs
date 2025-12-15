@@ -21,12 +21,15 @@ namespace Osiris
         static Action<string> ErrorReporter = GD.PrintErr;
         static readonly List<string> ErrorLog = [];
         static bool InTestMode = false;
+        public static void InitSingletons()
+        {
+            SchemaManager.Clear();
+            SchemaManager.AddSchema<AssetLog>("asset_log_schema.json");
+        }
         public static void EnterTestMode()
         {
             MockFilesystem.Clear();
             if(InTestMode) return;
-            // Reader = TestUtils.ReadFile;
-            // Checker = TestUtils.FileExists;
             InTestMode = true;
             Reader = filepath =>
             {
@@ -46,6 +49,7 @@ namespace Osiris
             };
             ErrorLog.Clear();
             ErrorReporter = s => {};
+            InitSingletons();
         }
         public static string ConvertPath(string filepath)
         {

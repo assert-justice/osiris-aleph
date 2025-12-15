@@ -8,28 +8,48 @@ namespace Osiris.Tests
     [TestClass]
     public class TestAssetLog
     {
+        // [TestMethod]
+        // public void Snapshot()
+        // {
+        //     OsirisSystem.EnterTestMode();
+        //     Guid zaneUserId = Guid.NewGuid();
+        //     Guid jasonUserId = Guid.NewGuid();
+        //     Guid nickUserId = Guid.NewGuid();
+        //     AssetLog log = new();
+        //     log.Add("niles_token.png", zaneUserId);
+        //     log.Add("niles_portrait.png", zaneUserId);
+        //     log.Add("dunsten_token.png", jasonUserId);
+        //     log.Add("dunsten_portrait.png", jasonUserId);
+        //     log.Add("dunsten_portrait.png", nickUserId);
+        //     PrionNode prionNode = log.ToNode();
+        //     var jsonNode = prionNode.ToJson();
+        //     string snapshotString = OsirisSystem.ReadFile("scripts/schemas/asset_log_example.json");
+        //     var snapshotJson = JsonNode.Parse(snapshotString);
+        //     if(jsonNode.ToJsonString() != snapshotJson.ToJsonString())
+        //     {
+        //         OsirisSystem.ReportError("Generated json:");
+        //         OsirisSystem.ReportError(jsonNode.ToJsonString());
+        //         OsirisSystem.ReportError("Snapshot json:");
+        //         OsirisSystem.ReportError(snapshotJson.ToJsonString());
+        //         Assert.Fail(OsirisSystem.GetErrors());
+        //     }
+        // }
         [TestMethod]
-        public void Create()
+        public void LoadAndValidate()
         {
             OsirisSystem.EnterTestMode();
-            // OsirisSystem.ReportError("bla");
-            var zaneUserId = Guid.NewGuid();
-            var jasonUserId = Guid.NewGuid();
-            var nickUserId = Guid.NewGuid();
-            var log = new AssetLog();
-            log.Add("niles_token.png", zaneUserId);
-            log.Add("niles_portrait.png", zaneUserId);
-            log.Add("dunsten_token.png", jasonUserId);
-            log.Add("dunsten_portrait.png", jasonUserId);
-            log.Add("dunsten_portrait.png", nickUserId);
-            var snapshotString = OsirisSystem.ReadFile("scripts/schemas/asset_log_example.json");
-            var jsonNode = JsonNode.Parse(snapshotString);
-            // OsirisSystem.ReportError("butts");
-            if(!PrionNode.TryFromJson(jsonNode, out PrionNode prionNode))
+            string snapshotString = OsirisSystem.ReadFile("scripts/schemas/asset_log_example.json");
+            var snapshotJson = JsonNode.Parse(snapshotString);
+            Assert.IsTrue(PrionNode.TryFromJson(snapshotJson, out PrionNode prionNode));
+            if(!SchemaManager.TryFromNode(prionNode, out AssetLog assetLog))
             {
-                Assert.Fail("Oops");
+                Assert.Fail(OsirisSystem.GetErrors());
             }
-            if(!AssetLog.TryFromNode(prionNode, out AssetLog _))
+            if(assetLog is null)
+            {
+                Assert.Fail("Asset log was null");
+            }
+            if(!SchemaManager.TryToNode(assetLog, out PrionNode _))
             {
                 Assert.Fail(OsirisSystem.GetErrors());
             }

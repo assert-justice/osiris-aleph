@@ -136,6 +136,16 @@ namespace Prion
         }
         static bool TryValidateNode(PrionNode schemaNode, PrionNode userNode, out string error)
         {
+            if(schemaNode == null)
+            {
+                error = "null schema node";
+                return false;
+            }
+            if(userNode == null)
+            {
+                error = "null user node";
+                return false;
+            }
             if(schemaNode.Type == PrionType.String)
             {
                 string schema = schemaNode.ToString();
