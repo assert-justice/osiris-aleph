@@ -1,0 +1,19 @@
+{
+    "handout_id": "guid:5971992b-e34c-46dc-bb61-d808c3493633",
+    "display_name?": "[Mysterious Note]",
+    "image_filename?": "torn_letter.png",
+    "text?": "The text is weathered and hard to read.",
+    "visible_to": [
+        "guid:499d6336-92fa-4d03-8220-198695ac9308",
+        "guid:cff4f95a-6971-455a-a604-a73c123169ab",
+        "guid:c17b99fb-ea39-4489-89b2-dcc1195a5a3b",
+        "guid:67f08668-8232-4b84-9121-90a92fa70026"
+    ],
+    "owners": [
+        "guid:d84b9c2d-4738-44ce-aadc-bf3e3984ef66",
+        "guid:09520852-1d34-4a80-b6c5-ba7ad19a6f7f",
+        "guid:a306d7ed-9c53-40ab-bd5f-6c4968ed7168",
+        "guid:06f422a6-d602-46b5-b31c-a555e0e7cce5"
+    ],
+    "gm_notes?": "Lol. Lmao even."
+}

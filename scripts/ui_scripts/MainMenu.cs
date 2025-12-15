@@ -9,7 +9,15 @@ public partial class MainMenu : Control
     public override void _Ready()
     {
         base._Ready();
-        var data = new Actor();
+        var data = new HandoutData();
+        data.VisibleTo.Add(Guid.NewGuid());
+        data.VisibleTo.Add(Guid.NewGuid());
+        data.VisibleTo.Add(Guid.NewGuid());
+        data.VisibleTo.Add(Guid.NewGuid());
+        data.Owners.Add(Guid.NewGuid());
+        data.Owners.Add(Guid.NewGuid());
+        data.Owners.Add(Guid.NewGuid());
+        data.Owners.Add(Guid.NewGuid());
         var node = data.ToNode();
         var str = node.ToJson().ToJsonString();
         GD.Print(str);

@@ -5,11 +5,11 @@ using Prion;
 
 namespace Osiris
 {
-    public class AssetLog : IBaseData
+    public class AssetLogData : IBaseData
     {
         readonly Dictionary<string, HashSet<Guid>> Data = [];
-        public AssetLog(){}
-        public AssetLog(Dictionary<string, HashSet<Guid>> data)
+        public AssetLogData(){}
+        public AssetLogData(Dictionary<string, HashSet<Guid>> data)
         {
             Data = data;
         }
@@ -36,7 +36,7 @@ namespace Osiris
                 data.Add(filename, owners);
             }
             // assetLog = new(data);
-            res = new AssetLog(data) as T;
+            res = new AssetLogData(data) as T;
             return true;
         }
 

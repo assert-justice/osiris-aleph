@@ -5,7 +5,7 @@ using Prion;
 
 namespace Osiris
 {
-    public class Actor : IBaseData
+    public class ActorData : IBaseData
     {
         public readonly Guid Id;
         public string DisplayName = "[Mysterious Figure]";
@@ -15,11 +15,11 @@ namespace Osiris
         public PrionDict Stats = new();
         public string Description = "They are very mysterious.";
 
-        public Actor()
+        public ActorData()
         {
             Id = Guid.NewGuid();
         }
-        public Actor(Guid guid)
+        public ActorData(Guid guid)
         {
             Id = guid;
         }
@@ -29,16 +29,13 @@ namespace Osiris
             data = default;
             if(!node.TryAs(out PrionDict prionDict)) return false;
             if(!prionDict.TryGet("actor_id", out Guid guid)) return false;
-            Actor actor = new(guid)
+            ActorData actor = new(guid)
             {
                 DisplayName = prionDict.GetDefault("display_name?", "[Mysterious Figure]"),
                 PortraitFilename = prionDict.GetDefault("portrait_filename?", ""),
                 TokenFilename = prionDict.GetDefault("token_filename?", ""),
                 Description = prionDict.GetDefault("description?", "They are very mysterious."),
             };
-            // if (!prionDict.TryGet("controlled_by", out PrionArray controlledBy)) return false;
-            // if(!controlledBy.TryAs(out PrionGuid[] owners)) return false;
-            // actor.ControlledBy = [.. owners.Select(o => o.Value)];
             if(!prionDict.TryGetGuidHashSet("controlled_by", out actor.ControlledBy)) return false;
             if(!prionDict.TryGet("stats", out actor.Stats)) return false;
             data = actor as T;
@@ -49,11 +46,11 @@ namespace Osiris
             PrionDict prionDict = new();
             prionDict.Set("actor_id", Id);
             prionDict.Set("display_name?", DisplayName);
-            prionDict.Dict["controlled_by"] = new PrionArray([.. ControlledBy.Select(o => new PrionGuid(o))]);
             prionDict.Set("portrait_filename?", PortraitFilename);
             prionDict.Set("token_filename?", TokenFilename);
-            prionDict.Dict["stats"] = Stats;
             prionDict.Set("description?", Description);
+            prionDict.Dict["controlled_by"] = new PrionArray([.. ControlledBy.Select(o => new PrionGuid(o))]);
+            prionDict.Dict["stats"] = Stats;
             return prionDict;
         }
     }

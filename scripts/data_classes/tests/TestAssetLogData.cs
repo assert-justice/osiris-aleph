@@ -6,7 +6,7 @@ using Prion;
 namespace Osiris.Tests
 {
     [TestClass]
-    public class TestAssetLog
+    public class TestAssetLogData
     {
         // [TestMethod]
         // public void Snapshot()
@@ -41,7 +41,7 @@ namespace Osiris.Tests
             string snapshotString = OsirisSystem.ReadFile("scripts/schemas/asset_log_example.json");
             var snapshotJson = JsonNode.Parse(snapshotString);
             Assert.IsTrue(PrionNode.TryFromJson(snapshotJson, out PrionNode prionNode));
-            if(!SchemaManager.TryFromNode(prionNode, out AssetLog assetLog))
+            if(!SchemaManager.TryFromNode(prionNode, out AssetLogData assetLog))
             {
                 Assert.Fail(OsirisSystem.GetErrors());
             }

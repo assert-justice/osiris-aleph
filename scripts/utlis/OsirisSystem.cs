@@ -24,8 +24,9 @@ namespace Osiris
         public static void InitSingletons()
         {
             SchemaManager.Clear();
-            SchemaManager.AddSchema<AssetLog>("asset_log_schema.json");
-            SchemaManager.AddSchema<Actor>("actor_schema.json");
+            SchemaManager.AddSchema<AssetLogData>("asset_log_schema.json");
+            SchemaManager.AddSchema<ActorData>("actor_schema.json");
+            SchemaManager.AddSchema<HandoutData>("handout_schema.json");
         }
         public static void EnterTestMode()
         {
