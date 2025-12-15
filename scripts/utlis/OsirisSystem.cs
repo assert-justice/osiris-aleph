@@ -18,8 +18,9 @@ namespace Osiris
         };
         static Func<string, bool> Checker = FileAccess.FileExists;
         static readonly Dictionary<string, string> MockFilesystem = [];
-        static Action<string> ErrorReporter = GD.PrintErr;
+        // static Action<string> ErrorReporter = GD.PrintErr;
         static readonly List<string> ErrorLog = [];
+        static readonly List<string> MessageLog = [];
         static bool InTestMode = false;
         public static void InitSingletons()
         {
@@ -31,6 +32,8 @@ namespace Osiris
         public static void EnterTestMode()
         {
             MockFilesystem.Clear();
+            ErrorLog.Clear();
+            MessageLog.Clear();
             if(InTestMode) return;
             InTestMode = true;
             Reader = filepath =>
@@ -49,8 +52,7 @@ namespace Osiris
             {
                 MockFilesystem.Add(filepath, contents);
             };
-            ErrorLog.Clear();
-            ErrorReporter = s => {};
+            // ErrorReporter = s => {};
             InitSingletons();
         }
         public static string ConvertPath(string filepath)
@@ -73,13 +75,22 @@ namespace Osiris
         public static void ReportError(string message)
         {
             ErrorLog.Add(message);
-            ErrorReporter(message);
+            if(!InTestMode) GD.PrintErr(message);
         }
         public static bool HasErrors()
         {
             return ErrorLog.Count > 0;
         }
         public static string GetErrors()
+        {
+            return string.Join("\n", ErrorLog);
+        }
+        public static void Log(string message)
+        {
+            MessageLog.Add(message);
+            if(!InTestMode) GD.Print(message);
+        }
+        public static string GetLogs()
         {
             return string.Join("\n", ErrorLog);
         }
