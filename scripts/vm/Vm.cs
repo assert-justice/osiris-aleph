@@ -1,15 +1,22 @@
+using System;
+using Jint;
+
 namespace Osiris.Vm
 {
     public class Vm
     {
-        public static void Example()
+        public static void JintExample()
         {
-            var eng = IronPython.Hosting.Python.CreateEngine();
-            var scope = eng.CreateScope();
-            string src = OsirisSystem.ReadFile("scripts/vm/python_scripts/example.py");
-            eng.Execute(src, scope);
-            dynamic greetings = scope.GetVariable("greetings");
-            OsirisSystem.Log(greetings("world"));
+            var engine = new Engine()
+                .SetValue("log", new Action<string>(OsirisSystem.Log));
+                
+            engine.Execute(@"
+                function hello() { 
+                    log('Hello World');
+                };
+            
+                hello();
+            ");
         }
     }
 }

@@ -6,7 +6,7 @@
     <RootNamespace>OsirisAleph</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="IronPython" Version="3.4.2" />
+    <PackageReference Include="Jint" Version="4.4.2" />
     <PackageReference Include="MSTest" Version="3.2.0" />
     <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" Version="17.10.1" />
 </ItemGroup>
