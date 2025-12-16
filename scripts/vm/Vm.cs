@@ -1,47 +1,40 @@
 using System;
 using Jint;
 using Jint.Native;
-using Jint.Runtime.Modules;
 
 namespace Osiris.Vm
 {
     public class Vm
     {
-        readonly Jint.Engine JsEngine;
+        readonly Engine JsEngine;
         public Vm()
         {
             // Init Engine
-            // string path = ProjectSettings.GlobalizePath("res://scripts/vm/js_scripts");
-            Options options = new();
-            options.LimitMemory(4_000_000); // limit memory usage to 4 mb. pretty conservative, will likely need to go up
-            options.TimeoutInterval(TimeSpan.FromMilliseconds(500)); // limit timeout to 500ms. seems reasonable
-            options.Strict = true;
-            // options.EnableModules(ProjectSettings.GlobalizePath("res://scripts/vm/js_scripts"));
-            JsEngine = new Engine(options);
+            JsEngine = new Engine(options =>
+            {
+                options.LimitMemory(4_000_000); // limit memory usage to 4 mb. pretty conservative, will likely need to go up
+                options.TimeoutInterval(TimeSpan.FromMilliseconds(500)); // limit timeout to 500ms. seems reasonable
+                options.Strict = true;
+            });
 
             BindOsirisModule();
 
             string exampleSrc = OsirisSystem.ReadFile("scripts/vm/js_scripts/example.js");
             JsEngine.Modules.Add("example", exampleSrc);
             var exampleMod = JsEngine.Modules.Import("example");
-            exampleMod.Get("hello").Call();
+            // exampleMod.Get("hello").Call();
         }
         void BindOsirisModule()
         {
-            // JsEngine.SetValue("log", new Action<string>(OsirisSystem.Log));
-            // JsEngine.Modules.
+            JsObject logging = new(JsEngine);
             var fn = JsValue.FromObject(JsEngine, new Action<string>(OsirisSystem.Log));
-            // JsObject obj = new(JsEngine);
-            // Module mod = ModuleFactory.BuildJsonModule(JsEngine, obj, "temp");
-            // var ns = Module.GetModuleNamespace(mod);
-            // ns.Set(new JsString("log"), fn, mod);
-            // JsEngine.SetValue<JsValue>("temp", mod);
-            JsEngine.Modules.Add("temp", mb =>
+            logging.Set(new JsString("Log"), fn);
+            fn = JsValue.FromObject(JsEngine, new Action<string>(OsirisSystem.ReportError));
+            logging.Set(new JsString("LogError"), fn);
+            JsEngine.Modules.Add("Osiris", mb =>
             {
-                mb.ExportObject("log", new Action<string>(OsirisSystem.Log));
-                mb.ExportObject("logErr", new Action<string>(OsirisSystem.ReportError));
+                mb.ExportObject("Logging", logging);
             });
-            // JsEngine.SetValue()
         }
     }
 }

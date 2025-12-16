@@ -1,6 +1,4 @@
+import { Logging } from "Osiris";
 
-import { log, logErr } from "temp";
-export function hello(){
-    log("ffff");
-    logErr("grrrrr");
-}
+Logging.Log("yo");
+Logging.LogError("ouch");
