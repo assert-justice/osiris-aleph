@@ -1,6 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Osiris.Tests;
+namespace Osiris.DataClass.Tests;
 
 [TestClass]
 public class TestInit

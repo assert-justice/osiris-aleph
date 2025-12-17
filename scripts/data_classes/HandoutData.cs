@@ -3,55 +3,53 @@ using System.Collections.Generic;
 using System.Linq;
 using Prion;
 
-namespace Osiris
+namespace Osiris.DataClass;
+public class HandoutData : IDataClass
 {
-    public class HandoutData : IBaseData
+    public readonly Guid Id;
+    public string DisplayName = "[Mysterious Note]";
+    public string ImageFilename = "";
+    public string Text = "";
+    public HashSet<Guid> VisibleTo = [];
+    public HashSet<Guid> Owners = [];
+    public string GMNotes = "";
+
+    public HandoutData()
     {
-        public readonly Guid Id;
-        public string DisplayName = "[Mysterious Note]";
-        public string ImageFilename = "";
-        public string Text = "";
-        public HashSet<Guid> VisibleTo = [];
-        public HashSet<Guid> Owners = [];
-        public string GMNotes = "";
+        Id = Guid.NewGuid();
+    }
+    public HandoutData(Guid guid)
+    {
+        Id = guid;
+    }
 
-        public HandoutData()
+    static bool IDataClass.TryFromNodeInternal<T>(PrionNode node, out T data)
+    {
+        data = default;
+        if(!node.TryAs(out PrionDict prionDict)) return false;
+        if(!prionDict.TryGet("handout_id", out Guid guid)) return false;
+        HandoutData handout = new(guid)
         {
-            Id = Guid.NewGuid();
-        }
-        public HandoutData(Guid guid)
-        {
-            Id = guid;
-        }
-
-        static bool IBaseData.TryFromNodeInternal<T>(PrionNode node, out T data)
-        {
-            data = default;
-            if(!node.TryAs(out PrionDict prionDict)) return false;
-            if(!prionDict.TryGet("handout_id", out Guid guid)) return false;
-            HandoutData handout = new(guid)
-            {
-                DisplayName = prionDict.GetDefault("display_name?", "[Mysterious Note]"),
-                ImageFilename = prionDict.GetDefault("image_filename?", ""),
-                Text = prionDict.GetDefault("text?", ""),
-                GMNotes = prionDict.GetDefault("gm_notes?", ""),
-            };
-            if(!prionDict.TryGetGuidHashSet("visible_to", out handout.VisibleTo)) return false;
-            if(!prionDict.TryGetGuidHashSet("owners", out handout.Owners)) return false;
-            data = handout as T;
-            return true;
-        }
-        public PrionNode ToNode()
-        {
-            PrionDict prionDict = new();
-            prionDict.Set("handout_id", Id);
-            prionDict.Set("display_name?", DisplayName);
-            prionDict.Set("image_filename?", ImageFilename);
-            prionDict.Set("text?", Text);
-            prionDict.Dict["visible_to"] = new PrionArray([.. VisibleTo.Select(o => new PrionGuid(o))]);
-            prionDict.Dict["owners"] = new PrionArray([.. Owners.Select(o => new PrionGuid(o))]);
-            prionDict.Set("gm_notes?", GMNotes);
-            return prionDict;
-        }
+            DisplayName = prionDict.GetDefault("display_name?", "[Mysterious Note]"),
+            ImageFilename = prionDict.GetDefault("image_filename?", ""),
+            Text = prionDict.GetDefault("text?", ""),
+            GMNotes = prionDict.GetDefault("gm_notes?", ""),
+        };
+        if(!prionDict.TryGetGuidHashSet("visible_to", out handout.VisibleTo)) return false;
+        if(!prionDict.TryGetGuidHashSet("owners", out handout.Owners)) return false;
+        data = handout as T;
+        return true;
+    }
+    public PrionNode ToNode()
+    {
+        PrionDict prionDict = new();
+        prionDict.Set("handout_id", Id);
+        prionDict.Set("display_name?", DisplayName);
+        prionDict.Set("image_filename?", ImageFilename);
+        prionDict.Set("text?", Text);
+        prionDict.Dict["visible_to"] = new PrionArray([.. VisibleTo.Select(o => new PrionGuid(o))]);
+        prionDict.Dict["owners"] = new PrionArray([.. Owners.Select(o => new PrionGuid(o))]);
+        prionDict.Set("gm_notes?", GMNotes);
+        return prionDict;
     }
 }
