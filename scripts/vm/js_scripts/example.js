@@ -1,4 +1,4 @@
 import { Logging } from "Osiris";
 
-Logging.Log("yo");
-Logging.LogError("ouch");
+Logging.Log("yo","yo","yo");
+Logging.LogError("ouchie","ma","gouchie");

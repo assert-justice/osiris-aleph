@@ -72,8 +72,13 @@ namespace Osiris
         {
             return Checker(filename);
         }
-        public static void ReportError(string message)
+        public static void ReportError<T>(params T[] messages)
         {
+            string message = "";
+            foreach (var m in messages)
+            {
+                message += m;
+            }
             ErrorLog.Add(message);
             if(!InTestMode) GD.PrintErr(message);
         }
@@ -85,8 +90,13 @@ namespace Osiris
         {
             return string.Join("\n", ErrorLog);
         }
-        public static void Log(string message)
+        public static void Log<T>(params T[] messages)
         {
+            string message = "";
+            foreach (var m in messages)
+            {
+                message += m;
+            }
             MessageLog.Add(message);
             if(!InTestMode) GD.Print(message);
         }
