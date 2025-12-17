@@ -9,11 +9,16 @@ namespace Prion
         public readonly string Version;
         readonly PrionNode SchemaNode;
         static readonly Dictionary<string, PrionType> StringLookup = [];
+        static PrionSchemaManager SchemaManager;
         PrionSchema(string name, string version, PrionNode schemaNode)
         {
             Name = name;
             Version = version;
             SchemaNode = schemaNode;
+        }
+        public static void SetManager(PrionSchemaManager schemaManager)
+        {
+            SchemaManager = schemaManager;
         }
         public bool TryValidate(PrionNode node, out string error)
         {
@@ -150,6 +155,7 @@ namespace Prion
             {
                 string schema = schemaNode.ToString();
                 if(schema.StartsWith("enum:")) return TryValidateEnum(schema, userNode as PrionEnum, out error);
+                if(schema.StartsWith("schema:")) return TryValidateNestedSchema(schema, userNode as PrionEnum, out error);
                 else return TryValidateString(schema, userNode, out error);
             }
             else if(schemaNode.Type != userNode.Type)
@@ -220,6 +226,30 @@ namespace Prion
                 return false;
             }
             return true;
+        }
+        static bool TryValidateNestedSchema(string str, PrionNode userNode, out string error)
+        {
+            if(SchemaManager is null)
+            {
+                error = "Nested schemas are not allowed in this context.";
+                return false;
+            }
+            error = "";
+            str = str[7..]; // remove "schema:"
+            List<string> errors = ["Could not validate against any supplied schema."];
+            var schemaNames = str.Split(',').Select(n => n.Trim());
+            foreach (var schemaName in schemaNames)
+            {
+                if(!SchemaManager.SchemasByName.TryGetValue(schemaName, out PrionSchema schema))
+                {
+                    error = $"Could not find schema of name '{schemaName}'";
+                    return false;
+                }
+                if(schema.TryValidate(userNode, out error)) return true;
+                errors.Add($"Could not validate with schema {schemaName}. Error: {error}");
+            }
+            error = string.Join("\n", errors);
+            return false;
         }
         static bool TryValidateString(string schema, PrionNode userNode, out string error)
         {

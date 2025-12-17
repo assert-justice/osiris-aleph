@@ -5,14 +5,17 @@ namespace Prion;
 
 public class PrionSchemaManager
 {
-    Dictionary<Type, PrionSchema> Schemas = [];
+    readonly Dictionary<Type, PrionSchema> SchemasByType = [];
+    public readonly Dictionary<string, PrionSchema> SchemasByName = [];
     public void RegisterSchema(Type type, PrionSchema schema)
     {
-        Schemas[type] = schema;
+        PrionSchema.SetManager(this);
+        SchemasByName[schema.Name] = schema;
+        SchemasByType[type] = schema;
     }
     public bool Validate<T>(PrionNode node, out string error)
     {
-        if(!Schemas.TryGetValue(typeof(T), out PrionSchema schema))
+        if(!SchemasByType.TryGetValue(typeof(T), out PrionSchema schema))
         {
             error = $"Could not find schema for {typeof(T)}.";
             return false;
