@@ -11,7 +11,6 @@ namespace Osiris.Tests
         [TestMethod]
         public void LoadAndValidateHandout()
         {
-            OsirisSystem.EnterTestMode();
             string snapshotString = OsirisSystem.ReadFile("scripts/schemas/handout_example.json");
             var snapshotJson = JsonNode.Parse(snapshotString);
             snapshotString = snapshotJson.ToJsonString();
@@ -24,17 +23,19 @@ namespace Osiris.Tests
                 OsirisSystem.ReportError($"Unable to convert json: {snapshotJson}");
                 TestUtils.Fail();
             }
-            if(!SchemaManager.TryFromNode(prionNode, out HandoutData handout))
+            if(!OsirisSystem.SchemaManager.Validate<HandoutData>(prionNode, out string error))
             {
-                TestUtils.Fail();
+                TestUtils.Fail(error);
             }
-            if(!SchemaManager.TryToNode(handout, out PrionNode node))
+            if(!IBaseData.TryFromNode(prionNode, out HandoutData handout)) TestUtils.Fail();
+            prionNode = handout.ToNode();
+            if(!OsirisSystem.SchemaManager.Validate<HandoutData>(prionNode, out error))
             {
-                TestUtils.Fail();
+                TestUtils.Fail(error);
             }
-            if(node.ToJson().ToJsonString() != snapshotString)
+            if(prionNode.ToJson().ToJsonString() != snapshotString)
             {
-                OsirisSystem.ReportError(node.ToJson().ToJsonString());
+                OsirisSystem.ReportError(prionNode.ToJson().ToJsonString());
                 OsirisSystem.ReportError(snapshotString);
                 TestUtils.Fail();
             }

@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Nodes;
 using Godot;
+using Prion;
 
 namespace Osiris
 {
@@ -18,16 +20,26 @@ namespace Osiris
         };
         static Func<string, bool> Checker = FileAccess.FileExists;
         static readonly Dictionary<string, string> MockFilesystem = [];
-        // static Action<string> ErrorReporter = GD.PrintErr;
         static readonly List<string> ErrorLog = [];
         static readonly List<string> MessageLog = [];
         static bool InTestMode = false;
-        public static void InitSingletons()
+        public static readonly PrionSchemaManager SchemaManager = new();
+        public static void LoadSchemas()
         {
-            SchemaManager.Clear();
-            SchemaManager.AddSchema<AssetLogData>("asset_log_schema.json");
-            SchemaManager.AddSchema<ActorData>("actor_schema.json");
-            SchemaManager.AddSchema<HandoutData>("handout_schema.json");
+            (Type, string)[] schemaFiles = [
+                (typeof(ActorData), "actor_schema.json"),
+                (typeof(AssetLogData), "asset_log_schema.json"),
+                (typeof(HandoutData), "handout_schema.json"),
+                (typeof(HandoutData), "handout_schema.json"),
+            ];
+            foreach (var (type, filename) in schemaFiles)
+            {
+                string schemaSrc = ReadFile($"res://scripts/schemas/{filename}");
+                var jsonNode = JsonNode.Parse(schemaSrc);
+                if(!PrionNode.TryFromJson(jsonNode, out PrionNode prionNode)) return;
+                if(!PrionSchema.TryFromNode(prionNode, out PrionSchema schema, out string _)) return;
+                SchemaManager.RegisterSchema(type, schema);
+            }
         }
         public static void EnterTestMode()
         {
@@ -52,8 +64,6 @@ namespace Osiris
             {
                 MockFilesystem.Add(filepath, contents);
             };
-            // ErrorReporter = s => {};
-            InitSingletons();
         }
         public static string ConvertPath(string filepath)
         {

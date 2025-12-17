@@ -13,7 +13,7 @@ namespace Osiris
         {
             Data = data;
         }
-        static bool IBaseData.TryFromNode<T>(PrionNode node, out T res)
+        static bool IBaseData.TryFromNodeInternal<T>(PrionNode node, out T res)
         {
             res = default;
             // return true;

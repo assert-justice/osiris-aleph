@@ -2,6 +2,7 @@
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Osiris;
+using Prion;
 
 public static class TestUtils
 {
@@ -15,8 +16,9 @@ public static class TestUtils
         string filepath = $"../../../../../{filename}";
         return File.Exists(filepath);
     }
-    public static void Fail()
+    public static void Fail(string message = null)
     {
+        if(message is not null) OsirisSystem.ReportError(message);
         Assert.Fail(OsirisSystem.GetErrors());
     }
 }

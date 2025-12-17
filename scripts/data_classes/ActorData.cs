@@ -24,7 +24,7 @@ namespace Osiris
             Id = guid;
         }
 
-        static bool IBaseData.TryFromNode<T>(PrionNode node, out T data)
+        static bool IBaseData.TryFromNodeInternal<T>(PrionNode node, out T data)
         {
             data = default;
             if(!node.TryAs(out PrionDict prionDict)) return false;

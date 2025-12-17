@@ -5,6 +5,10 @@ namespace Osiris
     public interface IBaseData
     {
         public PrionNode ToNode();
-        public abstract static bool TryFromNode<T>(PrionNode node, out T data) where T : class, IBaseData;
+        abstract static bool TryFromNodeInternal<T>(PrionNode node, out T data) where T : class, IBaseData;
+        public static bool TryFromNode<T>(PrionNode node, out T data) where T : class, IBaseData
+        {
+            return T.TryFromNodeInternal(node, out data);
+        }
     }
 }

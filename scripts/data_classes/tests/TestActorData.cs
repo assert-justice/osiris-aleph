@@ -11,7 +11,6 @@ namespace Osiris.Tests
         [TestMethod]
         public void LoadAndValidateActor()
         {
-            OsirisSystem.EnterTestMode();
             string snapshotString = OsirisSystem.ReadFile("scripts/schemas/actor_example.json");
             var snapshotJson = JsonNode.Parse(snapshotString);
             snapshotString = snapshotJson.ToJsonString();
@@ -21,20 +20,21 @@ namespace Osiris.Tests
                 {
                     OsirisSystem.ReportError(string.Join("\n", prionError.Messages));
                 }
-                OsirisSystem.ReportError($"Unable to convert json: {snapshotJson}");
-                TestUtils.Fail();
+                TestUtils.Fail($"Unable to convert json: {snapshotJson}");
             }
-            if(!SchemaManager.TryFromNode(prionNode, out ActorData actor))
+            if(!OsirisSystem.SchemaManager.Validate<ActorData>(prionNode, out string error))
             {
-                TestUtils.Fail();
+                TestUtils.Fail(error);
             }
-            if(!SchemaManager.TryToNode(actor, out PrionNode node))
+            if(!IBaseData.TryFromNode(prionNode, out ActorData actor)) TestUtils.Fail();
+            prionNode = actor.ToNode();
+            if(!OsirisSystem.SchemaManager.Validate<ActorData>(prionNode, out error))
             {
-                TestUtils.Fail();
+                TestUtils.Fail(error);
             }
-            if(node.ToJson().ToJsonString() != snapshotString)
+            if(prionNode.ToJson().ToJsonString() != snapshotString)
             {
-                OsirisSystem.ReportError(node.ToJson().ToJsonString());
+                OsirisSystem.ReportError(prionNode.ToJson().ToJsonString());
                 OsirisSystem.ReportError(snapshotString);
                 TestUtils.Fail();
             }
