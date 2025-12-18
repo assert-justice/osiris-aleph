@@ -26,13 +26,13 @@ public class PrionSchemaDict : PrionSchemaNode
 
     public override bool TryValidate(PrionNode prionNode, out string error)
     {
-        error = default;
+        error = "";
         if(!prionNode.TryAs(out PrionDict prionDict))
         {
             error = $"Expected an array, found a '{prionNode.GetType()}'.";
             return false;
         }
-        HashSet<string> keys = [.. ChildSchemas.Keys];
+        HashSet<string> keys = [.. prionDict.Dict.Keys];
         foreach (var (key, value) in ChildSchemas)
         {
             keys.Remove(key);
@@ -47,6 +47,11 @@ public class PrionSchemaDict : PrionSchemaNode
 
             if(value is PrionSchemaString str && str.Value == "dynamic") continue;
             if(!value.TryValidate(node, out error)) return false;
+        }
+        if(keys.Count > 0)
+        {
+            error = $"Unexpected extra keys in dict: {string.Join(", ", keys)}";
+            return false;
         }
         return true;
     }

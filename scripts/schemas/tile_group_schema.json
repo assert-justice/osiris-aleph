@@ -2,6 +2,7 @@
     "name": "tile_group",
     "version": "0.1.0",
     "data":{
+        "display_name?": "string",
         "bitfield": "ubigint",
         "tiles": [
             "vector2i"
