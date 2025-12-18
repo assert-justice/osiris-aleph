@@ -1,0 +1,7 @@
+{
+    "bitfield": "ubigint:0x1",
+    "tiles": [
+        "vector2i:0,0",
+        "vector2i:1,1"
+    ]
+}

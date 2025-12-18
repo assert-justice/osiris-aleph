@@ -1,0 +1,10 @@
+{
+    "name": "tile_group",
+    "version": "0.1.0",
+    "data":{
+        "bitfield": "ubigint",
+        "tiles": [
+            "vector2i"
+        ]
+    }
+}
