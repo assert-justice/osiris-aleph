@@ -73,6 +73,20 @@ namespace Prion
             value = res.Value;
             return true;
         }
+        public bool TryGet(string key, out bool value)
+        {
+            value = default;
+            if(!TryGet(key, out PrionBoolean res)) return false;
+            value = res.Value;
+            return true;
+        }
+        public bool TryGet(string key, out string value)
+        {
+            value = default;
+            if(!TryGet(key, out PrionString res)) return false;
+            value = res.Text;
+            return true;
+        }
         public T GetDefault<T>(string key, T defaultVal) where T : PrionNode
         {
             if(!TryGet(key, out T value)) return defaultVal;
@@ -94,6 +108,14 @@ namespace Prion
         public void Set(string key, Guid guid)
         {
             Dict[key] = new PrionGuid(guid);
+        }
+        public void Set(string key, bool value)
+        {
+            Dict[key] = new PrionBoolean(value);
+        }
+        public void Set<T>(string key, T value) where T : PrionNode
+        {
+            Dict[key] = value;
         }
         public void Set(string key, string str)
         {

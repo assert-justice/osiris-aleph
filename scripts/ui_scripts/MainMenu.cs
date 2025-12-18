@@ -1,11 +1,16 @@
+using System.Text.Json.Nodes;
 using Godot;
-using Osiris.Vm;
 
 public partial class MainMenu : Control
 {
     public override void _Ready()
     {
         base._Ready();
-        Vm vm = new();
+        Osiris.OsirisSystem.LoadAllSchemas();
+        // var blocker = new Osiris.DataClass.BlockerData();
+        // blocker.End = Vector2I.Right;
+        // var prionNode = blocker.ToNode();
+        // var jsonNode = prionNode.ToJson();
+        // GD.Print(jsonNode.ToJsonString());
     }
 }

@@ -1,5 +1,6 @@
 using System.Text.Json.Nodes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Prion.Schema;
 
 namespace Prion.Tests
 {
@@ -13,12 +14,13 @@ namespace Prion.Tests
             var jsonNode = JsonNode.Parse(exampleSchema);
             if(jsonNode.GetValueKind() != System.Text.Json.JsonValueKind.Object)
             {
-                Assert.Fail($"Expected json object, found '{jsonNode.GetValueKind()}'");
+                Assert.Fail($"Expected json object, found '{jsonNode.GetValueKind()}'.");
             }
-            PrionNode.TryFromJson(jsonNode, out PrionNode prionNode);
-            // Assert.Fail(exampleSchema);
-            PrionSchema.TryFromNode(prionNode, out PrionSchema _, out string error);
-            if(error != "")
+            if(!PrionNode.TryFromJson(jsonNode, out PrionNode prionNode))
+            {
+                Assert.Fail(prionNode.ToString());
+            }
+            if(!PrionSchema.TryFromPrionNode(prionNode, out PrionSchema _, out string error))
             {
                 Assert.Fail(error);
             }

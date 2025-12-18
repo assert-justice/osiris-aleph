@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
+using System.Xml.Serialization;
 using Godot;
+using Osiris.DataClass;
 using Prion;
+using Prion.Schema;
 
 namespace Osiris
 {
@@ -23,29 +26,67 @@ namespace Osiris
         static readonly List<string> ErrorLog = [];
         static readonly List<string> MessageLog = [];
         static bool InTestMode = false;
-        public static readonly PrionSchemaManager SchemaManager = new();
-        public static void LoadSchemas()
+        // public static readonly PrionSchemaManager SchemaManager = new();
+        public static void LoadAllSchemas()
         {
             (Type, string)[] schemaFiles = [
-                (typeof(ActorData), "actor_schema.json"),
-                (typeof(AssetLogData), "asset_log_schema.json"),
-                (typeof(HandoutData), "handout_schema.json"),
-                (typeof(HandoutData), "handout_schema.json"),
+                (typeof(ActorData), "actor"),
+                (typeof(AssetLogData), "asset_log"),
+                (typeof(BlockerData), "blocker"),
+                (typeof(HandoutData), "handout"),
             ];
-            foreach (var (type, filename) in schemaFiles)
+            foreach (var (type, name) in schemaFiles)
             {
-                string schemaSrc = ReadFile($"res://scripts/schemas/{filename}");
-                var jsonNode = JsonNode.Parse(schemaSrc);
-                if(!PrionNode.TryFromJson(jsonNode, out PrionNode prionNode)) return;
-                if(!PrionSchema.TryFromNode(prionNode, out PrionSchema schema, out string _)) return;
-                SchemaManager.RegisterSchema(type, schema);
+                LoadSchema(type, name);
+                // string path = $"res://scripts/schemas/{filename}";
+                // if (!FileExists(path))
+                // {
+                //     ReportError($"Invalid path '{path}'");
+                //     continue;
+                // }
+                // string schemaSrc = ReadFile(path);
+                // var jsonNode = JsonNode.Parse(schemaSrc);
+                // if(!PrionNode.TryFromJson(jsonNode, out PrionNode prionNode))
+                // {
+                //     ReportError($"Failed to parse json at path '{path}'. Error: {prionNode}");
+                //     continue;
+                // }
+                // if(!PrionSchema.TryFromPrionNode(prionNode, out PrionSchema prionSchema, out string error))
+                // {
+                //     ReportError(error);
+                //     continue;
+                // }
+                // PrionSchemaManager.RegisterSchema(type, prionSchema);
             }
+        }
+        public static void LoadSchema(Type type, string name)
+        {
+            string path = $"res://scripts/schemas/{name}_schema.json";
+            if (!FileExists(path))
+            {
+                ReportError($"Invalid path '{path}'");
+                return;
+            }
+            string schemaSrc = ReadFile(path);
+            var jsonNode = JsonNode.Parse(schemaSrc);
+            if(!PrionNode.TryFromJson(jsonNode, out PrionNode prionNode))
+            {
+                ReportError($"Failed to parse json at path '{path}'. Error: {prionNode}");
+                return;
+            }
+            if(!PrionSchema.TryFromPrionNode(prionNode, out PrionSchema prionSchema, out string error))
+            {
+                ReportError(error);
+                return;
+            }
+            PrionSchemaManager.RegisterSchema(type, prionSchema);
         }
         public static void EnterTestMode()
         {
             MockFilesystem.Clear();
             ErrorLog.Clear();
             MessageLog.Clear();
+            PrionSchemaManager.Clear();
             if(InTestMode) return;
             InTestMode = true;
             Reader = filepath =>

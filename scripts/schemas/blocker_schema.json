@@ -1,0 +1,11 @@
+{
+    "name": "blocker",
+    "version": "0.1.0",
+    "data": {
+        "start": "vector2i",
+        "end": "vector2i",
+        "status": "schema_enum: wall, open, closed, locked",
+        "opaque?": "boolean",
+        "blocks_projectiles?": "boolean"
+    }
+}

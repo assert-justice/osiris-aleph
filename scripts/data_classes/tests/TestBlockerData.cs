@@ -3,15 +3,20 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Osiris.DataClass.Tests;
 
 [TestClass]
-public class TestActorData : TestDataClass<ActorData>
+public class TestBlockerData : TestDataClass<BlockerData>
 {
-    public TestActorData() : base("actor"){}
+    public TestBlockerData() : base("blocker"){}
 
     [TestMethod]
-    public void LoadAndValidateActor()
+    public void LoadAndValidateBlocker()
     {
         LoadAndValidate();
-        // string snapshotString = OsirisSystem.ReadFile("scripts/schemas/actor_example.json");
+        // foreach (var (name, schema) in OsirisSystem.SchemaManager.SchemasByName)
+        // {
+        //     OsirisSystem.ReportError($"name: {name}, schema: {schema}");
+        // }
+        // TestUtils.Fail("wtf");
+        // string snapshotString = OsirisSystem.ReadFile("scripts/schemas/blocker_example.json");
         // var snapshotJson = JsonNode.Parse(snapshotString);
         // snapshotString = snapshotJson.ToJsonString();
         // if(!PrionNode.TryFromJson(snapshotJson, out PrionNode prionNode))
@@ -22,13 +27,13 @@ public class TestActorData : TestDataClass<ActorData>
         //     }
         //     TestUtils.Fail($"Unable to convert json: {snapshotJson}");
         // }
-        // if(!OsirisSystem.SchemaManager.Validate<ActorData>(prionNode, out string error))
+        // if(!OsirisSystem.SchemaManager.Validate<BlockerData>(prionNode, out string error))
         // {
         //     TestUtils.Fail(error);
         // }
-        // if(!IDataClass.TryFromNode(prionNode, out ActorData actor)) TestUtils.Fail();
-        // prionNode = actor.ToNode();
-        // if(!OsirisSystem.SchemaManager.Validate<ActorData>(prionNode, out error))
+        // if(!IDataClass.TryFromNode(prionNode, out BlockerData blocker)) TestUtils.Fail();
+        // prionNode = blocker.ToNode();
+        // if(!OsirisSystem.SchemaManager.Validate<BlockerData>(prionNode, out error))
         // {
         //     TestUtils.Fail(error);
         // }

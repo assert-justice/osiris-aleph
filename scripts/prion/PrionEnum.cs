@@ -5,15 +5,11 @@ using System.Text.Json.Nodes;
 
 namespace Prion
 {
-    public class PrionEnum: PrionNode
+    public class PrionEnum(HashSet<string> options, string value) : PrionNode(PrionType.Enum)
     {
-        public readonly HashSet<string> Options;
-        string Value;
-        PrionEnum(HashSet<string> options, string value): base((PrionType.Enum))
-        {
-            Options = options;
-            Value = value;
-        }
+        public readonly HashSet<string> Options = options;
+        string Value = value;
+
         public override JsonNode ToJson()
         {
             return JsonNode.Parse($"\"{ToString()}\"");
@@ -31,19 +27,19 @@ namespace Prion
             var sections = value.Split(':').Select(s => s.Trim()).ToArray();
             if(sections.Length != 3)
             {
-                node = new PrionError($"Could not parse enum.");
+                node = new PrionError($"Could not parse enum. Expected 3 sections, found {sections.Length}");
                 return false;
             }
             if (sections[0] != "enum")
             {
-                node = new PrionError($"enum signature not present at start of string '{value}'.");
+                node = new PrionError($"Enum signature not present at start of string '{value}'.");
                 return false;
             }
             var optionStrings = sections[1].Split(',').Select(s => s.Trim()).ToArray();
             HashSet<string> options = [.. optionStrings];
             if(optionStrings.Length != options.Count)
             {
-                node = new PrionError($"enum options contain duplicates.");
+                node = new PrionError($"Enum options contain duplicates.");
                 return false;
             }
             foreach (var option in options)
@@ -52,7 +48,7 @@ namespace Prion
                 {
                     if(!PrionParseUtils.IsAlphanumericOrUnderscore(c))
                     {
-                        node = new PrionError($"unexpected character '{c}' in enum option '{option}'. only alphanumeric characters or underscores are allowed.");
+                        node = new PrionError($"Unexpected character '{c}' in enum option '{option}'. only alphanumeric characters or underscores are allowed.");
                         return false;
                     }
                 }
@@ -60,7 +56,7 @@ namespace Prion
             string selected = sections[2];
             if (!options.Contains(selected))
             {
-                node = new PrionError($"enum options '{string.Join(", ", options)}' do not contain selected option '{selected}'.");
+                node = new PrionError($"Enum options '{string.Join(", ", options)}' do not contain selected option '{selected}'.");
                 return false;
             }
             node = new PrionEnum(options, selected);

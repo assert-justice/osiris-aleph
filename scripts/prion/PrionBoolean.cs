@@ -8,11 +8,11 @@ namespace Prion
 
         public override JsonNode ToJson()
         {
-            throw new System.NotImplementedException();
+            return JsonNode.Parse(ToString());
         }
         public override string ToString()
         {
-            throw new System.NotImplementedException();
+            return Value ? "true" : "false";
         }
     }
 }
