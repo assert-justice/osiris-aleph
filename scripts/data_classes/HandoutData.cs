@@ -4,7 +4,7 @@ using System.Linq;
 using Prion;
 
 namespace Osiris.DataClass;
-public class HandoutData : IDataClass
+public class HandoutData : IDataClass<HandoutData>
 {
     public readonly Guid Id;
     public string DisplayName = "[Mysterious Note]";
@@ -23,21 +23,20 @@ public class HandoutData : IDataClass
         Id = guid;
     }
 
-    static bool IDataClass.TryFromNodeInternal<T>(PrionNode node, out T data)
+    public static bool TryFromNode(PrionNode node, out HandoutData data)
     {
         data = default;
         if(!node.TryAs(out PrionDict prionDict)) return false;
         if(!prionDict.TryGet("handout_id", out Guid guid)) return false;
-        HandoutData handout = new(guid)
+        data = new(guid)
         {
             DisplayName = prionDict.GetDefault("display_name?", "[Mysterious Note]"),
             ImageFilename = prionDict.GetDefault("image_filename?", ""),
             Text = prionDict.GetDefault("text?", ""),
             GMNotes = prionDict.GetDefault("gm_notes?", ""),
         };
-        if(!prionDict.TryGetGuidHashSet("visible_to", out handout.VisibleTo)) return false;
-        if(!prionDict.TryGetGuidHashSet("owners", out handout.Owners)) return false;
-        data = handout as T;
+        if(!prionDict.TryGetGuidHashSet("visible_to", out data.VisibleTo)) return false;
+        if(!prionDict.TryGetGuidHashSet("owners", out data.Owners)) return false;
         return true;
     }
     public PrionNode ToNode()

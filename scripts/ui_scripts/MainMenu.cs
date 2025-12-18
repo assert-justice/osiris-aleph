@@ -10,12 +10,18 @@ public partial class MainMenu : Control
         // Osiris.OsirisSystem.LoadAllSchemas();
         // var blocker = new Osiris.DataClass.BlockerData();
         // blocker.End = Vector2I.Right;
-        var obj = new TileGroupData();
-        obj.Bitfield.SetBit(0, true);
-        obj.Tiles.Add(Vector2I.Zero);
-        obj.Tiles.Add(Vector2I.One);
-        var prionNode = obj.ToNode();
-        var jsonNode = prionNode.ToJson();
-        GD.Print(jsonNode.ToJsonString());
+        // var obj = new TileGroupData();
+        // obj.Bitfield.SetBit(0, true);
+        // obj.Tiles.Add(Vector2I.Zero);
+        // obj.Tiles.Add(Vector2I.One);
+        // var prionNode = obj.ToNode();
+        // var jsonNode = prionNode.ToJson();
+        // GD.Print(jsonNode.ToJsonString());
+        var obj = new Prion.Node.PrionString("hello world");
+        GD.Print(obj);
+        var str = obj.ToString();
+        GD.Print(str);
+        var json = obj.ToJson();
+        GD.Print(json);
     }
 }

@@ -5,7 +5,7 @@ using Prion;
 
 namespace Osiris.DataClass;
 
-public class TileGroupData : IDataClass
+public class TileGroupData : IDataClass<TileGroupData>
 {
 	public string DisplayName = "";
 	public readonly PrionUBigInt Bitfield = new();
@@ -17,9 +17,10 @@ public class TileGroupData : IDataClass
 		Bitfield = bitfield;
 		Tiles = tiles;
 	}
-	static bool IDataClass.TryFromNodeInternal<T>(PrionNode node, out T data)
-	{
-		data = default;
+
+    public static bool TryFromNode(PrionNode node, out TileGroupData data)
+    {
+        data = default;
 		if(!node.TryAs(out PrionDict dict)) return false;
 		string name = dict.GetDefault("display_name?", "");
 		if(!dict.TryGet("bitfield", out PrionUBigInt bitfield)) return false;
@@ -30,11 +31,9 @@ public class TileGroupData : IDataClass
 			if(!tile.TryAs(out PrionVector2I v)) return false;
 			tiles.Add(new(v.X, v.Y));
 		}
-		TileGroupData tileGroup = new(name, bitfield, tiles);
-		data = tileGroup as T;
+		data = new(name, bitfield, tiles);
 		return true;
-	}
-
+    }
 	public PrionNode ToNode()
 	{
 		PrionDict dict = new();

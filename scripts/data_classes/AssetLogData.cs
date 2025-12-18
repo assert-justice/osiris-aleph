@@ -4,7 +4,7 @@ using System.Linq;
 using Prion;
 
 namespace Osiris.DataClass;
-public class AssetLogData : IDataClass
+public class AssetLogData : IDataClass<AssetLogData>
 {
     readonly Dictionary<string, HashSet<Guid>> Data = [];
     public AssetLogData(){}
@@ -12,13 +12,12 @@ public class AssetLogData : IDataClass
     {
         Data = data;
     }
-    static bool IDataClass.TryFromNodeInternal<T>(PrionNode node, out T res)
+    public static bool TryFromNode(PrionNode node, out AssetLogData data)
     {
-        res = default;
-        // return true;
+        data = default;
         if(node.Type != PrionType.Array) return false;
         var arr = node as PrionArray;
-        Dictionary<string, HashSet<Guid>> data = [];
+        Dictionary<string, HashSet<Guid>> logs = [];
         foreach (var item in arr.Array)
         {
             if(item.Type != PrionType.Dict) return false;
@@ -32,13 +31,11 @@ public class AssetLogData : IDataClass
                 if(ownerNode.Type != PrionType.Guid) return false;
                 owners.Add((ownerNode as PrionGuid).Value);
             }
-            data.Add(filename, owners);
+            logs.Add(filename, owners);
         }
-        // assetLog = new(data);
-        res = new AssetLogData(data) as T;
+        data = new AssetLogData(logs);
         return true;
     }
-
     public PrionNode ToNode()
     {
         PrionArray array = new();

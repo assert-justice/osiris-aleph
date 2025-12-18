@@ -4,7 +4,7 @@ using Prion;
 
 namespace Osiris.DataClass;
 
-public class BlockerData : IDataClass
+public class BlockerData : IDataClass<BlockerData>
 {
     public enum BlockerStatus
     {
@@ -26,21 +26,20 @@ public class BlockerData : IDataClass
         "locked" => BlockerStatus.Locked,
         _ => throw new ArgumentOutOfRangeException(status, $"Not expected status value: {status}"),
     };
-    static bool IDataClass.TryFromNodeInternal<T>(PrionNode node, out T data)
+    public static bool TryFromNode(PrionNode node, out BlockerData data)
     {
         data = default;
         if(!node.TryAs(out PrionDict dict)) return false;
-        BlockerData blocker = new();
+        data = new();
         if(!dict.TryGet("start", out PrionVector2I v2i)) return false;
-        blocker.Start = new(v2i.X, v2i.Y);
+        data.Start = new(v2i.X, v2i.Y);
         if(!dict.TryGet("end", out v2i)) return false;
-        blocker.End = new(v2i.X, v2i.Y);
+        data.End = new(v2i.X, v2i.Y);
         if(!dict.TryGet("status", out PrionEnum prionEnum)) return false;
         //  status = prionEnum.GetValue();
-        blocker.Status = StatusFromString(prionEnum.GetValue());
-        if(!dict.TryGet("opaque?", out blocker.Opaque)) return false;
-        if(!dict.TryGet("blocks_projectiles?", out blocker.BlocksProjectiles)) return false;
-        data = blocker as T;
+        data.Status = StatusFromString(prionEnum.GetValue());
+        if(!dict.TryGet("opaque?", out data.Opaque)) return false;
+        if(!dict.TryGet("blocks_projectiles?", out data.BlocksProjectiles)) return false;
         return true;
     }
     public PrionNode ToNode()
@@ -53,4 +52,5 @@ public class BlockerData : IDataClass
         dict.Set("blocks_projectiles?", BlocksProjectiles);
         return dict;
     }
+
 }

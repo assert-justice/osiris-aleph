@@ -8,7 +8,7 @@ using Prion.Schema;
 namespace Osiris.DataClass.Tests;
 
 // [TestClass]
-public abstract class TestDataClass<T> where T : class, IDataClass
+public abstract class TestDataClass<T> where T : class, IDataClass<T>
 {
     protected PrionNode Data;
     protected string ExampleString;
@@ -53,7 +53,8 @@ public abstract class TestDataClass<T> where T : class, IDataClass
         {
             TestUtils.Fail($"Failed to parse json at path '{path}'. Error: {ExampleNode}");
         }
-        if(!IDataClass.TryFromNode(ExampleNode, out T data)) TestUtils.Fail();
+        // if(!IDataClass.TryFromNode(ExampleNode, out T data)) TestUtils.Fail();
+        if(!T.TryFromNode(ExampleNode, out T data)) TestUtils.Fail();
         ExampleNode = data.ToNode();
         if(!PrionSchemaManager.Validate(DataType, ExampleNode, out string error))
         {

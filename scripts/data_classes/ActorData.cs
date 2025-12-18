@@ -4,7 +4,7 @@ using System.Linq;
 using Prion;
 
 namespace Osiris.DataClass;
-public class ActorData : IDataClass
+public class ActorData : IDataClass<ActorData>
 {
     public readonly Guid Id;
     public string DisplayName = "[Mysterious Figure]";
@@ -22,22 +22,20 @@ public class ActorData : IDataClass
     {
         Id = guid;
     }
-
-    static bool IDataClass.TryFromNodeInternal<T>(PrionNode node, out T data)
+    public static bool TryFromNode(PrionNode node, out ActorData data)
     {
         data = default;
         if(!node.TryAs(out PrionDict prionDict)) return false;
         if(!prionDict.TryGet("actor_id", out Guid guid)) return false;
-        ActorData actor = new(guid)
+        data = new(guid)
         {
             DisplayName = prionDict.GetDefault("display_name?", "[Mysterious Figure]"),
             PortraitFilename = prionDict.GetDefault("portrait_filename?", ""),
             TokenFilename = prionDict.GetDefault("token_filename?", ""),
             Description = prionDict.GetDefault("description?", "They are very mysterious."),
         };
-        if(!prionDict.TryGetGuidHashSet("controlled_by", out actor.ControlledBy)) return false;
-        if(!prionDict.TryGet("stats", out actor.Stats)) return false;
-        data = actor as T;
+        if(!prionDict.TryGetGuidHashSet("controlled_by", out data.ControlledBy)) return false;
+        if(!prionDict.TryGet("stats", out data.Stats)) return false;
         return true;
     }
     public PrionNode ToNode()
