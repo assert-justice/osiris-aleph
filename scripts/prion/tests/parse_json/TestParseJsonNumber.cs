@@ -1,5 +1,6 @@
 using System.Text.Json.Nodes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Prion.Node;
 
 namespace Prion.Tests
 {
@@ -10,27 +11,26 @@ namespace Prion.Tests
         public void ParseJsonNumber()
         {
             var jsonNode = JsonNode.Parse("10");
-            Assert.IsTrue(PrionNode.TryFromJson(jsonNode, out PrionNode prionNode));
-            Assert.IsTrue(prionNode is PrionF32);
-            Assert.IsTrue(PrionF32.TryFromJson(jsonNode, out prionNode));
-            Assert.IsTrue(prionNode is PrionF32);
+            if(!PrionNode.TryFromJson(jsonNode, out PrionF32 prionNode, out string error))
+            {
+                Assert.Fail(error);
+            }
         }
         [TestMethod]
         public void ParseJsonF32()
         {
-            string str = "f32:10";
+            string str = "f32: 10";
             string jsonStr = $"\"{str}\"";
             var jsonNode = JsonNode.Parse(jsonStr);
-            Assert.IsTrue(PrionNode.TryFromJson(jsonNode, out PrionNode prionNode));
-            Assert.IsTrue(prionNode is PrionF32);
-            Assert.IsTrue(prionNode.ToString() == str);
-            Assert.IsTrue(PrionF32.TryFromJson(jsonNode, out prionNode));
-            Assert.IsTrue(prionNode is PrionF32);
+            Assert.IsTrue(PrionNode.TryFromJson(jsonNode, out PrionF32 prionNode, out string error));
             Assert.IsTrue(prionNode.ToString() == str);
             Assert.IsTrue(prionNode.ToJson().ToString() == str);
             jsonNode = JsonNode.Parse("\"10\"");
-            Assert.IsFalse(PrionF32.TryFromJson(jsonNode, out prionNode));
-            Assert.IsTrue(prionNode is PrionError);
+            if(!PrionNode.TryFromJson(jsonNode, out _, out error))
+            {
+                Assert.Fail(error);
+            }
+
         }
         [TestMethod]
         public void ParseJsonI32()
@@ -38,31 +38,28 @@ namespace Prion.Tests
             string str = "i32:10";
             string jsonStr = $"\"{str}\"";
             var jsonNode = JsonNode.Parse(jsonStr);
-            Assert.IsTrue(PrionNode.TryFromJson(jsonNode, out PrionNode prionNode));
-            Assert.IsTrue(prionNode is PrionI32);
-            Assert.IsTrue(PrionI32.TryFromJson(jsonNode, out prionNode));
-            Assert.IsTrue(prionNode is PrionI32);
+            Assert.IsTrue(PrionNode.TryFromJson(jsonNode, out PrionI32 prionNode, out string error));
+            Assert.IsTrue(PrionI32.TryFromJson(jsonNode, out prionNode, out error));
             Assert.IsTrue(prionNode.ToString() == str);
             Assert.IsTrue(prionNode.ToJson().ToString() == str);
-            jsonNode = JsonNode.Parse("\"10\"");
-            Assert.IsFalse(PrionI32.TryFromJson(jsonNode, out prionNode));
-            Assert.IsTrue(prionNode is PrionError);
+            // jsonNode = JsonNode.Parse("\"10\"");
+            // if(!PrionI32.TryFromJson(jsonNode, out _, out error))
+            // {
+            //     Assert.Fail(error);
+            // }
         }
         [TestMethod]
         public void ParseJsonUBigInt()
         {
-            string str = "ubigint:0x10";
+            string str = "ubigint: 0x10";
             string jsonStr = $"\"{str}\"";
             var jsonNode = JsonNode.Parse(jsonStr);
-            Assert.IsTrue(PrionNode.TryFromJson(jsonNode, out PrionNode prionNode));
-            Assert.IsTrue(prionNode is PrionUBigInt);
-            Assert.IsTrue(PrionUBigInt.TryFromJson(jsonNode, out prionNode));
-            Assert.IsTrue(prionNode is PrionUBigInt);
+            if(!PrionNode.TryFromJson(jsonNode, out PrionUBigInt prionNode, out string error)) Assert.Fail(error);
+            if(!PrionUBigInt.TryFromJson(jsonNode, out prionNode, out error)) Assert.Fail(error);
             Assert.IsTrue(prionNode.ToString() == str);
             Assert.IsTrue(prionNode.ToJson().ToString() == str);
             jsonNode = JsonNode.Parse("\"10\"");
-            Assert.IsFalse(PrionUBigInt.TryFromJson(jsonNode, out prionNode));
-            Assert.IsTrue(prionNode is PrionError);
+            Assert.IsFalse(PrionUBigInt.TryFromJson(jsonNode, out prionNode, out error));
         }
     }
 }

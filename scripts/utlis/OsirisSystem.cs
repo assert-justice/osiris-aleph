@@ -5,6 +5,7 @@ using System.Xml.Serialization;
 using Godot;
 using Osiris.DataClass;
 using Prion;
+using Prion.Node;
 using Prion.Schema;
 
 namespace Osiris
@@ -69,12 +70,12 @@ namespace Osiris
             }
             string schemaSrc = ReadFile(path);
             var jsonNode = JsonNode.Parse(schemaSrc);
-            if(!PrionNode.TryFromJson(jsonNode, out PrionNode prionNode))
+            if(!PrionNode.TryFromJson(jsonNode, out PrionNode prionNode, out string error))
             {
-                ReportError($"Failed to parse json at path '{path}'. Error: {prionNode}");
+                ReportError($"Failed to parse json at path '{path}'. Error: {error}");
                 return;
             }
-            if(!PrionSchema.TryFromPrionNode(prionNode, out PrionSchema prionSchema, out string error))
+            if(!PrionSchema.TryFromPrionNode(prionNode, out PrionSchema prionSchema, out error))
             {
                 ReportError(error);
                 return;

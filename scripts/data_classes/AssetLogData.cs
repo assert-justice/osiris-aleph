@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Prion;
+using Prion.Node;
 
 namespace Osiris.DataClass;
 public class AssetLogData : IDataClass<AssetLogData>
@@ -15,22 +15,15 @@ public class AssetLogData : IDataClass<AssetLogData>
     public static bool TryFromNode(PrionNode node, out AssetLogData data)
     {
         data = default;
-        if(node.Type != PrionType.Array) return false;
-        var arr = node as PrionArray;
+        // if(node.Type != PrionType.Array) return false;
+        // var arr = node as PrionArray;
+        if(!node.TryAs(out PrionArray prionArray)) return false;
         Dictionary<string, HashSet<Guid>> logs = [];
-        foreach (var item in arr.Array)
+        foreach (var item in prionArray.Value)
         {
-            if(item.Type != PrionType.Dict) return false;
-            var dict = item as PrionDict;
-            if(!dict.TryGet("filename", out PrionString filenameNode)) return false;
-            string filename = filenameNode.Text;
-            if(!dict.TryGet("owners", out PrionArray ownersNode)) return false;
-            HashSet<Guid> owners = [];
-            foreach (var ownerNode in ownersNode.Array)
-            {
-                if(ownerNode.Type != PrionType.Guid) return false;
-                owners.Add((ownerNode as PrionGuid).Value);
-            }
+            if(!item.TryAs(out PrionDict dict)) return false;
+            if(!dict.TryGet("filename", out string filename)) return false;
+            if(!dict.TryGet("owners", out HashSet<Guid> owners)) return false;
             logs.Add(filename, owners);
         }
         data = new AssetLogData(logs);
@@ -42,14 +35,14 @@ public class AssetLogData : IDataClass<AssetLogData>
         foreach (var (filename, owners) in Data)
         {
             PrionDict dict = new();
-            dict.Dict.Add("filename", PrionString.FromString(filename));
+            dict.Value.Add("filename", PrionString.FromString(filename));
             PrionArray arr = new();
             foreach (var owner in owners)
             {
-                arr.Array.Add(PrionGuid.FromGuid(owner));
+                arr.Value.Add(new PrionGuid(owner));
             }
-            dict.Dict.Add("owners", arr);
-            array.Array.Add(dict);
+            dict.Value.Add("owners", arr);
+            array.Value.Add(dict);
         }
         return array;
     }

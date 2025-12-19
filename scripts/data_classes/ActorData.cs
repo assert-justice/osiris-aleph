@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Prion;
+using Prion.Node;
 
 namespace Osiris.DataClass;
 public class ActorData : IDataClass<ActorData>
@@ -34,7 +34,7 @@ public class ActorData : IDataClass<ActorData>
             TokenFilename = prionDict.GetDefault("token_filename?", ""),
             Description = prionDict.GetDefault("description?", "They are very mysterious."),
         };
-        if(!prionDict.TryGetGuidHashSet("controlled_by", out data.ControlledBy)) return false;
+        if(!prionDict.TryGet("controlled_by", out data.ControlledBy)) return false;
         if(!prionDict.TryGet("stats", out data.Stats)) return false;
         return true;
     }
@@ -46,8 +46,8 @@ public class ActorData : IDataClass<ActorData>
         prionDict.Set("portrait_filename?", PortraitFilename);
         prionDict.Set("token_filename?", TokenFilename);
         prionDict.Set("description?", Description);
-        prionDict.Dict["controlled_by"] = new PrionArray([.. ControlledBy.Select(o => new PrionGuid(o))]);
-        prionDict.Dict["stats"] = Stats;
+        prionDict.Value["controlled_by"] = new PrionArray([.. ControlledBy.Select(o => new PrionGuid(o))]);
+        prionDict.Value["stats"] = Stats;
         return prionDict;
     }
 }

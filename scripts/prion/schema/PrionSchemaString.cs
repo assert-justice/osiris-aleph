@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Prion.Node;
 
 namespace Prion.Schema;
 
@@ -38,10 +39,15 @@ public class PrionSchemaString : PrionSchemaNode
     {
         error = default;
         if(prionNode is PrionString) return true;
-        string str = prionNode.Type.ToString().ToLower();
+        string str = prionNode.GetType().ToString().ToLower();
+        if(!PrionParseUtils.MatchStart("prion.node.prion", ref str))
+        {
+            error = "should be unreachable";
+            return false;
+        }
         if (!ValidValues.Contains(str))
         {
-            error = $"Expected a schema type, found a '{prionNode.GetType()}'.";
+            error = $"Expected a schema type, found a '{prionNode.GetType().ToString().ToLower()}'.";
             return false;
         }
         // if(!prionNode.TryAs(out PrionString prionString))

@@ -1,4 +1,5 @@
 using System;
+using Prion.Node;
 
 namespace Prion.Schema;
 
@@ -21,7 +22,7 @@ public abstract class PrionSchemaNode
         }
         else if(prionNode is PrionString prionString)
         {
-            string str = prionString.Text;
+            string str = prionString.Value;
             if (str.StartsWith("schema_enum:"))
             {
                 if(!PrionSchemaEnum.TryFromString(str, out PrionSchemaEnum prionSchemaEnum, out error)) return false;

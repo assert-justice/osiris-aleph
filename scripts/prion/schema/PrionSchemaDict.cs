@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Prion.Node;
 
 namespace Prion.Schema;
 
@@ -14,7 +15,7 @@ public class PrionSchemaDict : PrionSchemaNode
         prionSchemaDict = default;
         error = default;
         Dictionary<string, PrionSchemaNode> childSchemas = [];
-        foreach (var (key, node) in prionDict.Dict)
+        foreach (var (key, node) in prionDict.Value)
         {
             if(key.StartsWith('#')) continue;
             if(!TryFromPrionNode(node, out PrionSchemaNode prionSchemaNode, out error)) return false;
@@ -32,18 +33,18 @@ public class PrionSchemaDict : PrionSchemaNode
             error = $"Expected an array, found a '{prionNode.GetType()}'.";
             return false;
         }
-        HashSet<string> keys = [.. prionDict.Dict.Keys];
+        HashSet<string> keys = [.. prionDict.Value.Keys];
         foreach (var (key, value) in ChildSchemas)
         {
             keys.Remove(key);
             bool nullable = key.EndsWith('?');
-            if(!prionDict.Dict.TryGetValue(key, out PrionNode node))
+            if(!prionDict.Value.TryGetValue(key, out PrionNode node))
             {
                 if(nullable) continue;
                 error = $"Dict is missing key from schema '{key}'.";
                 return false;
             }
-            if(nullable && node.Type == PrionType.Null) continue;
+            if(nullable && node is PrionNull) continue;
 
             if(value is PrionSchemaString str && str.Value == "dynamic") continue;
             if(!value.TryValidate(node, out error)) return false;

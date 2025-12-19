@@ -1,5 +1,6 @@
 using System.Text.Json.Nodes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Prion.Node;
 
 namespace Prion.Tests
 {
@@ -10,14 +11,14 @@ namespace Prion.Tests
         public void ParseNull()
         {
             var jsonNode = JsonNode.Parse("null");
-            Assert.IsTrue(PrionNode.TryFromJson(jsonNode, out PrionNode prionNode));
+            Assert.IsTrue(PrionNode.TryFromJson(jsonNode, out PrionNode prionNode, out string error));
             Assert.IsTrue(prionNode is PrionNull);
         }
         [TestMethod]
         public void ParseString()
         {
             var jsonNode = JsonNode.Parse("\"test\"");
-            Assert.IsTrue(PrionNode.TryFromJson(jsonNode, out PrionNode prionNode));
+            Assert.IsTrue(PrionNode.TryFromJson(jsonNode, out PrionNode prionNode, out string error));
             Assert.IsTrue(prionNode is PrionString);
         }
         [TestMethod]
@@ -25,7 +26,7 @@ namespace Prion.Tests
         {
             string str = "10";
             var jsonNode = JsonNode.Parse(str);
-            Assert.IsTrue(PrionNode.TryFromJson(jsonNode, out PrionNode prionNode));
+            Assert.IsTrue(PrionNode.TryFromJson(jsonNode, out PrionNode prionNode, out string error));
             Assert.IsTrue(prionNode is PrionF32);
         }
         [TestMethod]
@@ -33,8 +34,8 @@ namespace Prion.Tests
         {
             var a = JsonNode.Parse("true");
             var b = JsonNode.Parse("false");
-            Assert.IsTrue(PrionNode.TryFromJson(a, out PrionNode a2));
-            Assert.IsTrue(PrionNode.TryFromJson(b, out PrionNode b2));
+            Assert.IsTrue(PrionNode.TryFromJson(a, out PrionNode a2, out string error));
+            Assert.IsTrue(PrionNode.TryFromJson(b, out PrionNode b2, out error));
             Assert.IsTrue(a2 is PrionBoolean);
             Assert.IsTrue(b2 is PrionBoolean);
         }

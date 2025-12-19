@@ -1,3 +1,5 @@
+using Prion.Node;
+
 namespace Prion.Schema;
 
 public class PrionSchema : PrionSchemaNode

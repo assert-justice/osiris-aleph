@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using System.Text.Json.Nodes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Prion.Node;
 
 namespace Prion.Tests
 {
@@ -30,25 +31,17 @@ namespace Prion.Tests
             string jsonStr = $"\"{input}\"";
             expected = $"\"{expected}\"";
             var jsonNode = JsonNode.Parse(jsonStr);
-            if(!PrionNode.TryFromJson(jsonNode, out PrionNode node))
+            if(!PrionNode.TryFromJson(jsonNode, out PrionColor node, out string error))
             {
-                Assert.Fail($"Parse failed, input: {input}, expected: {expected}, error: {node}");
-            }
-            if(node is not PrionColor)
-            {
-                Assert.Fail($"input: {input}, expected: {expected}, error: {node}");
+                Assert.Fail($"Parse failed, input: {input}, expected: {expected}, error: {error}");
             }
             if(node.ToJson().ToJsonString() != expected)
             {
                 Assert.Fail($"Mismatch detected input: {input}, expected: {expected}, received: {node.ToJson().ToJsonString()} error: {node}");
             }
-            if(!PrionColor.TryFromJson(jsonNode, out node))
+            if(!PrionColor.TryFromJson(jsonNode, out node, out error))
             {
-                Assert.Fail($"Parse failed, input: {input}, expected: {expected}, error: {node}");
-            }
-            if(node is not PrionColor)
-            {
-                Assert.Fail($"input: {input}, expected: {expected}, error: {node}");
+                Assert.Fail($"Parse failed, input: {input}, expected: {expected}, error: {error}");
             }
             if(node.ToJson().ToJsonString() != expected)
             {

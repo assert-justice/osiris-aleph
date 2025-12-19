@@ -2,38 +2,34 @@ using System.Text.Json.Nodes;
 
 namespace Prion.Node;
 
-public class PrionString : IPrionNode<PrionString>
+public class PrionString : PrionNode
 {
     public string Value = "";
     public PrionString(){}
     public PrionString(string value){Value = value;}
 
-    public static bool TryFromJson(JsonNode jsonNode, out PrionString node, out string error)
+    public static PrionString FromJson(JsonNode jsonNode)
     {
-        error = default;
         if(jsonNode.GetValueKind() == System.Text.Json.JsonValueKind.String)
         {
             if(jsonNode.AsValue().TryGetValue(out string value)){
-                node = new(value);
-                return true;
+                return new(value);
             }
         }
-        node = new(jsonNode.ToJsonString());
-        return true;
+        return new(jsonNode.ToJsonString());
+    }
+    public static PrionString FromString(string str)
+    {
+        return new(str);
     }
 
-    public static bool TryFromString(string str, out PrionString node, out string error)
+    public override JsonNode ToJson()
     {
-        throw new System.NotImplementedException();
+        return JsonNode.Parse($"\"{Value}\"");
     }
 
     public override string ToString()
     {
         return Value;
-    }
-
-    public JsonNode ToJson()
-    {
-        return JsonNode.Parse($"\"{this}\"");
     }
 }

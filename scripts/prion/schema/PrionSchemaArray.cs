@@ -1,3 +1,5 @@
+using Prion.Node;
+
 namespace Prion.Schema;
 
 public class PrionSchemaArray : PrionSchemaNode
@@ -10,12 +12,12 @@ public class PrionSchemaArray : PrionSchemaNode
     public static bool TryFromPrionArray(PrionArray prionArray, out PrionSchemaArray prionSchemaArray, out string error)
     {
         prionSchemaArray = default;
-        if(prionArray.Array.Count != 1)
+        if(prionArray.Value.Count != 1)
         {
             error = "Arrays in schemas can only have one element, the schema of all entries.";
             return false;
         }
-        if(!TryFromPrionNode(prionArray.Array[0], out PrionSchemaNode prionSchemaNode, out error)) return false;
+        if(!TryFromPrionNode(prionArray.Value[0], out PrionSchemaNode prionSchemaNode, out error)) return false;
         prionSchemaArray = new PrionSchemaArray(prionSchemaNode);
         return true;
     }
@@ -28,7 +30,7 @@ public class PrionSchemaArray : PrionSchemaNode
             error = $"Expected an array, found a '{prionNode.GetType()}'.";
             return false;
         }
-        foreach (var child in prionArray.Array)
+        foreach (var child in prionArray.Value)
         {
             if(!ChildSchema.TryValidate(child, out error)) return false;
         }

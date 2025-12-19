@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Prion.Node;
 
 namespace Prion.Tests
 {
@@ -22,9 +23,9 @@ namespace Prion.Tests
                 string[] optionStrings = [.. options];
                 string res = string.Join(", ", options);
                 res = "enum: " + res + ": " + optionStrings[index];
-                if(!PrionEnum.TryFromString(res, out PrionNode node))
+                if(!PrionEnum.TryFromString(res, out PrionEnum _, out string error))
                 {
-                    Assert.Fail($"Enum parse failed with error: {node}.");
+                    Assert.Fail($"Enum parse failed with error: {error}.");
                 }
             }
         }

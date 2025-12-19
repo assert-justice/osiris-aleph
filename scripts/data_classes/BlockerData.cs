@@ -1,6 +1,7 @@
 using System;
 using Godot;
 using Prion;
+using Prion.Node;
 
 namespace Osiris.DataClass;
 

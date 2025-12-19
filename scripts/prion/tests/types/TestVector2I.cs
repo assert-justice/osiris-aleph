@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Prion.Node;
 
 namespace Prion.Tests
 {

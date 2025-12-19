@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Prion;
+using Prion.Node;
 
 namespace Osiris.DataClass;
 public class HandoutData : IDataClass<HandoutData>
@@ -35,8 +36,8 @@ public class HandoutData : IDataClass<HandoutData>
             Text = prionDict.GetDefault("text?", ""),
             GMNotes = prionDict.GetDefault("gm_notes?", ""),
         };
-        if(!prionDict.TryGetGuidHashSet("visible_to", out data.VisibleTo)) return false;
-        if(!prionDict.TryGetGuidHashSet("owners", out data.Owners)) return false;
+        if(!prionDict.TryGet("visible_to", out data.VisibleTo)) return false;
+        if(!prionDict.TryGet("owners", out data.Owners)) return false;
         return true;
     }
     public PrionNode ToNode()
@@ -46,8 +47,8 @@ public class HandoutData : IDataClass<HandoutData>
         prionDict.Set("display_name?", DisplayName);
         prionDict.Set("image_filename?", ImageFilename);
         prionDict.Set("text?", Text);
-        prionDict.Dict["visible_to"] = new PrionArray([.. VisibleTo.Select(o => new PrionGuid(o))]);
-        prionDict.Dict["owners"] = new PrionArray([.. Owners.Select(o => new PrionGuid(o))]);
+        prionDict.Value["visible_to"] = new PrionArray([.. VisibleTo.Select(o => new PrionGuid(o))]);
+        prionDict.Value["owners"] = new PrionArray([.. Owners.Select(o => new PrionGuid(o))]);
         prionDict.Set("gm_notes?", GMNotes);
         return prionDict;
     }

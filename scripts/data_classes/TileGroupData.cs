@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Godot;
 using Prion;
+using Prion.Node;
 
 namespace Osiris.DataClass;
 
@@ -25,8 +26,8 @@ public class TileGroupData : IDataClass<TileGroupData>
 		string name = dict.GetDefault("display_name?", "");
 		if(!dict.TryGet("bitfield", out PrionUBigInt bitfield)) return false;
 		if(!dict.TryGet("tiles", out PrionArray tileArray)) return false;
-		List<Vector2I> tiles = new(tileArray.Array.Count);
-		foreach (var tile in tileArray.Array)
+		List<Vector2I> tiles = new(tileArray.Value.Count);
+		foreach (var tile in tileArray.Value)
 		{
 			if(!tile.TryAs(out PrionVector2I v)) return false;
 			tiles.Add(new(v.X, v.Y));

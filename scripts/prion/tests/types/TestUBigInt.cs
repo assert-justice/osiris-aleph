@@ -2,6 +2,7 @@
 using System;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Prion.Node;
 
 namespace Prion.Tests
 {
@@ -36,15 +37,19 @@ namespace Prion.Tests
         }
         static void DoesMatchHex(string input, string expected)
         {
-            Assert.IsTrue(PrionUBigInt.TryFromHexString(input, out PrionNode node));
-            Assert.IsTrue(node is PrionUBigInt);
-            Assert.IsTrue((node as PrionUBigInt).ToHexString() == expected);
+            if(!PrionUBigInt.TryFromHexString(input, out PrionUBigInt node, out string error))
+            {
+                Assert.Fail(error);
+            }
+            Assert.IsTrue(node.ToHexString() == expected);
         }
         static void DoesMatchBinary(string input, string expected)
         {
-            Assert.IsTrue(PrionUBigInt.TryFromBinaryString(input, out PrionNode node));
-            Assert.IsTrue(node is PrionUBigInt);
-            Assert.IsTrue((node as PrionUBigInt).ToBinaryString() == expected);
+            if(!PrionUBigInt.TryFromBinaryString(input, out PrionUBigInt node, out string error))
+            {
+                Assert.Fail(error);
+            }
+            Assert.IsTrue(node.ToBinaryString() == expected);
         }
         string GetRandomHexString()
         {

@@ -1,5 +1,6 @@
 using System.Text.Json.Nodes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Prion.Node;
 
 namespace Prion.Tests
 {
@@ -10,14 +11,13 @@ namespace Prion.Tests
         public void Create()
         {
             var jsonNode = JsonNode.Parse("{\"bite me\": \"poo\"}");
-            if(jsonNode.GetValueKind() != System.Text.Json.JsonValueKind.Object)
+            if(!PrionDict.TryFromJson(jsonNode, out PrionDict _, out string error))
             {
-                Assert.Fail($"Expected json object, found '{jsonNode.GetValueKind()}'");
+                Assert.Fail(error);
             }
-            PrionNode.TryFromJson(jsonNode, out PrionNode prionNode);
-            if(prionNode.Type != PrionType.Dict)
+            if(!PrionNode.TryFromJson(jsonNode, out PrionDict _, out error))
             {
-                Assert.Fail($"Expected dict, found '{prionNode.Type}'");
+                Assert.Fail(error);
             }
         }
     }

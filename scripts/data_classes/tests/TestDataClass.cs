@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
+using Microsoft.VisualBasic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Prion;
+using Prion.Node;
 using Prion.Schema;
 
 namespace Osiris.DataClass.Tests;
@@ -49,14 +50,13 @@ public abstract class TestDataClass<T> where T : class, IDataClass<T>
         }
         ExampleString = OsirisSystem.ReadFile(path);
         ExampleJson = JsonNode.Parse(ExampleString);
-        if(!PrionNode.TryFromJson(ExampleJson, out ExampleNode))
+        if(!PrionNode.TryFromJson(ExampleJson, out ExampleNode, out string error))
         {
-            TestUtils.Fail($"Failed to parse json at path '{path}'. Error: {ExampleNode}");
+            TestUtils.Fail($"Failed to parse json at path '{path}'. Error: {error}");
         }
-        // if(!IDataClass.TryFromNode(ExampleNode, out T data)) TestUtils.Fail();
         if(!T.TryFromNode(ExampleNode, out T data)) TestUtils.Fail();
         ExampleNode = data.ToNode();
-        if(!PrionSchemaManager.Validate(DataType, ExampleNode, out string error))
+        if(!PrionSchemaManager.Validate(DataType, ExampleNode, out error))
         {
             TestUtils.Fail(error);
         }
