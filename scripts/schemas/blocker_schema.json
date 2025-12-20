@@ -6,6 +6,6 @@
         "end": "vector2i",
         "status": "schema_enum: wall, open, closed, locked",
         "opaque?": "boolean",
-        "blocks_projectiles?": "boolean"
+        "blocks_effects?": "boolean"
     }
 }

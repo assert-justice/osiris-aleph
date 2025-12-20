@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Godot;
 using Prion.Node;
 
 namespace Osiris.DataClass.Tests;
@@ -91,8 +92,12 @@ public static class MockData
         }
         return prefix + expanded;
     }
-    public static PrionVector2I GetRandomVector2I(int minX, int maxX, int minY, int maxY)
+    public static Vector2I GetRandomVector2I(int minX, int maxX, int minY, int maxY)
     {
         return new(Rng.Next(minX, maxX), Rng.Next(minY, maxY));
+    }
+    public static bool GetRandomBool()
+    {
+        return Rng.Next(2) == 0;
     }
 }

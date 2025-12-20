@@ -3,5 +3,5 @@
     "end": "vector2i:1,0",
     "status": "enum: closed, locked, open, wall: wall",
     "opaque?": true,
-    "blocks_projectiles?": true
+    "blocks_effects?": true
 }
