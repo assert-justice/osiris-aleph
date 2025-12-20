@@ -45,7 +45,6 @@ public class PrionSchemaDict : PrionSchemaNode
                 return false;
             }
             if(nullable && node is PrionNull) continue;
-
             if(value is PrionSchemaString str && str.Value == "dynamic") continue;
             if(!value.TryValidate(node, out error)) return false;
         }

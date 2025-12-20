@@ -28,6 +28,11 @@ public abstract class PrionSchemaNode
                 if(!PrionSchemaEnum.TryFromString(str, out PrionSchemaEnum prionSchemaEnum, out error)) return false;
                 prionSchemaNode = prionSchemaEnum;
             }
+            else if (str.StartsWith("schema:"))
+            {
+                if(!PrionSchemaNested.TryFromString(str, out PrionSchemaNested prionSchemaNested, out error)) return false;
+                prionSchemaNode = prionSchemaNested;
+            }
             else
             {
                 if(!PrionSchemaString.TryFromString(str, out PrionSchemaString prionSchemaString, out error)) return false;
