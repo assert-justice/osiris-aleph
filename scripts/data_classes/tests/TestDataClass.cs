@@ -25,6 +25,11 @@ public abstract class TestDataClass<T> where T : class, IDataClass<T>
     public void Init()
     {
         OsirisSystem.EnterTestMode();
+        OsirisSystem.LoadSchema(DataType, Name);
+        foreach (var (type, name) in Dependencies)
+        {
+            OsirisSystem.LoadSchema(type, name);
+        }
     }
     [TestCleanup]
     public void Cleanup()
@@ -34,9 +39,9 @@ public abstract class TestDataClass<T> where T : class, IDataClass<T>
             TestUtils.Fail();
         }
     }
-    protected static void AddDependency(string name, Type type)
+    protected void AddDependency(string name, Type type)
     {
-        OsirisSystem.LoadSchema(type, name);
+        Dependencies.Add((type, name));
     }
     protected void LoadAndValidate()
     {
@@ -57,6 +62,20 @@ public abstract class TestDataClass<T> where T : class, IDataClass<T>
         if(!PrionSchemaManager.Validate(DataType, ExampleNode, out error))
         {
             TestUtils.Fail(error);
+        }
+    }
+    protected void Validate(T data)
+    {
+        if(!PrionSchemaManager.Validate(DataType, data.ToNode(), out string error))
+        {
+            TestUtils.Fail(error);
+        }
+    }
+    protected void MockAndValidate(Func<T> mock, int trials)
+    {
+        for (int idx  = 0; idx  < trials; idx ++)
+        {
+            Validate(mock());
         }
     }
 }

@@ -15,8 +15,6 @@ public class AssetLogData : IDataClass<AssetLogData>
     public static bool TryFromNode(PrionNode node, out AssetLogData data)
     {
         data = default;
-        // if(node.Type != PrionType.Array) return false;
-        // var arr = node as PrionArray;
         if(!node.TryAs(out PrionArray prionArray)) return false;
         Dictionary<string, HashSet<Guid>> logs = [];
         foreach (var item in prionArray.Value)
