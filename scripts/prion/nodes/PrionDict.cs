@@ -74,6 +74,21 @@ public class PrionDict : PrionNode
         value = res.Value;
         return true;
     }
+    public bool TryGet(string key, out float value)
+    {
+        value = default;
+        if(!TryGet(key, out PrionF32 res)) return false;
+        value = res.Value;
+        return true;
+    }
+    public bool TryGet(string key, out HashSet<Guid> guids)
+    {
+        guids = default;
+        if(!TryGet(key, out PrionArray res)) return false;
+        if(!res.TryAs(out List<PrionGuid> prionGuids)) return false;
+        guids = [.. prionGuids.Select(o => o.Value)];
+        return true;
+    }
     public T GetDefault<T>(string key, T defaultVal) where T : PrionNode
     {
         if(!TryGet(key, out T value)) return defaultVal;
@@ -83,14 +98,6 @@ public class PrionDict : PrionNode
     {
         if(!TryGet(key, out PrionString prionString)) return defaultVal;
         return prionString.Value;
-    }
-    public bool TryGet(string key, out HashSet<Guid> guids)
-    {
-        guids = default;
-        if(!TryGet(key, out PrionArray res)) return false;
-        if(!res.TryAs(out List<PrionGuid> prionGuids)) return false;
-        guids = [.. prionGuids.Select(o => o.Value)];
-        return true;
     }
     public void Set(string key, Guid guid)
     {
@@ -107,6 +114,10 @@ public class PrionDict : PrionNode
     public void Set(string key, string str)
     {
         Value[key] = new PrionString(str);
+    }
+    public void Set(string key, float value)
+    {
+        Value[key] = new PrionF32(value);
     }
     public void Set(string key, HashSet<Guid> guids)
     {

@@ -37,7 +37,6 @@ public class BlockerData : IDataClass<BlockerData>
         if(!dict.TryGet("end", out v2i)) return false;
         data.End = new(v2i.X, v2i.Y);
         if(!dict.TryGet("status", out PrionEnum prionEnum)) return false;
-        //  status = prionEnum.GetValue();
         data.Status = StatusFromString(prionEnum.GetValue());
         if(!dict.TryGet("opaque?", out data.Opaque)) return false;
         if(!dict.TryGet("blocks_projectiles?", out data.BlocksProjectiles)) return false;
@@ -46,12 +45,12 @@ public class BlockerData : IDataClass<BlockerData>
     public PrionNode ToNode()
     {
         PrionDict dict = new();
+        PrionEnum.TryFromOptions(["wall", "open", "closed", "locked"], Status.ToString().ToLower(), out PrionEnum prionEnum, out string _);
         dict.Set("start", new PrionVector2I(Start.X, Start.Y));
         dict.Set("end", new PrionVector2I(End.X, End.Y));
-        dict.Set("status", new PrionEnum(["wall", "open", "closed", "locked"], Status.ToString().ToLower()));
+        dict.Set("status", prionEnum);
         dict.Set("opaque?", Opaque);
         dict.Set("blocks_projectiles?", BlocksProjectiles);
         return dict;
     }
-
 }

@@ -5,10 +5,27 @@ using System.Text.Json.Nodes;
 
 namespace Prion.Node;
 
-public class PrionEnum(HashSet<string> options, string value) : PrionNode
+public class PrionEnum : PrionNode
 {
-    public readonly HashSet<string> Options = options;
-    string Value = value;
+    public readonly string[] Options;
+    int _Index ;
+    public int Index
+    {
+        get => _Index;
+        set
+        {
+            _Index = value % Options.Length;
+        }
+    }
+    PrionEnum(string[] options, int index)
+    {
+        Options = options;
+        _Index = index;
+    }
+    public string GetValue()
+    {
+        return Options[_Index];
+    }
 
     public override JsonNode ToJson()
     {
@@ -16,10 +33,43 @@ public class PrionEnum(HashSet<string> options, string value) : PrionNode
     }
     public override string ToString()
     {
-        var options = Options.ToList();
-        options.Sort();
-        string res = string.Join(", ", options);
-        return "enum: " + res + ": " + Value;
+        string res = string.Join(", ", Options);
+        return "enum: " + res + ": " + GetValue();
+    }
+    public static bool TryFromOptions(string[] options, int idx, out PrionEnum prionEnum, out string error)
+    {
+        prionEnum = default;
+        error = default;
+        if(new HashSet<string>([..options]).Count < options.Length)
+        {
+            error = "Options contain duplicate values.";
+            return false;
+        }
+        if(idx < 0 || idx >= options.Length)
+        {
+            error = "Enum index is out of bounds.";
+            return false;
+        }
+        prionEnum = new(options, idx);
+        return true;
+    }
+    public static bool TryFromOptions(string[] options, string selected, out PrionEnum prionEnum, out string error)
+    {
+        prionEnum = default;
+        error = default;
+        if(new HashSet<string>([..options]).Count < options.Length)
+        {
+            error = "Options contain duplicate values.";
+            return false;
+        }
+        prionEnum = new(options, 0);
+        if (!prionEnum.TrySetValue(selected))
+        {
+            prionEnum = default;
+            error = $"Invalid enum value '{selected}'";
+            return false;
+        }
+        return true;
     }
     public static bool TryFromString(string value, out PrionEnum node, out string error)
     {
@@ -37,13 +87,7 @@ public class PrionEnum(HashSet<string> options, string value) : PrionNode
             error = $"Enum signature not present at start of string '{value}'.";
             return false;
         }
-        var optionStrings = sections[1].Split(',').Select(s => s.Trim()).ToArray();
-        HashSet<string> options = [.. optionStrings];
-        if(optionStrings.Length != options.Count)
-        {
-            error = $"Enum options contain duplicates.";
-            return false;
-        }
+        var options = sections[1].Split(',').Select(s => s.Trim()).ToArray();
         foreach (var option in options)
         {
             foreach (char c in option)
@@ -61,13 +105,13 @@ public class PrionEnum(HashSet<string> options, string value) : PrionNode
             error = $"Enum options '{string.Join(", ", options)}' do not contain selected option '{selected}'.";
             return false;
         }
-        node = new PrionEnum(options, selected);
+        node = new PrionEnum(options, 0);
+        node.TrySetValue(selected);
         return true;
     }
     public static bool TryFromJson(JsonNode jsonNode, out PrionEnum node, out string error)
     {
         node = default;
-        error = default;
         if(jsonNode is null)
         {
             error = "Invalid json kind. Value cannot be null.";
@@ -89,17 +133,11 @@ public class PrionEnum(HashSet<string> options, string value) : PrionNode
             return false;
         }
     }
-    public string GetValue()
-    {
-        return Value;
-    }
     public bool TrySetValue(string value)
     {
-        if (Options.Contains(value))
-        {
-            Value = value;
-            return true;
-        }
-        return false;
+        int idx = Options.ToList().FindIndex(s => s == value);
+        if(idx == -1)return false;
+        _Index = idx;
+        return true;
     }
 }
