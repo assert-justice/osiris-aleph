@@ -7,8 +7,11 @@ public partial class MainMenu : Control
     {
         base._Ready();
         Osiris.OsirisSystem.LoadAllSchemas();
-        var obj = new Osiris.DataClass.StampDataText(Guid.NewGuid());
-        obj.AutoWrapMode = 2;
+        var obj = new Osiris.DataClass.StampDataToken(Guid.NewGuid());
+        obj.ActorId = Guid.NewGuid();
+        obj.IsUnique = true;
+        obj.Stats = new();
+        // obj.AutoWrapMode = 2;
         // obj.StretchMode = 1;
         // obj.ImageFilename = "image.png";
         var prionNode = obj.ToNode();

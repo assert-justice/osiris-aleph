@@ -15,6 +15,8 @@ public class TestStampData
     {
         OsirisSystem.EnterTestMode();
         OsirisSystem.LoadSchema(typeof(StampDataImage), "stamp");
+        OsirisSystem.LoadSchema(typeof(StampDataText), "stamp");
+        OsirisSystem.LoadSchema(typeof(StampDataToken), "stamp");
     }
     [TestCleanup]
     public void Cleanup()
@@ -30,9 +32,15 @@ public class TestStampData
     {
         LoadAndValidate<StampDataImage>("image");
     }
+    [TestMethod]
     public void LoadAndValidateText()
     {
         LoadAndValidate<StampDataText>("text");
+    }
+    [TestMethod]
+    public void LoadAndValidateToken()
+    {
+        LoadAndValidate<StampDataToken>("token");
     }
     public static void LoadAndValidate<T>(string stampType) where T : StampData
     {
