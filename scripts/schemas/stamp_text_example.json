@@ -1,0 +1,16 @@
+{
+    "stamp_id": "guid: 6ee762f1-3ddd-43cb-a027-bf1f1b5568ac",
+    "stamp_type": "enum: text, image, token: text",
+    "controlled_by": [],
+    "rect": "rect2i:0,0,0,0",
+    "angle": "f32: 0",
+    "text_data?": {
+        "text": "",
+        "size?": "16 px",
+        "margin_left?": "16 px",
+        "margin_right?": "16 px",
+        "margin_top?": "16 px",
+        "margin_bottom?": "16 px",
+        "auto_wrap_mode?": "enum: off, arbitrary, word, word_smart: word"
+    }
+}

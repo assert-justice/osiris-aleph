@@ -30,6 +30,10 @@ public class TestStampData
     {
         LoadAndValidate<StampDataImage>("image");
     }
+    public void LoadAndValidateText()
+    {
+        LoadAndValidate<StampDataText>("text");
+    }
     public static void LoadAndValidate<T>(string stampType) where T : StampData
     {
         string path = $"scripts/schemas/stamp_{stampType}_example.json";

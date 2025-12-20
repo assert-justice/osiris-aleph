@@ -18,14 +18,12 @@
         "text_data?": {
             "text": "string",
             "font_filename?": "string",
-            "font_size_px?": "f32",
-            "font_size_tiles?": "f32",
-            "margin_left?": "f32",
-            "margin_right?": "f32",
-            "margin_top?": "f32",
-            "margin_bottom?": "f32",
-            "scale_mode?": "schema_enum: none",
-            "auto_wrap_mode": "schema_enum: off, arbitrary, word, word_smart"
+            "font_size?": "string",
+            "margin_left?": "string",
+            "margin_right?": "string",
+            "margin_top?": "string",
+            "margin_bottom?": "string",
+            "auto_wrap_mode?": "schema_enum: off, arbitrary, word, word_smart"
         },
         "token_data?": {
             "actor_id": "guid",
