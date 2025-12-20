@@ -19,9 +19,9 @@ public class TileGroupData : IDataClass<TileGroupData>
 		Tiles = tiles;
 	}
 
-    public static bool TryFromNode(PrionNode node, out TileGroupData data)
-    {
-        data = default;
+	public static bool TryFromNode(PrionNode node, out TileGroupData data)
+	{
+		data = default;
 		if(!node.TryAs(out PrionDict dict)) return false;
 		string name = dict.GetDefault("display_name?", "");
 		if(!dict.TryGet("bitfield", out PrionUBigInt bitfield)) return false;
@@ -34,7 +34,7 @@ public class TileGroupData : IDataClass<TileGroupData>
 		}
 		data = new(name, bitfield, tiles);
 		return true;
-    }
+	}
 	public PrionNode ToNode()
 	{
 		PrionDict dict = new();

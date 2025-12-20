@@ -36,33 +36,27 @@ public class PrionEnum : PrionNode
         string res = string.Join(", ", Options);
         return "enum: " + res + ": " + GetValue();
     }
-    public static bool TryFromOptions(string[] options, int idx, out PrionEnum prionEnum, out string error)
+    public static bool TryFromOptions(string optionsStr, int idx, out PrionEnum prionEnum, out string error)
     {
         prionEnum = default;
         error = default;
-        if(new HashSet<string>([..options]).Count < options.Length)
+        var options = optionsStr.Split(',').Select(s => s.Trim());
+        if(new HashSet<string>([..options]).Count < options.Count())
         {
             error = "Options contain duplicate values.";
             return false;
         }
-        if(idx < 0 || idx >= options.Length)
+        if(idx < 0 || idx >= options.Count())
         {
             error = "Enum index is out of bounds.";
             return false;
         }
-        prionEnum = new(options, idx);
+        prionEnum = new([..options], idx);
         return true;
     }
-    public static bool TryFromOptions(string[] options, string selected, out PrionEnum prionEnum, out string error)
+    public static bool TryFromOptions(string optionsStr, string selected, out PrionEnum prionEnum, out string error)
     {
-        prionEnum = default;
-        error = default;
-        if(new HashSet<string>([..options]).Count < options.Length)
-        {
-            error = "Options contain duplicate values.";
-            return false;
-        }
-        prionEnum = new(options, 0);
+        if(!TryFromOptions(optionsStr, 0, out prionEnum, out error)) return false;
         if (!prionEnum.TrySetValue(selected))
         {
             prionEnum = default;
@@ -138,6 +132,16 @@ public class PrionEnum : PrionNode
         int idx = Options.ToList().FindIndex(s => s == value);
         if(idx == -1)return false;
         _Index = idx;
+        return true;
+    }
+    public bool MatchOptions(string optionsStr)
+    {
+        string[] options = [.. optionsStr.Split(',').Select(s => s.Trim())];
+        if(options.Length != Options.Length) return false;
+        for (int idx = 0; idx < options.Length; idx++)
+        {
+            if(options[idx] != Options[idx]) return false;
+        }
         return true;
     }
 }

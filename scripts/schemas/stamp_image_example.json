@@ -1,0 +1,11 @@
+{
+    "stamp_id": "guid: 200153cf-81cb-439e-80ae-c07a37992e4d",
+    "stamp_type": "enum: text, image, token: image",
+    "controlled_by": [],
+    "rect": "rect2i:0,0,0,0",
+    "angle": "f32: 0",
+    "image_data?": {
+        "image_filename?": "image.png",
+        "stretch_mode?": "enum: scale, tile, keep, keep_centered, keep_aspect, keep_aspect_centered, keep_aspect_covered: tile"
+    }
+}

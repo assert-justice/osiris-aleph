@@ -4,32 +4,32 @@
     "data":{
         "stamp_id": "guid",
         "controlled_by": ["guid"],
-        "stamp_type": "enum: text, image, token",
+        "stamp_type": "schema_enum: text, image, token",
         "rect": "rect2i",
-        "angle": "float",
-        "vision_radius?": "float",
-        "light_radius?": "float",
+        "angle": "f32",
+        "vision_radius?": "f32",
+        "light_radius?": "f32",
         "light_color?": "color",
         "effects?":"dynamic",
         "image_data?": {
-            "texture_filename?": "string",
-            "stretch_mode?": "enum: scale, tile, keep, keep_centered, keep_aspect, keep_aspect_centered, keep_aspect_covered"
+            "image_filename?": "string",
+            "stretch_mode?": "schema_enum: scale, tile, keep, keep_centered, keep_aspect, keep_aspect_centered, keep_aspect_covered"
         },
         "text_data?": {
             "text": "string",
             "font_filename?": "string",
-            "font_size_px?": "float",
-            "font_size_tiles?": "float",
-            "margin_left?": "float",
-            "margin_right?": "float",
-            "margin_top?": "float",
-            "margin_bottom?": "float",
-            "scale_mode?": "none",
-            "auto_wrap_mode": "enum: off, arbitrary, word, word_smart"
+            "font_size_px?": "f32",
+            "font_size_tiles?": "f32",
+            "margin_left?": "f32",
+            "margin_right?": "f32",
+            "margin_top?": "f32",
+            "margin_bottom?": "f32",
+            "scale_mode?": "schema_enum: none",
+            "auto_wrap_mode": "schema_enum: off, arbitrary, word, word_smart"
         },
         "token_data?": {
             "actor_id": "guid",
-            "is_unique": "bool",
+            "is_unique": "boolean",
             "stats": "dynamic"
         }
     }

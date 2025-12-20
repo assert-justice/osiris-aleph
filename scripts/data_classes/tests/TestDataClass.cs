@@ -1,14 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
-using Microsoft.VisualBasic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Prion.Node;
 using Prion.Schema;
 
 namespace Osiris.DataClass.Tests;
 
-// [TestClass]
 public abstract class TestDataClass<T> where T : class, IDataClass<T>
 {
     protected PrionNode Data;

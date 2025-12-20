@@ -45,7 +45,7 @@ public class BlockerData : IDataClass<BlockerData>
     public PrionNode ToNode()
     {
         PrionDict dict = new();
-        PrionEnum.TryFromOptions(["wall", "open", "closed", "locked"], Status.ToString().ToLower(), out PrionEnum prionEnum, out string _);
+        PrionEnum.TryFromOptions("wall, open, closed, locked", Status.ToString().ToLower(), out PrionEnum prionEnum, out string _);
         dict.Set("start", new PrionVector2I(Start.X, Start.Y));
         dict.Set("end", new PrionVector2I(End.X, End.Y));
         dict.Set("status", prionEnum);
