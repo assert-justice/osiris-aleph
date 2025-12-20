@@ -71,7 +71,7 @@ public abstract class TestDataClass<T> where T : class, IDataClass<T>
             TestUtils.Fail(error);
         }
     }
-    protected virtual T Mock()
+    public virtual T Mock()
     {
         return default;
     }

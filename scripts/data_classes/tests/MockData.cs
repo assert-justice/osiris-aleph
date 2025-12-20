@@ -95,29 +95,4 @@ public static class MockData
     {
         return new(Rng.Next(minX, maxX), Rng.Next(minY, maxY));
     }
-    public static AssetLogData MockAssetLog()
-    {
-        int numOwners = Rng.Next(5, 10);
-        List<Guid> owners = new(numOwners);
-        for (int idx = 0; idx < numOwners; idx++)
-        {
-            owners.Add(Guid.NewGuid());
-        }
-        int numFiles = Rng.Next(10, 20);
-        List<string> files = new(numFiles);
-        for (int idx = 0; idx < numFiles; idx++)
-        {
-            files.Add(GetRandomIdent());
-        }
-        AssetLogData data = new();
-        foreach (var file in files)
-        {
-            int numFileOwners = Rng.Next(1, numOwners);
-            for (int idx = 0; idx < numFileOwners; idx++)
-            {
-                data.Add(file, GetRandomElement(owners));
-            }
-        }
-        return data;
-    }
 }

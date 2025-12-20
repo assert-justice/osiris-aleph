@@ -14,10 +14,6 @@ public class ActorData : IDataClass<ActorData>
     public PrionDict Stats = new();
     public string Description = "They are very mysterious.";
 
-    public ActorData()
-    {
-        Id = Guid.NewGuid();
-    }
     public ActorData(Guid guid)
     {
         Id = guid;
