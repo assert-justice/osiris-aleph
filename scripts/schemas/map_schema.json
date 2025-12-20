@@ -1,89 +1,29 @@
 {
-    "name": "aura",
+    "name": "map",
     "version": "0.1.0",
     "data": {
         "map_id": "guid",
         "display_name": "string",
         "size": "vector2i",
-        "cell_width": "i32",
+        "cell_width?": "f32",
         "users_present": [
             "guid"
         ],
-        "state?": "dynamic",
-        "fog_enabled?": "boolean",
+        "state": "dynamic",
+        "lighting_enabled?": "boolean",
         "background_color?": "color",
         "border_color?": "color",
-        "show_grid?": "boolean",
+        "grid_visible?": "boolean",
         "grid_color?": "color",
-        "grid_width?": "i32",
+        "grid_line_width?": "i32",
         "blockers": [
-            {
-                "start": "vector2i",
-                "end": "vector2i",
-                "status": "enum: wall, open, closed, locked",
-                "opaque?": "boolean",
-                "blocks_projectiles?": "boolean"
-            }
+            "schema: blocker"
         ],
-        "tile_data": [
-            {
-                "bitfield": "bitfield",
-                "tiles": [
-                    "vector2i"
-                ]
-            }
+        "tile_groups": [
+            "schema: tile_group"
         ],
         "layers": [
-            {
-                "display_name": "string",
-                "is_player_visible": "boolean",
-                "stamps":[
-                    {
-                        "stamp_id": "guid",
-                        "controlled_by": ["guid"],
-                        "stamp_type": "enum: text, image, token",
-                        "rect": "rect2i",
-                        "angle": "float",
-                        "auras?": [
-                            {
-                                "shape": "enum: circle, square",
-                                "display_name?": "string",
-                                "size": "float",
-                                "color?": "color",
-                                "outline_color?": "color",
-                                "on_entered?": "string",
-                                "on_exited?": "string",
-                                "on_stay?": "string",
-                                "#note": ""
-                            }
-                        ],
-                        "vision_radius?": "float",
-                        "light_radius?": "float",
-                        "light_color?": "color",
-                        "image_data?": {
-                            "texture_filename?": "string",
-                            "stretch_mode?": "enum: scale, tile, keep, keep_centered, keep_aspect, keep_aspect_centered, keep_aspect_covered"
-                        },
-                        "text_data?": {
-                            "text": "string",
-                            "font_filename?": "string",
-                            "font_size_px?": "float",
-                            "font_size_tiles?": "float",
-                            "margin_left?": "float",
-                            "margin_right?": "float",
-                            "margin_top?": "float",
-                            "margin_bottom?": "float",
-                            "scale_mode?": "none",
-                            "auto_wrap_mode": "enum: off, arbitrary, word, word_smart"
-                        },
-                        "token_data?": {
-                            "actor_id": "guid",
-                            "is_unique": "bool",
-                            "stats": "dynamic"
-                        }
-                    }
-                ]
-            }
+            "schema: layer"
         ]
     }
 }

@@ -1,0 +1,17 @@
+{
+    "map_id": "guid: 90643042-c06b-4aa7-8ac8-58f7b30281af",
+    "display_name": "[A Mysterious Location]",
+    "size": "vector2i:12,18",
+    "cell_width?": "f32: 64",
+    "users_present": [],
+    "state": {},
+    "lighting_enabled?": false,
+    "background_color?": "color:#000000ff",
+    "border_color?": "color:#000000ff",
+    "grid_visible?": true,
+    "grid_color?": "color:#ffffffff",
+    "grid_line_width?": "f32: 2",
+    "blockers": [],
+    "tile_groups": [],
+    "layers": []
+}

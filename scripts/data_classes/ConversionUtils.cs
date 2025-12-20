@@ -27,9 +27,10 @@ public static class ConversionUtils
     }
     public static PrionColor ToPrionColor(Color color)
     {
-        if(PrionColor.TryFromHtmlString("#"+color.ToHtml(), out PrionColor prionColor, out string error))
+        string colorString = "#"+color.ToHtml();
+        if(!PrionColor.TryFromHtmlString(colorString, out PrionColor prionColor, out string error))
         {
-            OsirisSystem.ReportError("Should be unreachable");
+            OsirisSystem.ReportError($"Color conversion failed, should be unreachable. Error: {error}");
             return default;
         }
         return prionColor;
