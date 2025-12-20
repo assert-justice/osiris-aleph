@@ -71,11 +71,15 @@ public abstract class TestDataClass<T> where T : class, IDataClass<T>
             TestUtils.Fail(error);
         }
     }
-    protected void MockAndValidate(Func<T> mock, int trials)
+    protected virtual T Mock()
+    {
+        return default;
+    }
+    protected void MockAndValidate(int trials)
     {
         for (int idx  = 0; idx  < trials; idx ++)
         {
-            Validate(mock());
+            Validate(Mock());
         }
     }
 }

@@ -6,6 +6,10 @@ namespace Osiris.DataClass.Tests;
 public class TestAssetLogData  : TestDataClass<AssetLogData>
 {
     public TestAssetLogData() : base("asset_log"){}
+    protected override AssetLogData Mock()
+    {
+        return MockData.MockAssetLog();
+    }
 
     [TestMethod]
     public void LoadAndValidateAssetLog()
@@ -15,6 +19,6 @@ public class TestAssetLogData  : TestDataClass<AssetLogData>
     [TestMethod]
     public void MockAndValidateAssetLog()
     {
-        MockAndValidate(()=>MockData.MockAssetLog(), 100);
+        MockAndValidate(100);
     }
 }
