@@ -1,0 +1,43 @@
+{
+    "display_name": "[Unnamed Layer]",
+    "is_visible": false,
+    "stamps": [
+        {
+            "stamp_id": "guid: 80a1f487-8246-4321-9343-09eae85af320",
+            "stamp_type": "enum: text, image, token: image",
+            "controlled_by": [],
+            "rect": "rect2i:0,0,0,0",
+            "angle": "f32: 0",
+            "image_data?": {
+                "image_filename?": "image.png"
+            }
+        },
+        {
+            "stamp_id": "guid: 1cd83215-dc7d-4f1b-b6fa-fe9b831c0ef9",
+            "stamp_type": "enum: text, image, token: text",
+            "controlled_by": [],
+            "rect": "rect2i:0,0,0,0",
+            "angle": "f32: 0",
+            "text_data?": {
+                "text": "Hello world!",
+                "font_size?": "16 px",
+                "margin_left?": "16 px",
+                "margin_right?": "16 px",
+                "margin_top?": "16 px",
+                "margin_bottom?": "16 px"
+            }
+        },
+        {
+            "stamp_id": "guid: e4ef1f64-a7db-4eae-a9b1-02044098872d",
+            "stamp_type": "enum: text, image, token: token",
+            "controlled_by": [],
+            "rect": "rect2i:0,0,0,0",
+            "angle": "f32: 0",
+            "token_data?": {
+                "actor_id": "guid: f2e87599-5f67-4d54-8e9b-4fb2b6db2e26",
+                "is_unique": true,
+                "stats": {}
+            }
+        }
+    ]
+}
