@@ -6,6 +6,10 @@ namespace Osiris.DataClass.Tests;
 [TestClass]
 public class TestMapData : TestDataClass<MapData>
 {
+    // Does not spark joy
+    readonly TestBlockerData TestBlocker = new();
+    readonly TestTileGroupData TestTile = new();
+    readonly TestLayerData TestLayer = new();
     public TestMapData() : base("map")
     {
         AddDependency("stamp", typeof(StampData));
@@ -18,10 +22,6 @@ public class TestMapData : TestDataClass<MapData>
         int numBlockers = MockData.Rng.Next(100, 200);
         int numTileGroups = MockData.Rng.Next(50);
         int numLayers = MockData.Rng.Next(3, 16);
-        // Thanks, I hate it
-        TestBlockerData testBlocker = new();
-        TestTileGroupData testTile = new();
-        TestLayerData testLayer = new();
         MapData data = new(Guid.NewGuid())
         {
             DisplayName = MockData.GetRandomIdent(),
@@ -34,9 +34,9 @@ public class TestMapData : TestDataClass<MapData>
             GridVisible = MockData.GetRandomBool(),
             GridColor = MockData.GetRandomColor(),
             GridLineWidth = MockData.GetRandomFloat(1, 16),
-            Blockers = MockData.GetRandomList(testBlocker.Mock, numBlockers),
-            TileGroups = MockData.GetRandomList(testTile.Mock, numBlockers),
-            Layers = MockData.GetRandomList(testLayer.Mock, numBlockers),
+            Blockers = MockData.GetRandomList(TestBlocker.Mock, numBlockers),
+            TileGroups = MockData.GetRandomList(TestTile.Mock, numBlockers),
+            Layers = MockData.GetRandomList(TestLayer.Mock, numBlockers),
         };
         return data;
     }

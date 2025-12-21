@@ -32,6 +32,14 @@ namespace Osiris
                 (typeof(AssetLogData), "asset_log"),
                 (typeof(BlockerData), "blocker"),
                 (typeof(HandoutData), "handout"),
+                (typeof(LayerData), "layer"),
+                (typeof(MapData), "map"),
+                (typeof(SessionData), "session"),
+                (typeof(StampDataImage), "stamp"),
+                (typeof(StampDataText), "stamp"),
+                (typeof(StampDataToken), "stamp"),
+                (typeof(TileGroupData), "tile_group"),
+                (typeof(UserData), "user"),
             ];
             foreach (var (type, name) in schemaFiles)
             {
