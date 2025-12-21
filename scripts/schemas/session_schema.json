@@ -1,0 +1,13 @@
+{
+    "name": "session",
+    "version": "0.1.0",
+    "data":{
+        "asset_log": "schema: asset_log",
+        "users": ["schema: user"],
+        "actors": ["schema: actor"],
+        "handouts": ["schema: handout"],
+        "maps": ["schema: map"],
+        "events": "dynamic",
+        "#note": ""
+    }
+}
