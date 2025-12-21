@@ -81,6 +81,20 @@ public class PrionDict : PrionNode
 		value = res.Value;
 		return true;
 	}
+	public bool TryGet(string key, out int value)
+	{
+		value = default;
+		if(!TryGet(key, out PrionI32 res)) return false;
+		value = res.Value;
+		return true;
+	}
+	public bool TryGet(string key, out ulong value)
+	{
+		value = default;
+		if(!TryGet(key, out PrionU64 res)) return false;
+		value = res.Value;
+		return true;
+	}
 	public bool TryGet(string key, out HashSet<Guid> guids)
 	{
 		guids = default;
@@ -118,6 +132,10 @@ public class PrionDict : PrionNode
 	public void Set(string key, float value)
 	{
 		Value[key] = new PrionF32(value);
+	}
+	public void Set(string key, ulong value)
+	{
+		Value[key] = new PrionU64(value);
 	}
 	public void Set(string key, HashSet<Guid> guids)
 	{
