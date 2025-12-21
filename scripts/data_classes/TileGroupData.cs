@@ -26,7 +26,7 @@ public class TileGroupData : IDataClass<TileGroupData>
 			if(!tile.TryAs(out PrionVector2I v)) return false;
 			data.Tiles.Add(new(v.X, v.Y));
 		}
-        return true;
+		return true;
 	}
 	public PrionNode ToNode()
 	{

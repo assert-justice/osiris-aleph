@@ -7,7 +7,7 @@ public partial class MainMenu : Control
     {
         base._Ready();
         Osiris.OsirisSystem.LoadAllSchemas();
-        var obj = new Osiris.DataClass.MapData(Guid.NewGuid());
+        var obj = new Osiris.DataClass.UserData(Guid.NewGuid());
         // var stampImage = new Osiris.DataClass.StampDataImage(Guid.NewGuid());
         // stampImage.ImageFilename = "image.png";
         // obj.Stamps.Add(stampImage);

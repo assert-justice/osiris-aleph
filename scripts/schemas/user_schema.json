@@ -1,0 +1,9 @@
+{
+    "name": "user",
+    "version": "0.1.0",
+    "data":{
+        "user_id": "guid",
+        "display_name": "string",
+        "pfp_filename?": "string"
+    }
+}

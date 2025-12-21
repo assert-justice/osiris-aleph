@@ -17,6 +17,8 @@ public class ActorData : IDataClass<ActorData>
     public ActorData(Guid guid)
     {
         Id = guid;
+        List<List<int>> GroupsOfBuddies = [];
+        GroupsOfBuddies.Add([0]);
     }
     public static bool TryFromNode(PrionNode node, out ActorData data)
     {

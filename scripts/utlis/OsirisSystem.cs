@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
-using System.Xml.Serialization;
 using Godot;
 using Osiris.DataClass;
-using Prion;
 using Prion.Node;
 using Prion.Schema;
 
@@ -27,7 +25,6 @@ namespace Osiris
         static readonly List<string> ErrorLog = [];
         static readonly List<string> MessageLog = [];
         static bool InTestMode = false;
-        // public static readonly PrionSchemaManager SchemaManager = new();
         public static void LoadAllSchemas()
         {
             (Type, string)[] schemaFiles = [
@@ -39,25 +36,6 @@ namespace Osiris
             foreach (var (type, name) in schemaFiles)
             {
                 LoadSchema(type, name);
-                // string path = $"res://scripts/schemas/{filename}";
-                // if (!FileExists(path))
-                // {
-                //     ReportError($"Invalid path '{path}'");
-                //     continue;
-                // }
-                // string schemaSrc = ReadFile(path);
-                // var jsonNode = JsonNode.Parse(schemaSrc);
-                // if(!PrionNode.TryFromJson(jsonNode, out PrionNode prionNode))
-                // {
-                //     ReportError($"Failed to parse json at path '{path}'. Error: {prionNode}");
-                //     continue;
-                // }
-                // if(!PrionSchema.TryFromPrionNode(prionNode, out PrionSchema prionSchema, out string error))
-                // {
-                //     ReportError(error);
-                //     continue;
-                // }
-                // PrionSchemaManager.RegisterSchema(type, prionSchema);
             }
         }
         public static void LoadSchema(Type type, string name)
@@ -133,6 +111,7 @@ namespace Osiris
             }
             ErrorLog.Add(message);
             if(!InTestMode) GD.PrintErr(message);
+            else Console.WriteLine(message);
         }
         public static bool HasErrors()
         {
@@ -151,6 +130,7 @@ namespace Osiris
             }
             MessageLog.Add(message);
             if(!InTestMode) GD.Print(message);
+            else Console.WriteLine(message);
         }
         public static string GetLogs()
         {
