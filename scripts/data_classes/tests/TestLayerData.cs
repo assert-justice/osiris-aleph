@@ -16,7 +16,7 @@ public class TestLayerData : TestDataClass<LayerData>
         {
             DisplayName = MockData.GetRandomIdent(),
             IsVisible = MockData.GetRandomBool(),
-            // Stamps = MockData.GetRandomList(()=>TestStampData.Moc, numStamps),
+            Stamps = MockData.GetRandomList(()=>TestStampData.MockRandom(), numStamps),
         };
         return data;
     }
@@ -24,5 +24,10 @@ public class TestLayerData : TestDataClass<LayerData>
     public void LoadAndValidateLayer()
     {
         LoadAndValidate();
+    }
+    [TestMethod]
+    public void MockAndValidateLayers()
+    {
+        MockAndValidate(100);
     }
 }
