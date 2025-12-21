@@ -46,7 +46,7 @@ namespace Osiris
                 LoadSchema(type, name);
             }
         }
-        public static void LoadSchema(Type type, string name)
+        static void LoadSchema(Type type, string name)
         {
             string path = $"res://scripts/schemas/{name}_schema.json";
             if (!FileExists(path))
@@ -73,7 +73,6 @@ namespace Osiris
             MockFilesystem.Clear();
             ErrorLog.Clear();
             MessageLog.Clear();
-            PrionSchemaManager.Clear();
             if(InTestMode) return;
             InTestMode = true;
             Reader = filepath =>
@@ -92,6 +91,7 @@ namespace Osiris
             {
                 MockFilesystem.Add(filepath, contents);
             };
+            LoadAllSchemas();
         }
         public static string ConvertPath(string filepath)
         {

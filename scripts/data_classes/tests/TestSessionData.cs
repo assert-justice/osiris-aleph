@@ -12,34 +12,6 @@ public class TestSessionData : TestDataClass<SessionData>
     readonly TestHandoutData TestHandout = new();
     readonly TestMapData TestMap = new();
     readonly TestUserData TestUser = new();
-    public override SessionData Mock()
-    {
-        int numUsers = MockData.Rng.Next(20);
-        int numActors = MockData.Rng.Next(20, 50);
-        int numHandouts = MockData.Rng.Next(20);
-        int numMaps = MockData.Rng.Next(3, 5);
-        SessionData data = new()
-        {
-            AssetLog = TestAssetLog.Mock()
-        };
-        foreach (var item in MockData.GetRandomList(TestActor.Mock, numActors))
-        {
-            data.Actors.Add(item.Id, item);
-        }
-        foreach (var item in MockData.GetRandomList(TestHandout.Mock, numHandouts))
-        {
-            data.Handouts.Add(item.Id, item);
-        }
-        foreach (var item in MockData.GetRandomList(TestMap.Mock, numMaps))
-        {
-            data.Maps.Add(item.Id, item);
-        }
-        foreach (var item in MockData.GetRandomList(TestUser.Mock, numUsers))
-        {
-            data.Users.Add(item.Id, item);
-        }
-        return data;
-    }
     [TestMethod]
     public void LoadAndValidateSession()
     {
@@ -50,6 +22,9 @@ public class TestSessionData : TestDataClass<SessionData>
     public void MockAndValidateSession()
     {
         OsirisSystem.LoadAllSchemas();
-        MockAndValidate(10);
+        for (int idx = 0; idx < 10; idx++)
+        {
+            Validate(MockClass.MockSession());
+        }
     }
 }

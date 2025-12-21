@@ -25,11 +25,11 @@ public abstract class TestDataClass<T> where T : class, IDataClass<T>
     public void Init()
     {
         OsirisSystem.EnterTestMode();
-        OsirisSystem.LoadSchema(DataType, Name);
-        foreach (var (type, name) in Dependencies)
-        {
-            OsirisSystem.LoadSchema(type, name);
-        }
+        // OsirisSystem.LoadSchema(DataType, Name);
+        // foreach (var (type, name) in Dependencies)
+        // {
+        //     OsirisSystem.LoadSchema(type, name);
+        // }
     }
     [TestCleanup]
     public void Cleanup()
@@ -45,7 +45,7 @@ public abstract class TestDataClass<T> where T : class, IDataClass<T>
     }
     protected void LoadAndValidate()
     {
-        OsirisSystem.LoadSchema(DataType, Name);
+        //OsirisSystem.LoadSchema(DataType, Name);
         string path = $"scripts/schemas/{Name}_example.json";
         if (!OsirisSystem.FileExists(path))
         {
@@ -71,15 +71,15 @@ public abstract class TestDataClass<T> where T : class, IDataClass<T>
             TestUtils.Fail(error);
         }
     }
-    public virtual T Mock()
-    {
-        return default;
-    }
-    protected void MockAndValidate(int trials)
-    {
-        for (int idx  = 0; idx  < trials; idx ++)
-        {
-            Validate(Mock());
-        }
-    }
+    // public virtual T Mock()
+    // {
+    //     return default;
+    // }
+    // protected void MockAndValidate(int trials)
+    // {
+    //     for (int idx  = 0; idx  < trials; idx ++)
+    //     {
+    //         Validate(Mock());
+    //     }
+    // }
 }

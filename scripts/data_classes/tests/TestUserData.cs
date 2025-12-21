@@ -7,15 +7,6 @@ namespace Osiris.DataClass.Tests;
 public class TestUserData : TestDataClass<UserData>
 {
     public TestUserData() : base("user"){}
-    public override UserData Mock()
-    {
-        UserData data = new(Guid.NewGuid())
-        {
-            DisplayName = MockData.GetRandomIdent(),
-            PfpFilename = MockData.GetRandomIdent()
-        };
-        return data;
-    }
 
     [TestMethod]
     public void LoadAndValidateUser()
@@ -25,6 +16,9 @@ public class TestUserData : TestDataClass<UserData>
     [TestMethod]
     public void MockAndValidateUser()
     {
-        MockAndValidate(100);
+        for (int idx = 0; idx < 100; idx++)
+        {
+            Validate(MockClass.MockUser());
+        }
     }
 }

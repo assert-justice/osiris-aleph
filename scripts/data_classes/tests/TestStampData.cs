@@ -15,9 +15,9 @@ public class TestStampData
     public void Init()
     {
         OsirisSystem.EnterTestMode();
-        OsirisSystem.LoadSchema(typeof(StampDataImage), "stamp");
-        OsirisSystem.LoadSchema(typeof(StampDataText), "stamp");
-        OsirisSystem.LoadSchema(typeof(StampDataToken), "stamp");
+        // OsirisSystem.LoadSchema(typeof(StampDataImage), "stamp");
+        // OsirisSystem.LoadSchema(typeof(StampDataText), "stamp");
+        // OsirisSystem.LoadSchema(typeof(StampDataToken), "stamp");
     }
     [TestCleanup]
     public void Cleanup()

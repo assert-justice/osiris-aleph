@@ -9,17 +9,6 @@ public class TestLayerData : TestDataClass<LayerData>
     {
         AddDependency("stamp", typeof(StampData));
     }
-    public override LayerData Mock()
-    {
-        int numStamps = MockData.Rng.Next(20);
-        LayerData data = new()
-        {
-            DisplayName = MockData.GetRandomIdent(),
-            IsVisible = MockData.GetRandomBool(),
-            Stamps = MockData.GetRandomList(()=>TestStampData.MockRandom(), numStamps),
-        };
-        return data;
-    }
     [TestMethod]
     public void LoadAndValidateLayer()
     {
@@ -28,6 +17,9 @@ public class TestLayerData : TestDataClass<LayerData>
     [TestMethod]
     public void MockAndValidateLayers()
     {
-        MockAndValidate(100);
+        for (int idx = 0; idx < 100; idx++)
+        {
+            Validate(MockClass.MockLayer());
+        }
     }
 }

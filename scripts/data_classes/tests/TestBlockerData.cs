@@ -6,16 +6,6 @@ namespace Osiris.DataClass.Tests;
 public class TestBlockerData : TestDataClass<BlockerData>
 {
     public TestBlockerData() : base("blocker"){}
-    public override BlockerData Mock()
-    {
-        BlockerData data = new();
-        data.Start = MockData.GetRandomVector2I(-100, 100, -100, 100);
-        data.End = MockData.GetRandomVector2I(-100, 100, -100, 100);
-        data.Status = (BlockerData.BlockerStatus)MockData.Rng.Next(4);
-        data.Opaque = MockData.GetRandomBool();
-        data.BlocksEffects = MockData.GetRandomBool();
-        return data;
-    }
 
     [TestMethod]
     public void LoadAndValidateBlocker()
@@ -25,6 +15,9 @@ public class TestBlockerData : TestDataClass<BlockerData>
     [TestMethod]
     public void MockAndValidateBlockerData()
     {
-        MockAndValidate(100);
+        for (int idx = 0; idx < 100; idx++)
+        {
+            Validate(MockClass.MockBlocker());
+        }
     }
 }
