@@ -7,7 +7,7 @@
         "image_filename?": "string",
         "text?": "string",
         "visible_to": ["guid"],
-        "owners": ["guid"],
+        "owned_by": ["guid"],
         "gm_notes?": "string"
     }
 }

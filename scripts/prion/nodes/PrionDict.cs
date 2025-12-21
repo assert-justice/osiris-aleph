@@ -126,7 +126,7 @@ public class PrionDict : PrionNode
 		{
 			prionArray.Value.Add(new PrionGuid(guid));
 		}
-		prionArray.Value.Sort();
+		// prionArray.Value.Sort();
 		Set(key, prionArray);
 	}
 }

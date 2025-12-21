@@ -5,24 +5,15 @@ using Prion;
 using Prion.Node;
 
 namespace Osiris.DataClass;
-public class HandoutData : IDataClass<HandoutData>
+public class HandoutData(Guid guid) : IDataClass<HandoutData>
 {
-    public readonly Guid Id;
+    public readonly Guid Id = guid;
     public string DisplayName = "[Mysterious Note]";
     public string ImageFilename = "";
     public string Text = "";
     public HashSet<Guid> VisibleTo = [];
-    public HashSet<Guid> Owners = [];
+    public HashSet<Guid> OwnedBy = [];
     public string GMNotes = "";
-
-    public HandoutData()
-    {
-        Id = Guid.NewGuid();
-    }
-    public HandoutData(Guid guid)
-    {
-        Id = guid;
-    }
 
     public static bool TryFromNode(PrionNode node, out HandoutData data)
     {
@@ -37,7 +28,7 @@ public class HandoutData : IDataClass<HandoutData>
             GMNotes = prionDict.GetDefault("gm_notes?", ""),
         };
         if(!prionDict.TryGet("visible_to", out data.VisibleTo)) return false;
-        if(!prionDict.TryGet("owners", out data.Owners)) return false;
+        if(!prionDict.TryGet("owned_by", out data.OwnedBy)) return false;
         return true;
     }
     public PrionNode ToNode()
@@ -47,8 +38,8 @@ public class HandoutData : IDataClass<HandoutData>
         prionDict.Set("display_name?", DisplayName);
         prionDict.Set("image_filename?", ImageFilename);
         prionDict.Set("text?", Text);
-        prionDict.Value["visible_to"] = new PrionArray([.. VisibleTo.Select(o => new PrionGuid(o))]);
-        prionDict.Value["owners"] = new PrionArray([.. Owners.Select(o => new PrionGuid(o))]);
+        prionDict.Set("visible_to", VisibleTo);
+        prionDict.Set("owned_by", OwnedBy);
         prionDict.Set("gm_notes?", GMNotes);
         return prionDict;
     }

@@ -27,6 +27,21 @@ public static class MockData
     public static string GetRandomIdent()
     {
         int length = Rng.Next(1,256);
+        return GetRandomIdent(length);
+    }
+    public static string GetRandomIdent(int length)
+    {
+        Builder.EnsureCapacity(length);
+        for (int f = 0; f < length; f++)
+        {
+            // char c = ValidIdentChars[Rng.Next(ValidIdentChars.Length)];
+            Builder.Append(GetRandomElement(ValidIdentChars));
+        }
+        return Builder.ToString();
+    }
+    public static string GetRandomText(int length)
+    {
+        // TODO: expand to all ascii printable characters, eventually utf8
         Builder.EnsureCapacity(length);
         for (int f = 0; f < length; f++)
         {
@@ -39,6 +54,14 @@ public static class MockData
     {
         int idx = Rng.Next(elements.Count());
         return elements.ElementAt(idx);
+    }
+    public static U GetRandomCollection<T,U>(Func<T> factory, int numElements) where U : class, ICollection<T>, new()
+    {
+        return [..Enumerable.Range(0, numElements).Select(_ => factory())];
+    }
+    public static HashSet<T> GetRandomSet<T>(Func<T> factory, int numElements)
+    {
+        return GetRandomCollection<T, HashSet<T>>(factory, numElements);
     }
     public static string GetRandomHexColor()
     {
