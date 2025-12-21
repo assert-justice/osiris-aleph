@@ -63,13 +63,13 @@ public static class MockData
     {
         return GetRandomCollection<T, HashSet<T>>(factory, numElements);
     }
-    public static string GetRandomHexColor()
+    public static List<T> GetRandomList<T>(Func<T> factory, int numElements)
     {
-        return "0x" + GetRandomColorString();
+        return GetRandomCollection<T, List<T>>(factory, numElements);
     }
-    public static string GetRandomHtmlColor()
+    public static Color GetRandomColor()
     {
-        return "#" + GetRandomColorString();
+        return Color.FromHtml(GetRandomColorString());
     }
     public static string ExpandColor(string s)
     {
@@ -122,5 +122,13 @@ public static class MockData
     public static bool GetRandomBool()
     {
         return Rng.Next(2) == 0;
+    }
+    public static float GetRandomFloat()
+    {
+        return (float)Rng.Next() / int.MaxValue;
+    }
+    public static float GetRandomFloat(float min, float max)
+    {
+        return GetRandomFloat() * (max - min) + min;
     }
 }

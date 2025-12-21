@@ -9,14 +9,15 @@ namespace Osiris.DataClass;
 public abstract class StampData(Guid id) : IDataClass<StampData>
 {
     public readonly Guid Id = id;
-    public readonly HashSet<Guid> ControlledBy = [];
+    public HashSet<Guid> ControlledBy = [];
     public Rect2I Rect = new();
     public float Angle = 0;
     public float VisionRadius = 0;
     public bool HasVision = false;
-    public float LightRadius = 0;
-    public bool HasLight = false;
-    public Color LightColor = Colors.White;
+    // TODO: restore light functionality
+    // public float LightRadius = 0;
+    // public bool HasLight = false;
+    // public Color LightColor = Colors.White;
     public PrionDict Effects = new();
 
     public static bool TryFromNode(PrionNode node, out StampData data)
@@ -35,8 +36,8 @@ public abstract class StampData(Guid id) : IDataClass<StampData>
         data.Rect = ConversionUtils.FromPrionRect2I(rect);
         if(!dict.TryGet("angle", out data.Angle)) return false;
         if(dict.TryGet("vision_radius?", out data.VisionRadius)) data.HasVision = true;
-        if(dict.TryGet("light_radius?", out data.LightRadius)) data.HasLight = true;
-        if(dict.TryGet("light_color?", out PrionColor prionColor)) data.LightColor = ConversionUtils.FromPrionColor(prionColor);
+        // if(dict.TryGet("light_radius?", out data.LightRadius)) data.HasLight = true;
+        // if(dict.TryGet("light_color?", out PrionColor prionColor)) data.LightColor = ConversionUtils.FromPrionColor(prionColor);
         if(dict.TryGet("effects?", out PrionDict effects)) data.Effects = effects;
         return data.TryFinishFromNode(dict);
     }
@@ -63,11 +64,11 @@ public abstract class StampData(Guid id) : IDataClass<StampData>
         res.Set("rect", ConversionUtils.ToPrionRect2I(Rect));
         res.Set("angle", Angle);
         if(HasVision) res.Set("vision_radius?", VisionRadius);
-        if (HasLight)
-        {
-            res.Set("light_radius?", LightRadius);
-            res.Set("light_color?", ConversionUtils.ToPrionColor(LightColor));
-        }
+        // if (HasLight)
+        // {
+        //     res.Set("light_radius?", LightRadius);
+        //     res.Set("light_color?", ConversionUtils.ToPrionColor(LightColor));
+        // }
         if(Effects.Value.Count > 0) res.Set("effects?", Effects);
         return res;
     }

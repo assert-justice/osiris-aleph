@@ -5,32 +5,19 @@ namespace Osiris.DataClass;
 
 public class StampDataText(Guid id) : StampData(id)
 {
+    public enum TextWrapMode
+    {
+        Off,
+        Arbitrary,
+        Word,
+        WordSmart,
+    }
     public string Text = "";
     public string FontFilename = "";
     public string FontSize = "16 px";
     public string[] Margins = ["16 px", "16 px", "16 px", "16 px"];
-    // int _ScaleMode = 0;
-    // bool HasScaleMode = false;
-    // public int ScaleMode
-    // {
-    //     get => _ScaleMode;
-    //     set
-    //     {
-    //         _ScaleMode = value;
-    //         HasScaleMode = true;
-    //     }
-    // }
-    int _AutoWrapMode = 0;
-    bool HasAutoWrapMode = false;
-    public int AutoWrapMode
-    {
-        get => _AutoWrapMode;
-        set
-        {
-            _AutoWrapMode = value;
-            HasAutoWrapMode = true;
-        }
-    }
+    // TODO: figure out scale mode stuff
+    public TextWrapMode WrapMode = TextWrapMode.Off;
     public override bool TryFinishFromNode(PrionDict prionDict)
     {
         if(!prionDict.TryGet("text_data?", out PrionDict data)) return false;
@@ -41,8 +28,7 @@ public class StampDataText(Guid id) : StampData(id)
         if(data.TryGet("margin_right?", out margin)) Margins[1] = margin; 
         if(data.TryGet("margin_top?", out margin)) Margins[2] = margin; 
         if(data.TryGet("margin_bottom?", out margin)) Margins[3] = margin;
-        // if(data.TryGet("scale_mode?", out PrionEnum prionEnum)) _ScaleMode = prionEnum.Index;
-        if(data.TryGet("auto_wrap_mode?", out PrionEnum prionEnum)) _AutoWrapMode = prionEnum.Index;
+        if(data.TryGet("wrap_mode?", out PrionEnum prionEnum)) WrapMode = (TextWrapMode)prionEnum.Index;
         return true;
     }
     public override PrionNode ToNode()
@@ -56,11 +42,8 @@ public class StampDataText(Guid id) : StampData(id)
         if(Margins[1].Length > 0) dict.Set("margin_right?", Margins[1]);
         if(Margins[2].Length > 0) dict.Set("margin_top?", Margins[2]);
         if(Margins[3].Length > 0) dict.Set("margin_bottom?", Margins[3]);
-        if(HasAutoWrapMode || AutoWrapMode != 0)
-        {
-            PrionEnum.TryFromOptions("off, arbitrary, word, word_smart", AutoWrapMode, out PrionEnum prionEnum, out string _);
-            dict.Set("auto_wrap_mode?", prionEnum);
-        }
+        PrionEnum.TryFromOptions("off, arbitrary, word, word_smart", (int)WrapMode, out PrionEnum prionEnum, out string _);
+        dict.Set("wrap_mode?", prionEnum);
         node.Set("text_data?", dict);
         return node;
     }

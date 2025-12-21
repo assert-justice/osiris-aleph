@@ -23,7 +23,7 @@
             "margin_right?": "string",
             "margin_top?": "string",
             "margin_bottom?": "string",
-            "auto_wrap_mode?": "schema_enum: off, arbitrary, word, word_smart"
+            "wrap_mode?": "schema_enum: off, arbitrary, word, word_smart"
         },
         "token_data?": {
             "actor_id": "guid",

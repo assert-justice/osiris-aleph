@@ -7,12 +7,7 @@ public class StampDataToken(Guid id) : StampData(id)
 {
     public Guid ActorId;
     public bool IsUnique;
-    public PrionDict Stats;
-    /*
-    "actor_id": "guid",
-    "is_unique": "boolean",
-    "stats": "dynamic"
-    */
+    public PrionDict Stats = new();
     public override bool TryFinishFromNode(PrionDict prionDict)
     {
         if(!prionDict.TryGet("token_data?", out PrionDict data)) return false;
