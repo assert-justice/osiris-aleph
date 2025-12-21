@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Godot;
-using Prion.Node;
 
 namespace Osiris.DataClass.Tests;
 
@@ -17,6 +16,7 @@ public static class MockData
         const string hexChars = "0123456789abcdefABCDEF";
         int[] lens = [3, 4, 6, 8];
         int length = lens[Rng.Next(4)];
+        Builder.Clear();
         Builder.EnsureCapacity(length);
         for (int idx = 0; idx < length; idx++)
         {
@@ -31,6 +31,7 @@ public static class MockData
     }
     public static string GetRandomIdent(int length)
     {
+        Builder.Clear();
         Builder.EnsureCapacity(length);
         for (int f = 0; f < length; f++)
         {
@@ -42,6 +43,7 @@ public static class MockData
     public static string GetRandomText(int length)
     {
         // TODO: expand to all ascii printable characters, eventually utf8
+        Builder.Clear();
         Builder.EnsureCapacity(length);
         for (int f = 0; f < length; f++)
         {

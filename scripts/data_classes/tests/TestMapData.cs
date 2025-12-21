@@ -6,7 +6,13 @@ namespace Osiris.DataClass.Tests;
 [TestClass]
 public class TestMapData : TestDataClass<MapData>
 {
-    public TestMapData() : base("map"){}
+    public TestMapData() : base("map")
+    {
+        AddDependency("stamp", typeof(StampData));
+        AddDependency("layer", typeof(LayerData));
+        AddDependency("blocker", typeof(BlockerData));
+        AddDependency("tile_group", typeof(TileGroupData));
+    }
     public override MapData Mock()
     {
         int numBlockers = MockData.Rng.Next(100, 200);
@@ -36,8 +42,13 @@ public class TestMapData : TestDataClass<MapData>
     }
 
     [TestMethod]
-    public void LoadAndValidateActor()
+    public void LoadAndValidateMap()
     {
         LoadAndValidate();
+    }
+    [TestMethod]
+    public void MockAndValidateMap()
+    {
+        MockAndValidate(10);
     }
 }
