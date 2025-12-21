@@ -13,9 +13,9 @@ public class TestMapData : TestDataClass<MapData>
         int numTileGroups = MockData.Rng.Next(50);
         int numLayers = MockData.Rng.Next(3, 16);
         // Thanks, I hate it
-        // TestBlockerData testBlocker = new();
-        // TestTileGroupData testBlocker = new();
-        // TestBlockerData testBlocker = new();
+        TestBlockerData testBlocker = new();
+        TestTileGroupData testTile = new();
+        TestLayerData testLayer = new();
         MapData data = new(Guid.NewGuid())
         {
             DisplayName = MockData.GetRandomIdent(),
@@ -28,7 +28,9 @@ public class TestMapData : TestDataClass<MapData>
             GridVisible = MockData.GetRandomBool(),
             GridColor = MockData.GetRandomColor(),
             GridLineWidth = MockData.GetRandomFloat(1, 16),
-            Blockers = MockData.GetRandomList(new TestBlockerData().Mock, numBlockers),
+            Blockers = MockData.GetRandomList(testBlocker.Mock, numBlockers),
+            TileGroups = MockData.GetRandomList(testTile.Mock, numBlockers),
+            Layers = MockData.GetRandomList(testLayer.Mock, numBlockers),
         };
         return data;
     }
