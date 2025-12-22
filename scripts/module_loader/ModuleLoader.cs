@@ -35,7 +35,7 @@ public static class ModuleLoader
         }
         var actor = MockClass.MockActor();
         // OsirisSystem.Log(actor.Id);
-        SessionData.Session.Actors.Add(actor.Id, actor);
+        OsirisSystem.Session.Actors.Add(actor.Id, actor);
         bool foundMain = false;
         foreach (var filename in OsirisSystem.DirListFiles(examplePath + "/scripts"))
         {
@@ -43,7 +43,7 @@ public static class ModuleLoader
             if(!filename.EndsWith(".js")) continue;
             string jsSrc = OsirisSystem.ReadFile(examplePath + "/scripts/" + filename);
             string name = filename[..^3];
-            if(!Vm.Engine.TryAddModule(name, jsSrc)) continue;
+            if(!OsirisSystem.Vm.TryAddModule(name, jsSrc)) continue;
             OsirisSystem.Log($"Loaded script '{filename}'");
         }
         if(!foundMain)
@@ -51,7 +51,7 @@ public static class ModuleLoader
             OsirisSystem.ReportError("Could not find a 'main.js' file at supplied path.");
             return;
         }
-        if(!Vm.Engine.TryImportModule("main", out VmModule mainModule))return;
+        if(!OsirisSystem.Vm.TryImportModule("main", out VmModule mainModule))return;
         mainModule.TryCall("init");
     }
 }

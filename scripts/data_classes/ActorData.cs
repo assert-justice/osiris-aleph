@@ -4,7 +4,7 @@ using System.Linq;
 using Prion.Node;
 
 namespace Osiris.DataClass;
-public class ActorData : IDataClass<ActorData>
+public class ActorData : IDataClass<ActorData>, IEventReceiver<ActorData>
 {
     public readonly Guid Id;
     public string DisplayName = "[Mysterious Figure]";
@@ -36,6 +36,12 @@ public class ActorData : IDataClass<ActorData>
         if(!prionDict.TryGet("stats", out data.Stats)) return false;
         return true;
     }
+
+    public void HandleEvent(Event eventObj)
+    {
+        IEventReceiver<ActorData>.InvokeEvent(this, eventObj);
+    }
+
     public PrionNode ToNode()
     {
         PrionDict prionDict = new();

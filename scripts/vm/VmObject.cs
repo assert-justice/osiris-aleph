@@ -1,34 +1,31 @@
-using System.Collections.Generic;
-using Jint;
 using Jint.Native;
 
 namespace Osiris.Scripting;
 
-public class VmObject(Engine engine, string name)
+public class VmObject(Vm vm, JsObject jsObject = null)
 {
-    public readonly string Name = name;
-    public readonly Engine Engine = engine;
-    public readonly Dictionary<string, JsValue> Children = [];
+    // public readonly string Name = name;
+    public readonly Vm Vm = vm;
+    public readonly JsObject Object = jsObject ?? new(vm.Engine);
     public void AddObject(string name, object obj)
     {
-        var jsValue = JsValue.FromObject(Engine, obj);
-        Children[name] = jsValue;
+        var jsValue = JsValue.FromObject(Vm.Engine, obj);
+        Object.Set(name, jsValue);
     }
     public void AddValue(string name, JsValue value)
     {
-        Children[name] = value;
+        Object.Set(name, value);
     }
-    public void AddVmObject(VmObject vmObject)
+    public JsObject ToJsObject()
     {
-        Children[vmObject.Name] = vmObject.ToJsObject();
+        return Object;
     }
-    public JsValue ToJsObject()
+    public JsValue ToJsValue()
     {
-        JsObject res = new(Engine);
-        foreach (var (name, val) in Children)
-        {
-            res.Set(name, val);
-        }
-        return res;
+        return Object;
+    }
+    public string ToJsonString()
+    {
+        return Vm.ToJsonString(ToJsObject());
     }
 }

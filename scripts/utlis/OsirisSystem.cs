@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using Godot;
 using Osiris.DataClass;
+using Osiris.Scripting;
 using Prion.Node;
 using Prion.Schema;
 
@@ -41,13 +42,8 @@ public static class OsirisSystem
 			string fileName = dir.GetNext();
 			while (fileName != "")
 			{
-				if (dir.CurrentIsDir())
+				if (!dir.CurrentIsDir())
 				{
-					// GD.Print($"Found directory: {fileName}");
-				}
-				else
-				{
-					// GD.Print($"Found file: {fileName}");
 					filenames.Add(fileName);
 				}
 				fileName = dir.GetNext();
@@ -59,6 +55,16 @@ public static class OsirisSystem
 	static readonly List<string> ErrorLog = [];
 	static readonly List<string> MessageLog = [];
 	static bool InTestMode = false;
+	static Vm VmInternal;
+	public static Vm Vm
+	{
+		get => VmInternal ??= new();
+	}
+	static SessionData SessionInternal;
+	public static SessionData Session
+	{
+		get => SessionInternal ??= new();
+	}
 	public static void LoadAllSchemas()
 	{
 		(Type, string)[] schemaFiles = [

@@ -1,19 +1,22 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using Jint;
+using Jint.Native;
 using Osiris.DataClass;
 
 namespace Osiris.Scripting;
 
 public static class VmBindActors
 {
-    public static void Bind(VmObject module)
+    public static void Bind(Vm vm, Dictionary<string, JsValue> module)
     {
-        VmObject actorModule = new(module.Engine, "Actor");
+        VmObject actorModule = new(vm);
         actorModule.AddObject("listActors", new Func<ActorData[]>(ListActors));
-        module.AddVmObject(actorModule);
+        module.Add("Actor", actorModule.ToJsObject());
     }
     public static ActorData[] ListActors()
     {
-        return [..SessionData.Session.Actors.Values];
+        return [..OsirisSystem.Session.Actors.Values];
     }
 }

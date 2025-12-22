@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using Prion.Node;
 
 namespace Osiris.DataClass;
@@ -12,16 +14,10 @@ public class SessionData : IDataClass<SessionData>
     public Dictionary<Guid, ActorData> Actors = [];
     public Dictionary<Guid, HandoutData> Handouts = [];
     public Dictionary<Guid, MapData> Maps = [];
-    public List<PrionNode> Events = [];
-    static SessionData _Session;
-    public static SessionData Session
-    {
-        get
-        {
-            _Session ??= new();
-            return _Session;
-        }
-    }
+    public List<Event> Events = [];
+    public Dictionary<Guid, LayerData> LayerIndex = [];
+    public Dictionary<Guid, StampData> StampIndex = [];
+    public Dictionary<Guid, StampDataToken> TokenIndex = [];
     public static bool TryFromNode(PrionNode node, out SessionData data)
     {
         data = new();
@@ -52,8 +48,13 @@ public class SessionData : IDataClass<SessionData>
             if(!MapData.TryFromNode(item, out MapData entry)) return false;
             data.Maps.Add(entry.Id, entry);
         }
-        if(!dict.TryGet("events", out prionArray )) return false;
-        data.Events = prionArray.Value;
+        if(!dict.TryGet("events", out prionArray)) return false;
+        // foreach (var item in prionArray.Value)
+        // {
+        //     if(!Event.TryFromNode(item, out Event eventObj)) return false;
+        //     data.Events.Add(eventObj);
+        // }
+        data.GenerateIndex();
         return true;
     }
 
@@ -65,7 +66,42 @@ public class SessionData : IDataClass<SessionData>
         dict.Set("actors", new PrionArray([..Actors.Values.Select(u => u.ToNode())]));
         dict.Set("handouts", new PrionArray([..Handouts.Values.Select(u => u.ToNode())]));
         dict.Set("maps", new PrionArray([..Maps.Values.Select(u => u.ToNode())]));
-        dict.Set("events", new PrionArray(Events));
+        // dict.Set("events", new PrionArray([..Events.Select(e => e.ToNode())]));
         return dict;
+    }
+    public void GenerateIndex()
+    {
+        foreach (var map in Maps.Values)
+        {
+            foreach (var layer in map.Layers)
+            {
+                LayerIndex[layer.Id] = layer;
+                foreach (var stamp in layer.Stamps)
+                {
+                    StampIndex[stamp.Id] = stamp;
+                    if(stamp is StampDataToken token) TokenIndex[token.Id] = token;
+                }
+            }
+        }
+    }
+    public string GetChecksum()
+    {
+        var str = ToNode().ToJson().ToJsonString();
+        var hashBytes = SHA256.HashData(Encoding.UTF8.GetBytes(str));
+        return Encoding.UTF8.GetString(hashBytes);
+    }
+
+    public void DispatchEvent(Guid targetId, string targetType, Event e)
+    {
+        switch (targetType)
+        {
+            case "actor":
+                if(Actors.TryGetValue(targetId, out ActorData actorData)) actorData.HandleEvent(e);
+                else OsirisSystem.ReportError($"Could not find actor with id '{targetId}'.");
+                break;
+            default:
+                OsirisSystem.ReportError("Invalid target type");
+                break;
+        }
     }
 }

@@ -74,7 +74,7 @@ public static class MockClass
     public static LayerData MockLayer()
     {
         int numStamps = MockData.Rng.Next(20);
-        LayerData data = new()
+        LayerData data = new(Guid.NewGuid())
         {
             DisplayName = MockData.GetRandomIdent(),
             IsVisible = MockData.GetRandomBool(),

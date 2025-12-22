@@ -1,11 +1,13 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Prion.Node;
 
 namespace Osiris.DataClass;
 
-public class LayerData : IDataClass<LayerData>
+public class LayerData(Guid id) : IDataClass<LayerData>
 {
+    public readonly Guid Id = id;
     public string DisplayName = "[Unnamed Layer]";
     public bool IsVisible = false;
     public List<StampData> Stamps = [];
@@ -13,7 +15,8 @@ public class LayerData : IDataClass<LayerData>
     {
         data = default;
         if(!node.TryAs(out PrionDict dict)) return false;
-        data = new();
+        if(!dict.TryGet("layer_id", out Guid id)) return false;
+        data = new(id);
         if(!dict.TryGet("display_name", out data.DisplayName)) return false;
         if(!dict.TryGet("is_visible", out data.IsVisible)) return false;
         if(!dict.TryGet("stamps", out PrionArray prionArray)) return false;
@@ -27,6 +30,7 @@ public class LayerData : IDataClass<LayerData>
     public PrionNode ToNode()
     {
         PrionDict dict = new();
+        dict.Set("layer_id", Id);
         dict.Set("display_name", DisplayName);
         dict.Set("is_visible", IsVisible);
         PrionArray stamps = new([..Stamps.Select(s => s.ToNode())]);
