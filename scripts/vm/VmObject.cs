@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Jint;
 using Jint.Native;
 
-namespace Osiris.Vm;
+namespace Osiris.Scripting;
 
 public class VmObject(Engine engine, string name)
 {

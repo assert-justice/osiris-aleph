@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using Jint.Native;
 
-namespace Osiris.Vm;
+namespace Osiris.Scripting;
 
 public static class VmBindLogging
 {

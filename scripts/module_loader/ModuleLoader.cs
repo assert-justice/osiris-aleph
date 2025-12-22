@@ -1,6 +1,8 @@
 using System.Text.Json.Nodes;
 using Prion.Node;
 using Prion.Schema;
+using Osiris.Scripting;
+using Jint;
 
 namespace Osiris.ModuleLoader;
 
@@ -9,10 +11,11 @@ public static class ModuleLoader
     public static void Example()
     {
         // System loosely based on Pathfinder 2E
-        string schemaDirPath = "res://example_module/schemas";
-        foreach (var filename in OsirisSystem.DirListFiles(schemaDirPath))
+        string examplePath = "res://example_module";
+        foreach (var filename in OsirisSystem.DirListFiles(examplePath + "/schemas"))
         {
-            string schemaSrc = OsirisSystem.ReadFile(schemaDirPath + "/" + filename);
+            if(!filename.EndsWith(".json")) continue;
+            string schemaSrc = OsirisSystem.ReadFile(examplePath + "/schemas/" + filename);
             var schemaJson = JsonNode.Parse(schemaSrc);
             if(!PrionNode.TryFromJson(schemaJson, out PrionNode prionNode, out string error))
             {
@@ -24,8 +27,26 @@ public static class ModuleLoader
                 OsirisSystem.ReportError(error);
                 continue;
             }
-            OsirisSystem.Log($"Loaded and registered schema for '{prionSchema.Name}'");
             PrionSchemaManager.RegisterSchema(prionSchema);
+            // OsirisSystem.Log($"Loaded and registered schema for '{prionSchema.Name}'");
         }
+        Vm.InitEngine();
+        bool foundMain = false;
+        foreach (var filename in OsirisSystem.DirListFiles(examplePath + "/scripts"))
+        {
+            if(filename == "main.js") foundMain = true;
+            if(!filename.EndsWith(".js")) continue;
+            string jsSrc = OsirisSystem.ReadFile(examplePath + "/scripts/" + filename);
+            string name = filename[..^3];
+            if(!Vm.Engine.TryAddModule(name, jsSrc)) continue;
+            OsirisSystem.Log($"Loaded script '{filename}'");
+        }
+        if(!foundMain)
+        {
+            OsirisSystem.ReportError("Could not find a 'main.js' file at supplied path.");
+            return;
+        }
+        if(!Vm.Engine.TryImportModule("main", out VmModule mainModule))return;
+        mainModule.TryCall("init");
     }
 }

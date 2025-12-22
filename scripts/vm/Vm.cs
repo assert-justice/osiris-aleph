@@ -1,30 +1,37 @@
 using System;
+using System.Collections.Generic;
 using Jint;
+using Jint.Native.Object;
 
-namespace Osiris.Vm
+namespace Osiris.Scripting;
+public partial class Vm
 {
-	public partial class Vm
+	static Vm _Engine;
+	public static Vm Engine
 	{
-		readonly Engine JsEngine;
-		public Vm()
+		get => _Engine;
+	}
+	public static void InitEngine()
+	{
+		_Engine = new();
+	}
+	readonly Engine JsEngine;
+	public Vm()
+	{
+		// Init Engine
+		JsEngine = new Engine(options =>
 		{
-			// Init Engine
-			JsEngine = new Engine(options =>
-			{
-				options.LimitMemory(4_000_000); // limit memory usage to 4 mb. pretty conservative, will likely need to go up
-				options.TimeoutInterval(TimeSpan.FromMilliseconds(500)); // limit timeout to 500ms. seems reasonable
-				options.Strict = true;
-			});
-			VmObject osiris = new(JsEngine, "Osiris");
-			VmBindLogging.Bind(osiris);
-			AddModule(osiris);
-
-			string exampleSrc = OsirisSystem.ReadFile("scripts/vm/js_scripts/example.js");
-			JsEngine.Modules.Add("example", exampleSrc);
-			var exampleMod = JsEngine.Modules.Import("example");
-			// exampleMod.Get("hello").Call();
-		}
-		void AddModule(VmObject module)
+			options.LimitMemory(4_000_000); // limit memory usage to 4 mb. pretty conservative, will likely need to go up
+			options.TimeoutInterval(TimeSpan.FromMilliseconds(500)); // limit timeout to 500ms. seems reasonable
+			options.Strict = true;
+		});
+		VmObject osiris = new(JsEngine, "Osiris");
+		VmBindLogging.Bind(osiris);
+		AddModule(osiris);
+	}
+	void AddModule(VmObject module)
+	{
+		try
 		{
 			JsEngine.Modules.Add(module.Name, mb =>
 			{
@@ -33,6 +40,40 @@ namespace Osiris.Vm
 					mb.ExportValue(n, mod);
 				}
 			});
+		}
+		catch (Exception e)
+		{
+			string message = e.ToString();
+			OsirisSystem.ReportError(message);
+		}
+	}
+	public bool TryAddModule(string moduleName, string src)
+	{
+		try
+		{
+			JsEngine.Modules.Add(moduleName, src);
+			return true;
+		}
+		catch (Exception e)
+		{
+			string message = e.ToString();
+			OsirisSystem.ReportError(message);
+			return false;
+		}
+	}
+	public bool TryImportModule(string name, out VmModule vmModule)
+	{
+		vmModule = default;
+		try
+		{
+			vmModule = new(JsEngine.Modules.Import(name));
+			return true;
+		}
+		catch (Exception e)
+		{
+			string message = e.ToString();
+			OsirisSystem.ReportError(message);
+			return false;
 		}
 	}
 }
