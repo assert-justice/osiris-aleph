@@ -9,19 +9,22 @@ public readonly struct Event
     public readonly string Name;
     public readonly DateTime Timestamp;
     public readonly PrionNode Payload;
-    public Event(string name, PrionNode payload)
+    public readonly Action<PrionNode> Callback;
+    public Event(string name, PrionNode payload, Action<PrionNode> callback = null)
     {
         Id = Guid.NewGuid();
         Name = name;
         Timestamp = DateTime.UtcNow;
         Payload = payload;
+        Callback = callback ?? (p => {});
     }
-    Event(Guid id, string name, DateTime timestamp, PrionNode payload)
+    Event(Guid id, string name, DateTime timestamp, PrionNode payload, Action<PrionNode> callback = null)
     {
         Id = id;
         Name = name;
         Timestamp = timestamp;
         Payload = payload;
+        Callback = callback ?? (p => {});
     }
     public static bool TryFromNode(PrionNode prionNode, out Event eventObj)
     {

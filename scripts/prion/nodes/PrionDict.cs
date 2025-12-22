@@ -42,7 +42,7 @@ public class PrionDict : PrionNode
 	}
 	public override string ToString()
 	{
-		return "dict";
+		return "PrionDict";
 	}
 
 	public bool TryGet<T>(string key, out T value) where T : PrionNode

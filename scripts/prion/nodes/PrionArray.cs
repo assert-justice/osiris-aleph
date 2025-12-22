@@ -44,7 +44,7 @@ public class PrionArray : PrionNode
 
     public override string ToString()
     {
-        return "array";
+        return "PrionArray";
     }
     public bool TryAs<T>(out List<T> res) where T : PrionNode
     {
