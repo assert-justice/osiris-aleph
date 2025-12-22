@@ -16,6 +16,16 @@ public static class TestUtils
         string filepath = $"../../../../../{filename}";
         return File.Exists(filepath);
     }
+    public static bool DirExists(string path)
+    {
+        path = $"../../../../../{path}";
+        return Directory.Exists(path);
+    }
+    public static string[] DirGetFilenames(string path)
+    {
+        path = $"../../../../../{path}";
+        return Directory.GetFiles(path);
+    }
     public static void Fail(string message = null)
     {
         if(message is not null) OsirisSystem.ReportError(message);

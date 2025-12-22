@@ -1,0 +1,45 @@
+{
+    "name": "actor_stats",
+    "version": "0.1.0",
+    "data":{
+        "name": "string",
+        "class": "string",
+        "level": "i32",
+        "ancestry": "string",
+        "heritage": "string",
+        "background": "string",
+        "alignment": "string",
+        "gender": "string",
+        "age": "string",
+        "deity": "string",
+        "size": "schema_enum: tiny, small, medium, large, huge, gargantuan",
+        "keyability": "string",
+        "languages": [
+            "string"
+        ],
+        "abilities": {
+            "str": "i32",
+            "dex": "i32",
+            "con": "i32",
+            "int": "i32",
+            "wis": "i32",
+            "cha": "i32"
+        },
+        "attributes": {
+            "ancestryhp": "i32",
+            "classhp": "i32",
+            "bonushp": "i32",
+            "bonushpPerLevel": "i32",
+            "speed": "i32",
+            "speedBonus": "i32"
+        },
+        "proficiencies":{
+            "classDC": "i32",
+            "perception": "i32",
+            "fortitude": "i32",
+            "reflex": "i32",
+            "will": "i32"
+        },
+        "#note": "noted"
+    }
+}
