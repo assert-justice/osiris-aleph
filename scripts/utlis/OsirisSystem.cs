@@ -66,7 +66,7 @@ namespace Osiris
                 ReportError(error);
                 return;
             }
-            PrionSchemaManager.RegisterSchema(type, prionSchema);
+            PrionSchemaManager.RegisterSchema(prionSchema, type);
         }
         public static void EnterTestMode()
         {
