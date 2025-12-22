@@ -1,9 +1,9 @@
 declare module "Osiris"{
     export namespace Logging{
-        function Log(...args: any[]);
-        function LogError(...args: any[]);
+        function log(...args: any[]): void;
+        function logError(...args: any[]): void;
     }
     export namespace Actor{
-        function ListActors(): string[];
+        function listActors(): string[];
     }
 }

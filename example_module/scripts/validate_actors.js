@@ -1,8 +1,12 @@
-import { Logging } from "Osiris";
+import { Logging, Actor } from "Osiris";
 
-Logging.Log("Validate actor module loaded!");
+Logging.log("Validate actor module loaded!");
 
 export function validateActors(){
-    Logging.Log("validating...");
-    // Logging.Log(Actor.ListActors);
+    Logging.log("validating...");
+    for (const actor of Actor.listActors()) {
+        for (const [key, value] of Object.entries(actor)) {
+            Logging.log(key, ": ", value);
+        }
+    }
 }

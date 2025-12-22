@@ -44,7 +44,7 @@ public class PrionArray : PrionNode
 
     public override string ToString()
     {
-        throw new System.NotImplementedException();
+        return "array";
     }
     public bool TryAs<T>(out List<T> res) where T : PrionNode
     {

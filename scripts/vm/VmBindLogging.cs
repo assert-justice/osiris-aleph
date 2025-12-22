@@ -9,8 +9,8 @@ public static class VmBindLogging
     public static void Bind(VmObject module)
     {
         VmObject logging = new(module.Engine, "Logging");
-        logging.AddObject("Log", new Action<JsValue[]>(Log));
-        logging.AddObject("LogError", new Action<JsValue[]>(LogError));
+        logging.AddObject("log", new Action<JsValue[]>(Log));
+        logging.AddObject("logError", new Action<JsValue[]>(LogError));
         module.AddVmObject(logging);
     }
     public static void Log(params JsValue[] messages)

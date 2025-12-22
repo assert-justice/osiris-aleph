@@ -42,7 +42,7 @@ public class PrionDict : PrionNode
 	}
 	public override string ToString()
 	{
-		throw new System.NotImplementedException();
+		return "dict";
 	}
 
 	public bool TryGet<T>(string key, out T value) where T : PrionNode

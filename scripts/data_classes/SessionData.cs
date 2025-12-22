@@ -13,6 +13,15 @@ public class SessionData : IDataClass<SessionData>
     public Dictionary<Guid, HandoutData> Handouts = [];
     public Dictionary<Guid, MapData> Maps = [];
     public List<PrionNode> Events = [];
+    static SessionData _Session;
+    public static SessionData Session
+    {
+        get
+        {
+            _Session ??= new();
+            return _Session;
+        }
+    }
     public static bool TryFromNode(PrionNode node, out SessionData data)
     {
         data = new();

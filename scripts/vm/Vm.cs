@@ -9,11 +9,11 @@ public partial class Vm
 	static Vm _Engine;
 	public static Vm Engine
 	{
-		get => _Engine;
-	}
-	public static void InitEngine()
-	{
-		_Engine = new();
+		get
+		{
+			_Engine ??= new();
+			return _Engine;
+		}
 	}
 	readonly Engine JsEngine;
 	public Vm()
@@ -27,6 +27,7 @@ public partial class Vm
 		});
 		VmObject osiris = new(JsEngine, "Osiris");
 		VmBindLogging.Bind(osiris);
+		VmBindActors.Bind(osiris);
 		AddModule(osiris);
 	}
 	void AddModule(VmObject module)

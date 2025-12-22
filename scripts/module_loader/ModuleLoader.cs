@@ -3,6 +3,9 @@ using Prion.Node;
 using Prion.Schema;
 using Osiris.Scripting;
 using Jint;
+using Osiris.DataClass;
+using System;
+using Osiris.DataClass.Tests;
 
 namespace Osiris.ModuleLoader;
 
@@ -30,7 +33,9 @@ public static class ModuleLoader
             PrionSchemaManager.RegisterSchema(prionSchema);
             // OsirisSystem.Log($"Loaded and registered schema for '{prionSchema.Name}'");
         }
-        Vm.InitEngine();
+        var actor = MockClass.MockActor();
+        // OsirisSystem.Log(actor.Id);
+        SessionData.Session.Actors.Add(actor.Id, actor);
         bool foundMain = false;
         foreach (var filename in OsirisSystem.DirListFiles(examplePath + "/scripts"))
         {
