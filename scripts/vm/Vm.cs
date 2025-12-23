@@ -29,7 +29,7 @@ public class Vm
 		Dictionary<string, JsValue> osiris = [];
 		VmBindLogging.Bind(this, osiris);
 		VmBindActors.Bind(this, osiris);
-		VmBindEvent.Bind(this, osiris);
+		// VmBindEvent.Bind(this, osiris);
 		AddModule("Osiris", osiris);
 	}
 	public JsValue ParseJson(string jsonString)

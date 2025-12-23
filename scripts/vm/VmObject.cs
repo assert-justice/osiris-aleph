@@ -2,11 +2,20 @@ using Jint.Native;
 
 namespace Osiris.Scripting;
 
-public class VmObject(Vm vm, JsObject jsObject = null)
+public class VmObject
 {
-    // public readonly string Name = name;
-    public readonly Vm Vm = vm;
-    public readonly JsObject Object = jsObject ?? new(vm.Engine);
+    public readonly Vm Vm;
+    public readonly JsObject Object;
+    public VmObject(Vm vm, JsObject jsObject = null)
+    {
+        Vm = vm;
+        Object = jsObject ?? new(vm.Engine);
+    }
+    public VmObject(Vm vm, JsValue jsValue)
+    {
+        Vm = vm;
+        Object = (JsObject)jsValue;
+    }
     public void AddObject(string name, object obj)
     {
         var jsValue = JsValue.FromObject(Vm.Engine, obj);

@@ -13,6 +13,7 @@ public class ActorData : IDataClass<ActorData>, IEventReceiver<ActorData>
     public string TokenFilename = "";
     public PrionDict Stats = new();
     public string Description = "They are very mysterious.";
+    public Dictionary<string, string> State = [];
 
     public ActorData(Guid guid)
     {
@@ -34,24 +35,33 @@ public class ActorData : IDataClass<ActorData>, IEventReceiver<ActorData>
         };
         if(!prionDict.TryGet("controlled_by", out data.ControlledBy)) return false;
         if(!prionDict.TryGet("stats", out data.Stats)) return false;
+        if(prionDict.TryGet("state?", out prionDict))
+        {
+            foreach (var (key, value) in prionDict.Value)
+            {
+                if(!value.TryAs(out PrionString prionString)) return false;
+                data.State[key] = prionString.Value;
+            }
+        }
         return true;
-    }
-
-    public void HandleEvent(Event eventObj)
-    {
-        IEventReceiver<ActorData>.InvokeEvent(this, eventObj);
     }
 
     public PrionNode ToNode()
     {
+        PrionDict dict = new();
+        dict.Set("actor_id", Id);
+        dict.Set("display_name?", DisplayName);
+        dict.Set("portrait_filename?", PortraitFilename);
+        dict.Set("token_filename?", TokenFilename);
+        dict.Set("description?", Description);
+        dict.Value["controlled_by"] = new PrionArray([.. ControlledBy.Select(o => new PrionGuid(o))]);
+        dict.Value["stats"] = Stats;
         PrionDict prionDict = new();
-        prionDict.Set("actor_id", Id);
-        prionDict.Set("display_name?", DisplayName);
-        prionDict.Set("portrait_filename?", PortraitFilename);
-        prionDict.Set("token_filename?", TokenFilename);
-        prionDict.Set("description?", Description);
-        prionDict.Value["controlled_by"] = new PrionArray([.. ControlledBy.Select(o => new PrionGuid(o))]);
-        prionDict.Value["stats"] = Stats;
-        return prionDict;
+        foreach (var (key, value) in State)
+        {
+            prionDict.Set(key, new PrionString(value));
+        }
+        dict.Set("state?", prionDict);
+        return dict;
     }
 }

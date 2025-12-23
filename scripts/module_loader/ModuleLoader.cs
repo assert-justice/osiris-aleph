@@ -44,7 +44,7 @@ public static class ModuleLoader
             string jsSrc = OsirisSystem.ReadFile(examplePath + "/scripts/" + filename);
             string name = filename[..^3];
             if(!OsirisSystem.Vm.TryAddModule(name, jsSrc)) continue;
-            OsirisSystem.Log($"Loaded script '{filename}'");
+            // OsirisSystem.Log($"Loaded script '{filename}'");
         }
         if(!foundMain)
         {
