@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Nodes;
 using Jint.Native;
 using Osiris.DataClass;
 using Prion.Node;
@@ -52,12 +53,13 @@ class ActorDataWrapper(ActorData data) : VmDataWrapper<ActorData>(data)
         if(!InEventHandler) OsirisSystem.ReportError("Cannot set state of actor outside of an event handler.");
         else Data.State[key] = value;
     }
-    public void applyEvent(JsObject payload)
+
+    public override void applyEvent(JsValue payload)
     {
-        Event e = new(Guid.Empty, Data.Id, "actor", new(OsirisSystem.Vm, payload));
-        if(!OsirisSystem.Session.TryApplyEvent(e)) return; // TODO: log this?
+        Event e = new(Guid.Empty, Data.Id, "actor", OsirisSystem.Vm.GetVmObject(payload));
+        if(!OsirisSystem.Session.TryApplyEvent(e)) return; // TODO: log when this happens?
         InEventHandler = true;
-        IEventReceiver<ActorDataWrapper>.InvokeEvent(this, e);
+        EventHandler(this, e);
         InEventHandler = false;
     }
 }
@@ -70,9 +72,9 @@ public static class VmBindActors
         actorModule.AddObject("listActors", new Func<ActorDataWrapper[]>(ListActors));
         actorModule.AddObject("setEventHandler", new Action<Action<ActorDataWrapper, JsObject>>(fn =>
         {
-            IEventReceiver<ActorDataWrapper>.SetEventHandler((a,e) =>
+            ActorDataWrapper.SetEventHandler((a,e) =>
             {
-                fn(a, e.Payload.ToJsObject());
+                fn(a as ActorDataWrapper, e.Payload.ToJsObject());
             });
         }));
         module.Add("Actor", actorModule.ToJsObject());

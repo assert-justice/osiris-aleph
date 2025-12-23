@@ -40,6 +40,10 @@ public class Vm
 	{
 		return JsonSerializer.Serialize(jsValue).ToString();
 	}
+	public VmObject GetVmObject(JsValue jsValue)
+	{
+		return new(this, jsValue);
+	}
 	void AddModule(string name, Dictionary<string, JsValue> module)
 	{
 		try

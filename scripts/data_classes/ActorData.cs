@@ -4,7 +4,7 @@ using System.Linq;
 using Prion.Node;
 
 namespace Osiris.DataClass;
-public class ActorData : IDataClass<ActorData>, IEventReceiver<ActorData>
+public class ActorData : IDataClass<ActorData>
 {
     public readonly Guid Id;
     public string DisplayName = "[Mysterious Figure]";
