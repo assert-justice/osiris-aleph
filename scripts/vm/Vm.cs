@@ -40,7 +40,7 @@ public class Vm
 	{
 		return JsonSerializer.Serialize(jsValue).ToString();
 	}
-	public VmObject GetVmObject(JsValue jsValue)
+	public VmObject GetVmObject(JsValue jsValue = null)
 	{
 		return new(this, jsValue);
 	}

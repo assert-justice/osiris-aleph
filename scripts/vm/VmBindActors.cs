@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json.Nodes;
 using Jint.Native;
 using Osiris.DataClass;
 using Prion.Node;
@@ -11,7 +10,7 @@ namespace Osiris.Scripting;
 class ActorDataWrapper(ActorData data) : VmDataWrapper<ActorData>(data)
 {
     string StatsString;
-    bool InEventHandler = false;
+    // bool InEventHandler = false;
     public Guid getId(){return Data.Id;}
     public string getName(){return Data.DisplayName;}
     public void setName(string name)
@@ -56,11 +55,12 @@ class ActorDataWrapper(ActorData data) : VmDataWrapper<ActorData>(data)
 
     public override void applyEvent(JsValue payload)
     {
-        Event e = new(Guid.Empty, Data.Id, "actor", OsirisSystem.Vm.GetVmObject(payload));
-        if(!OsirisSystem.Session.TryApplyEvent(e)) return; // TODO: log when this happens?
-        InEventHandler = true;
-        EventHandler(this, e);
-        InEventHandler = false;
+        ApplyEventInternal(Data.Id, "actor", payload);
+        // Event e = new(Guid.Empty, Data.Id, "actor", OsirisSystem.Vm.GetVmObject(payload));
+        // if(!OsirisSystem.Session.TryApplyEvent(e)) return; // TODO: log when this happens?
+        // InEventHandler = true;
+        // EventHandler(this, e);
+        // InEventHandler = false;
     }
 }
 

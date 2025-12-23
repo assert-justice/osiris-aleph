@@ -8,6 +8,7 @@ export function init(){
     let actor = Actor.listActors()[0];
     Logging.log("id: ", actor.getId());
     Logging.log("name: ", actor.getName());
+    Logging.log("hmn: ", actor.getState["sup"] ?? "yo");
     actor.applyEvent({name: "butts"});
     Logging.log("name: ", actor.getName());
 }

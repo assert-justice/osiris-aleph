@@ -14,7 +14,7 @@ public class VmObject
     public VmObject(Vm vm, JsValue jsValue)
     {
         Vm = vm;
-        Object = (JsObject)jsValue;
+        Object = (JsObject)jsValue ?? new(vm.Engine);
     }
     public void AddObject(string name, object obj)
     {
