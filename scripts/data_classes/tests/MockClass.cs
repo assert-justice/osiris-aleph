@@ -48,12 +48,14 @@ public static class MockClass
     }
     public static BlockerData MockBlocker()
     {
-        BlockerData data = new();
-        data.Start = MockData.GetRandomVector2I(-100, 100, -100, 100);
-        data.End = MockData.GetRandomVector2I(-100, 100, -100, 100);
-        data.Status = (BlockerData.BlockerStatus)MockData.Rng.Next(4);
-        data.Opaque = MockData.GetRandomBool();
-        data.BlocksEffects = MockData.GetRandomBool();
+        BlockerData data = new()
+        {
+            Start = MockData.GetRandomVector2I(-100, 100, -100, 100),
+            End = MockData.GetRandomVector2I(-100, 100, -100, 100),
+            Status = (BlockerData.BlockerStatus)MockData.Rng.Next(4),
+            IsOpaque = MockData.GetRandomBool(),
+            IsSolid = MockData.GetRandomBool()
+        };
         return data;
     }
     public static HandoutData MockHandout()

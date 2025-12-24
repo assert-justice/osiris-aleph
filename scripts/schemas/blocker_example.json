@@ -2,6 +2,6 @@
     "start": "vector2i:0,0",
     "end": "vector2i:1,0",
     "status": "enum: closed, locked, open, wall: wall",
-    "opaque?": true,
-    "blocks_effects?": true
+    "is_opaque?": true,
+    "is_solid?": true
 }

@@ -17,8 +17,8 @@ public class BlockerData : IDataClass<BlockerData>
     public Vector2I Start = Vector2I.Zero;
     public Vector2I End = Vector2I.Zero;
     public BlockerStatus Status = BlockerStatus.Wall;
-    public bool Opaque = true;
-    public bool BlocksEffects = true;
+    public bool IsOpaque = true;
+    public bool IsSolid = true;
     static BlockerStatus StatusFromString(string status) => status switch
     {
         "wall" => BlockerStatus.Wall,
@@ -38,8 +38,8 @@ public class BlockerData : IDataClass<BlockerData>
         data.End = new(v2i.X, v2i.Y);
         if(!dict.TryGet("status", out PrionEnum prionEnum)) return false;
         data.Status = StatusFromString(prionEnum.GetValue());
-        if(!dict.TryGet("opaque?", out data.Opaque)) return false;
-        if(!dict.TryGet("blocks_effects?", out data.BlocksEffects)) return false;
+        if(!dict.TryGet("is_opaque?", out data.IsOpaque)) return false;
+        if(!dict.TryGet("is_solid?", out data.IsSolid)) return false;
         return true;
     }
     public PrionNode ToNode()
@@ -49,8 +49,8 @@ public class BlockerData : IDataClass<BlockerData>
         dict.Set("start", new PrionVector2I(Start.X, Start.Y));
         dict.Set("end", new PrionVector2I(End.X, End.Y));
         dict.Set("status", prionEnum);
-        dict.Set("opaque?", Opaque);
-        dict.Set("blocks_effects?", BlocksEffects);
+        dict.Set("is_opaque?", IsOpaque);
+        dict.Set("is_solid?", IsSolid);
         return dict;
     }
 }
