@@ -15,9 +15,6 @@ public class SessionData : IDataClass<SessionData>
     public Dictionary<Guid, HandoutData> Handouts = [];
     public Dictionary<Guid, MapData> Maps = [];
     public List<Event> Events = [];
-    public Dictionary<Guid, LayerData> LayerIndex = [];
-    public Dictionary<Guid, StampData> StampIndex = [];
-    public Dictionary<Guid, StampDataToken> TokenIndex = [];
     public Dictionary<Guid, Event> EventIndex = [];
     public static bool TryFromNode(PrionNode node, out SessionData data)
     {
@@ -55,7 +52,6 @@ public class SessionData : IDataClass<SessionData>
             if(!Event.TryFromNode(item, out Event eventObj)) return false;
             data.Events.Add(eventObj);
         }
-        data.GenerateIndex();
         return true;
     }
 
@@ -69,21 +65,6 @@ public class SessionData : IDataClass<SessionData>
         dict.Set("maps", new PrionArray([..Maps.Values.Select(u => u.ToNode())]));
         dict.Set("events", new PrionArray([..Events.Select(e => e.ToNode())]));
         return dict;
-    }
-    public void GenerateIndex()
-    {
-        foreach (var map in Maps.Values)
-        {
-            foreach (var layer in map.Layers)
-            {
-                LayerIndex[layer.Id] = layer;
-                foreach (var stamp in layer.Stamps)
-                {
-                    StampIndex[stamp.Id] = stamp;
-                    if(stamp is StampDataToken token) TokenIndex[token.Id] = token;
-                }
-            }
-        }
     }
     public string GetChecksum()
     {

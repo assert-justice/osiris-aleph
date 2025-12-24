@@ -1,12 +1,11 @@
 {
     "stamp_id": "guid: 9f6adc6e-a466-4ec2-882c-785a1cfe1e42",
-    "stamp_type": "enum: text, image, token: token",
+    "display_name?": "my token",
     "controlled_by": [],
-    "rect": "rect2i:0,0,0,0",
+    "rect": "rect2i:0,0,1,1",
     "angle": "f32: 0",
     "token_data?": {
         "actor_id": "guid: 2ccc8d6a-18cd-4eef-a36e-bff20d4d5281",
-        "is_unique": true,
-        "stats": {}
+        "stats?": null
     }
 }

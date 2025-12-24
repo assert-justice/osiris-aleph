@@ -3,14 +3,15 @@
     "version": "0.1.0",
     "data":{
         "stamp_id": "guid",
+        "display_name?": "string",
         "controlled_by": ["guid"],
-        "stamp_type": "schema_enum: text, image, token",
         "rect": "rect2i",
         "angle": "f32",
         "vision_radius?": "f32",
-        "light_radius?": "f32",
-        "light_color?": "color",
-        "effects?":"dynamic",
+        "lights?": [{
+            "color": "color",
+            "radius": "f32"
+        }],
         "image_data?": {
             "image_filename?": "string",
             "stretch_mode?": "schema_enum: scale, tile, keep, keep_centered, keep_aspect, keep_aspect_centered, keep_aspect_covered"
@@ -27,8 +28,9 @@
         },
         "token_data?": {
             "actor_id": "guid",
-            "is_unique": "boolean",
-            "stats": "dynamic"
+            "#is_unique": "boolean",
+            "stats?": "dynamic",
+            "#note": "if stats are not null then the actor is not unique. if they are null then incoming changes to stats should propagate to the actor."
         }
     }
 }

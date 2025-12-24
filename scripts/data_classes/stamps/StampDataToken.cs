@@ -3,27 +3,28 @@ using Prion.Node;
 
 namespace Osiris.DataClass;
 
-public class StampDataToken(Guid id) : StampData(id)
+public class StampDataToken : IDataClass<StampDataToken>
 {
     public Guid ActorId;
-    public bool IsUnique;
-    public PrionDict Stats = new();
-    public override bool TryFinishFromNode(PrionDict prionDict)
+    public PrionDict Stats;
+    public static bool TryFromNode(PrionNode node, out StampDataToken data)
     {
-        if(!prionDict.TryGet("token_data?", out PrionDict data)) return false;
-        if(!data.TryGet("actor_id", out ActorId)) return false;
-        if(!data.TryGet("is_unique", out IsUnique)) return false;
-        if(!data.TryGet("stats", out Stats)) return false;
+        data = default;
+        if(!node.TryAs(out PrionDict dict)) return false;
+        if (!dict.TryGet("actor_id", out Guid actorId)) return false;
+        data = new()
+        {
+            ActorId = actorId,
+            Stats = dict.GetDefault<PrionDict>("stats?", null),
+        };
         return true;
     }
-    public override PrionNode ToNode()
+
+    public PrionNode ToNode()
     {
-        var node = BaseToNode();
         PrionDict dict = new();
         dict.Set("actor_id", ActorId);
-        dict.Set("is_unique", IsUnique);
-        dict.Set("stats", Stats);
-        node.Set("token_data?", dict);
-        return node;
+        dict.Set("stats?", Stats);
+        return dict;
     }
 }

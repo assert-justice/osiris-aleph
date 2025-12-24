@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Prion.Node;
 
 namespace Osiris.DataClass.Tests;
 
@@ -80,7 +81,7 @@ public static class MockClass
         {
             DisplayName = MockData.GetRandomIdent(),
             IsVisible = MockData.GetRandomBool(),
-            Stamps = MockData.GetRandomList(()=>TestStampData.MockRandom(), numStamps),
+            // Stamps = MockData.GetRandomList(()=>TestStampData.MockRandom(), numStamps),
         };
         return data;
     }
@@ -133,6 +134,66 @@ public static class MockClass
         {
             data.Users.Add(item.Id, item);
         }
+        return data;
+    }
+    public static StampData MockStampData()
+    {
+        var pos = MockData.GetRandomVector2I(-100, 100, -100, 100);
+        var size = MockData.GetRandomVector2I(1, 5, 1, 5);
+        bool hasImage = MockData.Rng.Next(2) == 0;
+        bool hasText = MockData.Rng.Next(2) == 0;
+        bool hasToken = MockData.Rng.Next(2) == 0;
+        StampDataImage image = hasImage ? MockStampDataImage() : null;
+        StampDataText text = hasText ? MockStampDataText() : null;
+        StampDataToken token = hasToken ? MockStampDataToken() : null;
+        StampData data = new(Guid.NewGuid())
+        {
+            ControlledBy = MockData.GetRandomSet(Guid.NewGuid, MockData.Rng.Next(4)),
+            Rect = new(pos, size),
+            Angle = MockData.GetRandomFloat() * (float)Math.PI * 2,
+            VisionRadius = MockData.GetRandomFloat(5, 50),
+            HasVision = MockData.GetRandomBool(),
+            ImageData = image,
+            TextData = text,
+            TokenData = token
+        };
+        return data;
+    }
+    static StampDataImage MockStampDataImage()
+    {
+        StampDataImage data = new()
+        {
+            ImageFilename = MockData.GetRandomIdent(),
+            StretchMode = (StampDataImage.ImageStretchMode)MockData.Rng.Next(6)
+        };
+        return data;
+    }
+    static StampDataText MockStampDataText()
+    {
+        StampDataText data = new()
+        {
+            Text = MockData.GetRandomText(1000),
+            FontFilename = MockData.GetRandomIdent(),
+            FontSize = MockData.GetRandomIdent(),
+            Margins = [
+                MockData.GetRandomIdent(),
+                MockData.GetRandomIdent(),
+                MockData.GetRandomIdent(),
+                MockData.GetRandomIdent(),
+            ],
+            WrapMode = (StampDataText.TextWrapMode)MockData.Rng.Next(4)
+        };
+        return data;
+    }
+    static StampDataToken MockStampDataToken()
+    {
+        bool hasStats = MockData.Rng.Next(2) == 0;
+        PrionDict stats = hasStats ? new() : null;
+        StampDataToken data = new()
+        {
+            ActorId = Guid.NewGuid(),
+            Stats = stats
+        };
         return data;
     }
     public static TileGroupData MockTileGroup()

@@ -75,9 +75,7 @@ public static class OsirisSystem
 			(typeof(LayerData), "layer"),
 			(typeof(MapData), "map"),
 			(typeof(SessionData), "session"),
-			(typeof(StampDataImage), "stamp"),
-			(typeof(StampDataText), "stamp"),
-			(typeof(StampDataToken), "stamp"),
+			(typeof(StampData), "stamp"),
 			(typeof(TileGroupData), "tile_group"),
 			(typeof(UserData), "user"),
 		];

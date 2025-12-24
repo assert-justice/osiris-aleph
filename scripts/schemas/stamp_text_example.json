@@ -1,11 +1,11 @@
 {
     "stamp_id": "guid: 6ee762f1-3ddd-43cb-a027-bf1f1b5568ac",
-    "stamp_type": "enum: text, image, token: text",
+    "display_name?": "my text",
     "controlled_by": [],
-    "rect": "rect2i:0,0,0,0",
+    "rect": "rect2i:0,0,4,2",
     "angle": "f32: 0",
     "text_data?": {
-        "text": "",
+        "text": "here is some text",
         "size?": "16 px",
         "margin_left?": "16 px",
         "margin_right?": "16 px",

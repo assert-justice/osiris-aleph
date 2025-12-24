@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Godot;
 using Prion.Node;
 
 namespace Osiris.DataClass;
 
-public abstract class StampData(Guid id) : IDataClass<StampData>
+public class StampData(Guid id) : IDataClass<StampData>
 {
     public readonly Guid Id = id;
+    public string DisplayName = "";
     public HashSet<Guid> ControlledBy = [];
     public Rect2I Rect = new();
     public float Angle = 0;
@@ -18,15 +18,16 @@ public abstract class StampData(Guid id) : IDataClass<StampData>
     // public float LightRadius = 0;
     // public bool HasLight = false;
     // public Color LightColor = Colors.White;
-    public PrionDict Effects = new();
+    public StampDataImage ImageData;
+    public StampDataText TextData;
+    public StampDataToken TokenData;
 
     public static bool TryFromNode(PrionNode node, out StampData data)
     {
         data = default;
         if(!node.TryAs(out PrionDict dict)) return false;
         if(!dict.TryGet("stamp_id", out Guid id)) return false;
-        if(!dict.TryGet("stamp_type", out PrionEnum typeEnum)) return false;
-        data = InitStamp(id, typeEnum.GetValue());
+        data = new(id);
         if(!dict.TryGet("controlled_by", out HashSet<Guid> guids)) return false;
         foreach (var item in guids)
         {
@@ -36,57 +37,31 @@ public abstract class StampData(Guid id) : IDataClass<StampData>
         data.Rect = ConversionUtils.FromPrionRect2I(rect);
         if(!dict.TryGet("angle", out data.Angle)) return false;
         if(dict.TryGet("vision_radius?", out data.VisionRadius)) data.HasVision = true;
-        // if(dict.TryGet("light_radius?", out data.LightRadius)) data.HasLight = true;
-        // if(dict.TryGet("light_color?", out PrionColor prionColor)) data.LightColor = ConversionUtils.FromPrionColor(prionColor);
-        if(dict.TryGet("effects?", out PrionDict effects)) data.Effects = effects;
-        return data.TryFinishFromNode(dict);
-    }
-    public static bool TryFromNode<T>(PrionNode node, out T data) where T : StampData
-    {
-        data = default;
-        if(!TryFromNode(node, out StampData stampData)) return false;
-        if(stampData is T res)
+        if(dict.TryGet("image_data?", out PrionDict prionDict))
         {
-            data = res;
-            return true;
+            if(!StampDataImage.TryFromNode(prionDict, out data.ImageData)) return false;
         }
-        return false;
-    }
-
-    protected PrionDict BaseToNode()
-    {
-        PrionDict res = new();
-        res.Set("stamp_id", Id);
-        string name = GetType().ToString().Split("StampData")[1].ToLower();
-        PrionEnum.TryFromOptions("text, image, token", name, out PrionEnum prionEnum, out string _);
-        res.Set("stamp_type", prionEnum);
-        res.Set("controlled_by", ControlledBy);
-        res.Set("rect", ConversionUtils.ToPrionRect2I(Rect));
-        res.Set("angle", Angle);
-        if(HasVision) res.Set("vision_radius?", VisionRadius);
-        // if (HasLight)
-        // {
-        //     res.Set("light_radius?", LightRadius);
-        //     res.Set("light_color?", ConversionUtils.ToPrionColor(LightColor));
-        // }
-        if(Effects.Value.Count > 0) res.Set("effects?", Effects);
-        return res;
-    }
-    static StampData InitStamp(Guid id, string type)
-    {
-        switch (type)
+        if(dict.TryGet("text_data?", out prionDict))
         {
-            case "text":
-                return new StampDataText(id);
-            case "image":
-                return new StampDataImage(id);
-            case "token":
-                return new StampDataToken(id);
-            default:
-                OsirisSystem.ReportError($"Unexpected type for stamp '{type}'");
-                return default;
+            if(!StampDataText.TryFromNode(prionDict, out data.TextData)) return false;
         }
+        if(dict.TryGet("token_data?", out prionDict))
+        {
+            if(!StampDataToken.TryFromNode(prionDict, out data.TokenData)) return false;
+        }
+        return true;
     }
-    public abstract PrionNode ToNode();
-    public abstract bool TryFinishFromNode(PrionDict prionDict);
+    public PrionNode ToNode()
+    {
+        PrionDict dict = new();
+        dict.Set("stamp_id", Id);
+        dict.Set("controlled_by", ControlledBy);
+        dict.Set("rect", ConversionUtils.ToPrionRect2I(Rect));
+        dict.Set("angle", Angle);
+        if(HasVision) dict.Set("vision_radius?", VisionRadius);
+        if(ImageData is not null) dict.Set("image_data?", ImageData.ToNode());
+        if(TextData is not null) dict.Set("text_data?", TextData.ToNode());
+        if(TokenData is not null) dict.Set("token_data?", TokenData.ToNode());
+        return dict;
+    }
 }
