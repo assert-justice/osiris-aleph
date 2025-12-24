@@ -81,7 +81,16 @@ public static class MockClass
         {
             DisplayName = MockData.GetRandomIdent(),
             IsVisible = MockData.GetRandomBool(),
-            // Stamps = MockData.GetRandomList(()=>TestStampData.MockRandom(), numStamps),
+            Stamps = MockData.GetRandomList(MockStampData, numStamps),
+        };
+        return data;
+    }
+    public static LightData MockLight()
+    {
+        LightData data = new(Guid.NewGuid())
+        {
+            Radius = MockData.GetRandomFloat(),
+            Color = MockData.GetRandomColor()
         };
         return data;
     }
@@ -103,8 +112,8 @@ public static class MockClass
             GridColor = MockData.GetRandomColor(),
             GridLineWidth = MockData.GetRandomFloat(1, 16),
             Blockers = MockData.GetRandomList(MockBlocker, numBlockers),
-            TileGroups = MockData.GetRandomList(MockTileGroup, numBlockers),
-            Layers = MockData.GetRandomList(MockLayer, numBlockers),
+            TileGroups = MockData.GetRandomList(MockTileGroup, numTileGroups),
+            Layers = MockData.GetRandomList(MockLayer, numLayers),
         };
         return data;
     }
@@ -143,6 +152,7 @@ public static class MockClass
         bool hasImage = MockData.Rng.Next(2) == 0;
         bool hasText = MockData.Rng.Next(2) == 0;
         bool hasToken = MockData.Rng.Next(2) == 0;
+        int numLights = MockData.Rng.Next(0, 10);
         StampDataImage image = hasImage ? MockStampDataImage() : null;
         StampDataText text = hasText ? MockStampDataText() : null;
         StampDataToken token = hasToken ? MockStampDataToken() : null;
@@ -153,6 +163,7 @@ public static class MockClass
             Angle = MockData.GetRandomFloat() * (float)Math.PI * 2,
             VisionRadius = MockData.GetRandomFloat(5, 50),
             HasVision = MockData.GetRandomBool(),
+            Lights = MockData.GetRandomList(MockLight, numLights),
             ImageData = image,
             TextData = text,
             TokenData = token

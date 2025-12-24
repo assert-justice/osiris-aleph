@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Godot;
 using Prion.Node;
 
@@ -14,10 +15,7 @@ public class StampData(Guid id) : IDataClass<StampData>
     public float Angle = 0;
     public float VisionRadius = 0;
     public bool HasVision = false;
-    // TODO: restore light functionality
-    // public float LightRadius = 0;
-    // public bool HasLight = false;
-    // public Color LightColor = Colors.White;
+    public List<LightData> Lights = [];
     public StampDataImage ImageData;
     public StampDataText TextData;
     public StampDataToken TokenData;
@@ -37,6 +35,14 @@ public class StampData(Guid id) : IDataClass<StampData>
         data.Rect = ConversionUtils.FromPrionRect2I(rect);
         if(!dict.TryGet("angle", out data.Angle)) return false;
         if(dict.TryGet("vision_radius?", out data.VisionRadius)) data.HasVision = true;
+        if(dict.TryGet("lights?", out PrionArray prionArray))
+        {
+            foreach (var item in prionArray.Value)
+            {
+                if(!LightData.TryFromNode(item, out LightData light)) return false;
+                data.Lights.Add(light);
+            }
+        }
         if(dict.TryGet("image_data?", out PrionDict prionDict))
         {
             if(!StampDataImage.TryFromNode(prionDict, out data.ImageData)) return false;
@@ -58,6 +64,7 @@ public class StampData(Guid id) : IDataClass<StampData>
         dict.Set("controlled_by", ControlledBy);
         dict.Set("rect", ConversionUtils.ToPrionRect2I(Rect));
         dict.Set("angle", Angle);
+        dict.Set("lights?", new PrionArray([.. Lights.Select(l => l.ToNode())]));
         if(HasVision) dict.Set("vision_radius?", VisionRadius);
         if(ImageData is not null) dict.Set("image_data?", ImageData.ToNode());
         if(TextData is not null) dict.Set("text_data?", TextData.ToNode());

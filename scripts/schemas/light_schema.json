@@ -1,0 +1,9 @@
+{
+    "name": "light",
+    "version": "0.1.0",
+    "data":{
+        "light_id": "guid",
+        "radius": "f32",
+        "color?": "color"
+    }
+}

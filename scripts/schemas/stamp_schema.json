@@ -9,8 +9,9 @@
         "angle": "f32",
         "vision_radius?": "f32",
         "lights?": [{
-            "color": "color",
-            "radius": "f32"
+            "light_id": "guid",
+            "radius": "f32",
+            "color?": "color"
         }],
         "image_data?": {
             "image_filename?": "string",
