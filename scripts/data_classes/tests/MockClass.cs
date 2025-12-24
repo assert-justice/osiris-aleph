@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Godot;
 using Prion.Node;
 
 namespace Osiris.DataClass.Tests;
@@ -97,8 +98,18 @@ public static class MockClass
     public static MapData MockMap()
     {
         int numBlockers = MockData.Rng.Next(100, 200);
-        int numTileGroups = MockData.Rng.Next(50);
         int numLayers = MockData.Rng.Next(3, 16);
+        int numTileGroups = MockData.Rng.Next(5, 20);
+        Dictionary<Vector2I, ulong> tiles = [];
+        for (int idx = 0; idx < numTileGroups; idx++)
+        {
+            ulong group = MockData.GetRandomUlong();
+            int numTiles = MockData.Rng.Next(50);
+            for (int f = 0; f < numTiles; f++)
+            {
+                tiles[MockData.GetRandomVector2I(-100, 100, -100, 100)] = group;
+            }
+        }
         MapData data = new(Guid.NewGuid())
         {
             DisplayName = MockData.GetRandomIdent(),
@@ -112,7 +123,7 @@ public static class MockClass
             GridColor = MockData.GetRandomColor(),
             GridLineWidth = MockData.GetRandomFloat(1, 16),
             Blockers = MockData.GetRandomList(MockBlocker, numBlockers),
-            TileGroups = MockData.GetRandomList(MockTileGroup, numTileGroups),
+            Tiles = tiles,
             Layers = MockData.GetRandomList(MockLayer, numLayers),
         };
         return data;
@@ -212,8 +223,7 @@ public static class MockClass
         int numTiles = MockData.Rng.Next(200);
         TileGroupData data = new()
         {
-            DisplayName = MockData.GetRandomIdent(),
-            // TODO: test bitfield somehow.
+            Bitfield = MockData.GetRandomUlong(),
             Tiles = MockData.GetRandomList(() => MockData.GetRandomVector2I(-100, 100, -100, 100), numTiles)
         };
         return data;

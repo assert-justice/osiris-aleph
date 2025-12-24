@@ -21,7 +21,8 @@ public class MapData(Guid id) : IDataClass<MapData>
     public Color GridColor = Colors.White;
     public float GridLineWidth = 2;
     public List<BlockerData> Blockers = [];
-    public List<TileGroupData> TileGroups = [];
+    // public List<TileGroupData> TileGroups = [];
+    public Dictionary<Vector2I, ulong> Tiles = [];
     public List<LayerData> Layers = [];
     public static bool TryFromNode(PrionNode node, out MapData data)
     {
@@ -48,11 +49,7 @@ public class MapData(Guid id) : IDataClass<MapData>
             data.Blockers.Add(blocker);
         }
         if(!dict.TryGet("tile_groups", out prionArray)) return false;
-        foreach (var tileGroupNode in prionArray.Value)
-        {
-            if(!TileGroupData.TryFromNode(tileGroupNode, out TileGroupData tileGroup)) return false;
-            data.TileGroups.Add(tileGroup);
-        }
+        if(!data.TryLoadTileGroups(prionArray)) return false;
         if(!dict.TryGet("layers", out prionArray)) return false;
         foreach (var layerNode in prionArray.Value)
         {
@@ -78,8 +75,25 @@ public class MapData(Guid id) : IDataClass<MapData>
         dict.Set("grid_color?", ConversionUtils.ToPrionColor(GridColor));
         dict.Set("grid_line_width?", GridLineWidth);
         dict.Set("blockers", new PrionArray([..Blockers.Select(b => b.ToNode())]));
-        dict.Set("tile_groups", new PrionArray([..TileGroups.Select(b => b.ToNode())]));
+        dict.Set("tile_groups", GetTileGroups());
         dict.Set("layers", new PrionArray([..Layers.Select(b => b.ToNode())]));
         return dict;
+    }
+
+    bool TryLoadTileGroups(PrionArray tileGroups)
+    {
+        foreach (var item in tileGroups.Value)
+        {
+            if(!TileGroupData.TryFromNode(item, out TileGroupData data)) return false;
+            foreach (var tileCoord in data.Tiles)
+            {
+                Tiles[tileCoord] = data.Bitfield;
+            }
+        }
+        return true;
+    }
+    PrionArray GetTileGroups()
+    {
+        return new();
     }
 }

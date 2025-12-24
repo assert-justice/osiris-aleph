@@ -24,6 +24,7 @@ public class PrionSchemaString : PrionSchemaNode
             "i32",
             "rect2i",
             "string",
+            "u64",
             "ubigint",
             "vector2i",
         ];
@@ -50,16 +51,6 @@ public class PrionSchemaString : PrionSchemaNode
             error = $"Expected a schema type, found a '{prionNode.GetType().ToString().ToLower()}'.";
             return false;
         }
-        // if(!prionNode.TryAs(out PrionString prionString))
-        // {
-        //     error = $"Expected a schema type, found a '{prionNode.GetType()}'.";
-        //     return false;
-        // }
-        // if(Value != prionString.Text)
-        // {
-        //     error = $"Expected schema type '{Value}', received string '{prionString.Text}'.";
-        //     return false;
-        // }
         return true;
     }
 }

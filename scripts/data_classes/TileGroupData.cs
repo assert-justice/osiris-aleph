@@ -7,8 +7,7 @@ namespace Osiris.DataClass;
 
 public class TileGroupData : IDataClass<TileGroupData>
 {
-	public string DisplayName = "";
-	public PrionUBigInt Bitfield = new();
+	public ulong Bitfield = 0;
 	public List<Vector2I> Tiles = [];
 	public TileGroupData(){}
 
@@ -17,7 +16,6 @@ public class TileGroupData : IDataClass<TileGroupData>
 		data = default;
 		if(!node.TryAs(out PrionDict dict)) return false;
 		data = new();
-		if(dict.TryGet("display_name?", out string displayName)) data.DisplayName = displayName;
 		if(!dict.TryGet("bitfield", out data.Bitfield)) return false;
 		if(!dict.TryGet("tiles", out PrionArray tileArray)) return false;
 		data.Tiles = new(tileArray.Value.Count);
@@ -31,7 +29,6 @@ public class TileGroupData : IDataClass<TileGroupData>
 	public PrionNode ToNode()
 	{
 		PrionDict dict = new();
-		dict.Set("display_name?", DisplayName);
 		dict.Set("bitfield", Bitfield);
 		dict.Set("tiles", new PrionArray([..Tiles.Select(v => new PrionVector2I(v.X, v.Y))]));
 		return dict;

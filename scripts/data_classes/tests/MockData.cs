@@ -133,4 +133,9 @@ public static class MockData
     {
         return GetRandomFloat() * (max - min) + min;
     }
+    public static ulong GetRandomUlong()
+    {
+        ulong res = (ulong)Rng.Next() << 32;
+        return res | (ulong)(long)Rng.Next();
+    }
 }
