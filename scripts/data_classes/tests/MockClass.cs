@@ -49,7 +49,7 @@ public static class MockClass
     }
     public static BlockerData MockBlocker()
     {
-        BlockerData data = new()
+        BlockerData data = new(Guid.NewGuid())
         {
             Start = MockData.GetRandomVector2I(-100, 100, -100, 100),
             End = MockData.GetRandomVector2I(-100, 100, -100, 100),

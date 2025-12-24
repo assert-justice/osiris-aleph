@@ -5,7 +5,7 @@ using Prion.Node;
 
 namespace Osiris.DataClass;
 
-public class BlockerData : IDataClass<BlockerData>
+public class BlockerData(Guid id) : IDataClass<BlockerData>
 {
     public enum BlockerStatus
     {
@@ -14,6 +14,7 @@ public class BlockerData : IDataClass<BlockerData>
         Closed,
         Locked,
     }
+    public readonly Guid Id = id;
     public Vector2I Start = Vector2I.Zero;
     public Vector2I End = Vector2I.Zero;
     public BlockerStatus Status = BlockerStatus.Wall;
@@ -31,7 +32,8 @@ public class BlockerData : IDataClass<BlockerData>
     {
         data = default;
         if(!node.TryAs(out PrionDict dict)) return false;
-        data = new();
+        if(!dict.TryGet("blocker_id", out Guid id)) return false;
+        data = new(id);
         if(!dict.TryGet("start", out PrionVector2I v2i)) return false;
         data.Start = new(v2i.X, v2i.Y);
         if(!dict.TryGet("end", out v2i)) return false;
@@ -46,6 +48,7 @@ public class BlockerData : IDataClass<BlockerData>
     {
         PrionDict dict = new();
         PrionEnum.TryFromOptions("wall, open, closed, locked", Status.ToString().ToLower(), out PrionEnum prionEnum, out string _);
+        dict.Set("blocker_id", Id);
         dict.Set("start", new PrionVector2I(Start.X, Start.Y));
         dict.Set("end", new PrionVector2I(End.X, End.Y));
         dict.Set("status", prionEnum);
