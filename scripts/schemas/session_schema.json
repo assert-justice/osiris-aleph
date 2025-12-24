@@ -4,6 +4,7 @@
     "data":{
         "asset_log": "schema: asset_log",
         "users": ["schema: user"],
+        "gms": ["guid"],
         "actors": ["schema: actor"],
         "handouts": ["schema: handout"],
         "maps": ["schema: map"],

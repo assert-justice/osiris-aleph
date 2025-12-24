@@ -34,7 +34,7 @@ public abstract class TestDataClass<T>(string name) where T : class, IDataClass<
     {
         Dependencies.Add((type, name));
     }
-    protected T Load(string exampleName)
+    protected PrionNode Load(string exampleName)
     {
         string path = $"scripts/schemas/{exampleName}_example.json";
         if (!OsirisSystem.FileExists(path))
@@ -47,8 +47,9 @@ public abstract class TestDataClass<T>(string name) where T : class, IDataClass<
         {
             TestUtils.Fail($"Failed to parse json at path '{path}'. Error: {error}");
         }
-        if(!T.TryFromNode(ExampleNode, out T data)) TestUtils.Fail();
-        return data;
+        return ExampleNode;
+        // if(!T.TryFromNode(ExampleNode, out T data)) TestUtils.Fail("Failed to convert to node.");
+        // return data;
     }
     protected void LoadAndValidate(string exampleName = null)
     {
@@ -58,6 +59,13 @@ public abstract class TestDataClass<T>(string name) where T : class, IDataClass<
     protected void Validate(T data)
     {
         if(!PrionSchemaManager.Validate(DataType, data.ToNode(), out string error))
+        {
+            TestUtils.Fail(error);
+        }
+    }
+    protected void Validate(PrionNode prionNode)
+    {
+        if(!PrionSchemaManager.Validate(DataType, prionNode, out string error))
         {
             TestUtils.Fail(error);
         }

@@ -11,6 +11,7 @@ public class SessionData : IDataClass<SessionData>
 {
     public AssetLogData AssetLog = new();
     public Dictionary<Guid, UserData> Users = [];
+    public HashSet<Guid> Gms = [];
     public Dictionary<Guid, ActorData> Actors = [];
     public Dictionary<Guid, HandoutData> Handouts = [];
     public Dictionary<Guid, MapData> Maps = [];
@@ -28,6 +29,7 @@ public class SessionData : IDataClass<SessionData>
             if(!UserData.TryFromNode(item, out UserData entry)) return false;
             data.Users.Add(entry.Id, entry);
         }
+        if(!dict.TryGet("gms", out data.Gms)) return false;
         if(!dict.TryGet("actors", out prionArray)) return false;
         foreach (var item in prionArray.Value)
         {
@@ -60,6 +62,7 @@ public class SessionData : IDataClass<SessionData>
         PrionDict dict = new();
         dict.Set("asset_log", AssetLog.ToNode());
         dict.Set("users", new PrionArray([..Users.Values.Select(u => u.ToNode())]));
+        dict.Set("gms", Gms);
         dict.Set("actors", new PrionArray([..Actors.Values.Select(u => u.ToNode())]));
         dict.Set("handouts", new PrionArray([..Handouts.Values.Select(u => u.ToNode())]));
         dict.Set("maps", new PrionArray([..Maps.Values.Select(u => u.ToNode())]));

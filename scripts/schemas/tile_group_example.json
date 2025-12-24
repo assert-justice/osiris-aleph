@@ -1,5 +1,4 @@
 {
-    "display_name?": "mud",
     "bitfield": "u64:1",
     "tiles": [
         "vector2i:0,0",

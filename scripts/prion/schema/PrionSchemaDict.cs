@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Osiris;
 using Prion.Node;
 
 namespace Prion.Schema;
@@ -34,6 +35,7 @@ public class PrionSchemaDict : PrionSchemaNode
             return false;
         }
         HashSet<string> keys = [.. prionDict.Value.Keys];
+        OsirisSystem.Log(string.Join(", ", keys));
         foreach (var (key, value) in ChildSchemas)
         {
             keys.Remove(key);

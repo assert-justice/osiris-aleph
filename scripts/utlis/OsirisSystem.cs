@@ -65,6 +65,16 @@ public static class OsirisSystem
 	{
 		get => SessionInternal ??= new();
 	}
+	static Guid CurrentUserId;
+	static Guid UserId
+	{
+		get => CurrentUserId;
+		set{CurrentUserId = value;}
+	}
+	public static bool IsGm()
+	{
+		return true;
+	}
 	public static void LoadAllSchemas()
 	{
 		(Type, string)[] schemaFiles = [
@@ -181,7 +191,7 @@ public static class OsirisSystem
 		}
 		ErrorLog.Add(message);
 		if(!InTestMode) GD.PrintErr(message);
-		else Console.WriteLine(message);
+		// else Console.WriteLine(message);
 	}
 	public static bool HasErrors()
 	{
@@ -200,7 +210,7 @@ public static class OsirisSystem
 		}
 		MessageLog.Add(message);
 		if(!InTestMode) GD.Print(message);
-		else Console.WriteLine(message);
+		// else Console.WriteLine(message);
 	}
 	public static string GetLogs()
 	{

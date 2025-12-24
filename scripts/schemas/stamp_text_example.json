@@ -6,11 +6,10 @@
     "angle": "f32: 0",
     "text_data?": {
         "text": "here is some text",
-        "size?": "16 px",
+        "font_size?": "16 px",
         "margin_left?": "16 px",
         "margin_right?": "16 px",
         "margin_top?": "16 px",
-        "margin_bottom?": "16 px",
-        "auto_wrap_mode?": "enum: off, arbitrary, word, word_smart: word"
+        "margin_bottom?": "16 px"
     }
 }

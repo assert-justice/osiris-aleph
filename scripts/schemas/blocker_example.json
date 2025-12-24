@@ -2,7 +2,7 @@
     "blocker_id": "guid: dd8963be-7c1b-4737-89f3-69e09657780c",
     "start": "vector2i:0,0",
     "end": "vector2i:1,0",
-    "status": "enum: closed, locked, open, wall: wall",
+    "status": "enum: wall, open, closed, locked: wall",
     "is_opaque?": true,
     "is_solid?": true
 }
