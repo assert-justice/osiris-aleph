@@ -10,7 +10,7 @@ namespace Osiris.Scripting;
 class ActorDataWrapper(ActorData data) : VmDataWrapper<ActorData>(data)
 {
     string StatsString;
-    // bool InEventHandler = false;
+    // TODO: authenticate user has access before using methods? Sounds annoying and might not be needed.
     public Guid getId(){return Data.Id;}
     public string getName(){return Data.DisplayName;}
     public void setName(string name)
@@ -56,11 +56,6 @@ class ActorDataWrapper(ActorData data) : VmDataWrapper<ActorData>(data)
     public override void applyEvent(JsValue payload)
     {
         ApplyEventInternal(Data.Id, "actor", payload);
-        // Event e = new(Guid.Empty, Data.Id, "actor", OsirisSystem.Vm.GetVmObject(payload));
-        // if(!OsirisSystem.Session.TryApplyEvent(e)) return; // TODO: log when this happens?
-        // InEventHandler = true;
-        // EventHandler(this, e);
-        // InEventHandler = false;
     }
 }
 
@@ -70,6 +65,7 @@ public static class VmBindActors
     {
         VmObject actorModule = new(vm);
         actorModule.AddObject("listActors", new Func<ActorDataWrapper[]>(ListActors));
+        actorModule.AddObject("getActor", new Func<Guid,ActorDataWrapper>(GetActor));
         actorModule.AddObject("setEventHandler", new Action<Action<ActorDataWrapper, JsObject>>(fn =>
         {
             ActorDataWrapper.SetEventHandler((a,e) =>
@@ -81,6 +77,14 @@ public static class VmBindActors
     }
     static ActorDataWrapper[] ListActors()
     {
-        return [..OsirisSystem.Session.Actors.Values.Select(a => new ActorDataWrapper(a))];
+        if(OsirisSystem.IsGm()) return [..OsirisSystem.Session.Actors.Values.Select(a => new ActorDataWrapper(a))];
+        return [..OsirisSystem.Session.Actors.Values.Where(a => a.ControlledBy.Contains(OsirisSystem.UserId)).Select(a => new ActorDataWrapper(a))];
+    }
+    static ActorDataWrapper GetActor(Guid actorId)
+    {
+        ActorData actor = OsirisSystem.Session.Actors[actorId];
+        if(actor is null) return null;
+        if(OsirisSystem.IsGm() || actor.ControlledBy.Contains(OsirisSystem.UserId)) return new(actor);
+        return null;
     }
 }

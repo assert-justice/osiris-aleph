@@ -31,10 +31,17 @@ public static class ModuleLoader
                 continue;
             }
             PrionSchemaManager.RegisterSchema(prionSchema);
-            // OsirisSystem.Log($"Loaded and registered schema for '{prionSchema.Name}'");
+        }
+        var user = MockClass.MockUser();
+        OsirisSystem.Session.Users.Add(user.Id, user);
+        OsirisSystem.UserId = user.Id;
+        OsirisSystem.Session.Gms.Add(user.Id);
+        for (int idx = 0; idx < 5; idx++)
+        {
+            user = MockClass.MockUser();
+            OsirisSystem.Session.Users.Add(user.Id, user);
         }
         var actor = MockClass.MockActor();
-        // OsirisSystem.Log(actor.Id);
         OsirisSystem.Session.Actors.Add(actor.Id, actor);
         bool foundMain = false;
         foreach (var filename in OsirisSystem.DirListFiles(examplePath + "/scripts"))
@@ -44,7 +51,6 @@ public static class ModuleLoader
             string jsSrc = OsirisSystem.ReadFile(examplePath + "/scripts/" + filename);
             string name = filename[..^3];
             if(!OsirisSystem.Vm.TryAddModule(name, jsSrc)) continue;
-            // OsirisSystem.Log($"Loaded script '{filename}'");
         }
         if(!foundMain)
         {

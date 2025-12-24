@@ -24,8 +24,7 @@ public abstract class VmDataWrapper<T>(T data)
     }
     protected void ApplyEventInternal(Guid targetId, string targetType, JsValue payload)
     {
-        // TODO: get user id.
-        Event e = new(Guid.Empty, targetId, targetType, OsirisSystem.Vm.GetVmObject(payload));
+        Event e = new(OsirisSystem.UserId, targetId, targetType, OsirisSystem.Vm.GetVmObject(payload));
         if(!OsirisSystem.Session.TryApplyEvent(e)) return; // TODO: log when this happens?
         InHandler = true;
         EventHandler(this, e);

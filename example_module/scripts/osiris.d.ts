@@ -19,15 +19,13 @@ declare module "Osiris"{
             applyEvent(event: object): void;
         }
         function listActors(): Actor[];
-        function getActor(id: string): Actor;
+        function getActor(id: string): Actor | undefined;
         function setEventHandler(fn: (actor: Actor, event: object) => void): void;
     }
     export namespace AssetLog{
         function addFile(filename: string): void;
         function removeFile(filename: string): boolean;
         function listFiles(): string[];
-        function applyEvent(event: object): void;
-        function setEventHandler(fn: (event: object) => void): void;
     }
     export namespace Map{
         type BlockerStatus = "wall" | "open" | "closed" | "locked";
@@ -48,17 +46,17 @@ declare module "Osiris"{
             setName(name: string): void;
             isVisible(): boolean;
             setIsVisible(value: boolean): void;
-            getStamps(): stamp[];
-            setStamps(stamps: stamp[]): void;
+            getStamps(): Stamp[];
+            setStamps(stamps: Stamp[]): void;
         }
         class Map{
             applyEvent(event: object): void;
         }
         class Stamp{
-            getImage(): StampImage?;
-            getText(): StampImage?;
-            getActor(): Actor.Actor?;
-            getStats(): object;
+            getImage(): StampImage | undefined;
+            getText(): StampImage | undefined;
+            // getActor(): Actor.Actor | undefined;
+            getStats(): object | undefined;
         }
         class StampImage{}
         class StampText{}

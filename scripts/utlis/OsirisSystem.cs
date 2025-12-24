@@ -66,14 +66,14 @@ public static class OsirisSystem
 		get => SessionInternal ??= new();
 	}
 	static Guid CurrentUserId;
-	static Guid UserId
+	public static Guid UserId
 	{
 		get => CurrentUserId;
 		set{CurrentUserId = value;}
 	}
 	public static bool IsGm()
 	{
-		return true;
+		return Session.Gms.Contains(UserId);
 	}
 	public static void LoadAllSchemas()
 	{
