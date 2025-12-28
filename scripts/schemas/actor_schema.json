@@ -2,13 +2,15 @@
     "name": "actor",
     "version" : "0.1.0",
     "data":{
-        "actor_id": "guid",
+        "id": "guid",
+        "editors": ["guid"],
+        "viewers": ["guid"],
+        "security": "schema_enum: none, partial, full, editable",
+        "private_data?": "dynamic",
+        "public_data?": "dynamic",
         "display_name?": "string",
         "description?": "string",
-        "controlled_by": ["guid"],
         "portrait_filename?": "string",
-        "token_filename?": "string",
-        "stats": "dynamic",
-        "state?": "dynamic"
+        "token_filename?": "string"
     }
 }

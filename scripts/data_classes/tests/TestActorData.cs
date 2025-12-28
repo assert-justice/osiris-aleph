@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Osiris.DataClass.Tests;
 
 [TestClass]
-public class TestActorData : TestDataClass<ActorData>
+public class TestActorData : BaseTestBlobData<ActorData>
 {
     public TestActorData() : base("actor"){}
 

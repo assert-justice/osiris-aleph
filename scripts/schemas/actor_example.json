@@ -1,10 +1,12 @@
 {
-    "actor_id": "guid:e65ef547-cb56-4362-bbed-a199bcf1aecf",
+    "id": "guid: 0bbc6691-4a32-482f-8814-615fb0a15c5c",
+    "editors": [],
+    "viewers": [],
+    "security": "enum: none, partial, full, editable: none",
+    "public_data?": {},
+    "private_data?": {},
     "display_name?": "[Mysterious Figure]",
-    "description?": "They are very mysterious.",
     "portrait_filename?": "",
     "token_filename?": "",
-    "controlled_by": [],
-    "stats": {},
-    "state?": {}
+    "description?": "They are very mysterious."
 }

@@ -16,11 +16,17 @@ public static class MockClass
             TokenFilename = MockData.GetRandomIdent(),
             Description = MockData.GetRandomIdent()
         };
-        int numOwners = MockData.Rng.Next(0, 3);
-        for (int idx = 0; idx < numOwners; idx++)
+        int numEditors = MockData.Rng.Next(0, 3);
+        for (int idx = 0; idx < numEditors; idx++)
         {
-            data.ControlledBy.Add(Guid.NewGuid());
+            data.Editors.Add(Guid.NewGuid());
         }
+        int numViewers = MockData.Rng.Next(0, 10);
+        for (int idx = 0; idx < numViewers; idx++)
+        {
+            data.Viewers.Add(Guid.NewGuid());
+        }
+        data.Security = (BlobData.SecurityStatus)MockData.Rng.Next(4);
         return data;
     }
     public static AssetLogData MockAssetLog()

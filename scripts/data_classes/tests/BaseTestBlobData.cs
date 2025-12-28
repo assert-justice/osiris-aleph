@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Prion.Node;
@@ -7,16 +6,10 @@ using Prion.Schema;
 
 namespace Osiris.DataClass.Tests;
 
-public abstract class TestDataClass<T>(string name) where T : class, IDataClass<T>
+public abstract class BaseTestBlobData<T>(string name) where T : BlobData, IToNode<T>
 {
     readonly string Name = name;
     readonly Type DataType = typeof(T);
-    protected PrionNode Data;
-    protected string ExampleString;
-    protected JsonNode ExampleJson;
-    protected PrionNode ExampleNode;
-    readonly List<(Type, string)> Dependencies = [];
-
     [TestInitialize]
     public void Init()
     {
@@ -30,10 +23,6 @@ public abstract class TestDataClass<T>(string name) where T : class, IDataClass<
             TestUtils.Fail();
         }
     }
-    protected void AddDependency(string name, Type type)
-    {
-        Dependencies.Add((type, name));
-    }
     protected PrionNode Load(string exampleName)
     {
         string path = $"scripts/schemas/{exampleName}_example.json";
@@ -41,13 +30,13 @@ public abstract class TestDataClass<T>(string name) where T : class, IDataClass<
         {
             TestUtils.Fail($"Failed to find example with path '{path}'.");
         }
-        ExampleString = OsirisSystem.ReadFile(path);
-        ExampleJson = JsonNode.Parse(ExampleString);
-        if(!PrionNode.TryFromJson(ExampleJson, out ExampleNode, out string error))
+        string exampleString = OsirisSystem.ReadFile(path);
+        JsonNode exampleJson = JsonNode.Parse(exampleString);
+        if(!PrionNode.TryFromJson(exampleJson, out PrionNode exampleNode, out string error))
         {
             TestUtils.Fail($"Failed to parse json at path '{path}'. Error: {error}");
         }
-        return ExampleNode;
+        return exampleNode;
     }
     protected void LoadAndValidate(string exampleName = null)
     {

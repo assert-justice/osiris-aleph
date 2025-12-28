@@ -9,7 +9,7 @@ namespace Osiris.Scripting;
 
 class ActorDataWrapper(ActorData data) : VmDataWrapper<ActorData>(data)
 {
-    string StatsString;
+    // string StatsString;
     // TODO: authenticate user has access before using methods? Sounds annoying and might not be needed.
     public Guid getId(){return Data.Id;}
     public string getName(){return Data.DisplayName;}
@@ -31,28 +31,28 @@ class ActorDataWrapper(ActorData data) : VmDataWrapper<ActorData>(data)
         if(!InEventHandler) OsirisSystem.ReportError("Cannot set token of actor outside of an event handler.");
         else Data.PortraitFilename = name;
     }
-    public JsObject getStats()
-    {
-        return (JsObject)OsirisSystem.Vm.ParseJson(StatsString ??= Data.Stats.ToJson().ToJsonString());
-    }
-    public void setStats(JsObject jsObject)
-    {
-        if(!InEventHandler) OsirisSystem.ReportError("Cannot set stats of actor outside of an event handler.");
-        else
-        {
-            if(!PrionNode.TryFromJson(OsirisSystem.Vm.ToJsonString(jsObject), out PrionDict prionNode, out string error))
-            {
-                OsirisSystem.ReportError(error);
-            }
-            else Data.Stats = prionNode;
-        }
-    }
-    public string getState(string key){return Data.State[key];}
-    public void setState(string key, string value)
-    {
-        if(!InEventHandler) OsirisSystem.ReportError("Cannot set state of actor outside of an event handler.");
-        else Data.State[key] = value;
-    }
+    // public JsObject getStats()
+    // {
+    //     return (JsObject)OsirisSystem.Vm.ParseJson(StatsString ??= Data.Stats.ToJson().ToJsonString());
+    // }
+    // public void setStats(JsObject jsObject)
+    // {
+    //     if(!InEventHandler) OsirisSystem.ReportError("Cannot set stats of actor outside of an event handler.");
+    //     else
+    //     {
+    //         if(!PrionNode.TryFromJson(OsirisSystem.Vm.ToJsonString(jsObject), out PrionDict prionNode, out string error))
+    //         {
+    //             OsirisSystem.ReportError(error);
+    //         }
+    //         else Data.Stats = prionNode;
+    //     }
+    // }
+    // public string getState(string key){return Data.State[key];}
+    // public void setState(string key, string value)
+    // {
+    //     if(!InEventHandler) OsirisSystem.ReportError("Cannot set state of actor outside of an event handler.");
+    //     else Data.State[key] = value;
+    // }
 
     public override void applyEvent(JsValue payload)
     {
@@ -79,13 +79,13 @@ public static class VmBindActors
     static ActorDataWrapper[] ListActors()
     {
         if(OsirisSystem.IsGm()) return [..OsirisSystem.Session.Actors.Values.Select(a => new ActorDataWrapper(a))];
-        return [..OsirisSystem.Session.Actors.Values.Where(a => a.ControlledBy.Contains(OsirisSystem.UserId)).Select(a => new ActorDataWrapper(a))];
+        return [..OsirisSystem.Session.Actors.Values.Select(a => new ActorDataWrapper(a))];
     }
     static ActorDataWrapper GetActor(Guid actorId)
     {
         ActorData actor = OsirisSystem.Session.Actors[actorId];
         if(actor is null) return null;
-        if(OsirisSystem.IsGm() || actor.ControlledBy.Contains(OsirisSystem.UserId)) return new(actor);
+        if(OsirisSystem.IsGm()) return new(actor);
         return null;
     }
 }

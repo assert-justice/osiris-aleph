@@ -14,11 +14,11 @@ public class BlobData(Guid id)
         Editable, // As above but the private data can be edited as well as viewed.
     }
     public readonly Guid Id = id;
-    HashSet<Guid> Editors = [];
-    HashSet<Guid> Viewers = [];
-    SecurityStatus Security = SecurityStatus.None;
-    PrionDict PrivateData = new();
-    PrionDict PublicData = new();
+    public HashSet<Guid> Editors = [];
+    public HashSet<Guid> Viewers = [];
+    public SecurityStatus Security = SecurityStatus.None;
+    public PrionDict PrivateData = new();
+    public PrionDict PublicData = new();
     public SecurityStatus GetSecurityStatus()
     {
         return Security;
@@ -48,7 +48,7 @@ public class BlobData(Guid id)
         if(!OsirisSystem.IsGm()) OsirisSystem.ReportError("Only GMs can block viewers from blobs.");
         else Viewers.Remove(id);
     }
-    public bool CanEdit()
+    public bool CanEditPrivate()
     {
         if(OsirisSystem.IsGm()) return true;
         if(Security == SecurityStatus.Editable && OsirisSystem.IsPlayer()) return true;
@@ -57,12 +57,54 @@ public class BlobData(Guid id)
     }
     public bool CanView()
     {
-        if(CanEdit()) return true;
+        if(CanEditPrivate()) return true;
         if(Security == SecurityStatus.Full && OsirisSystem.IsPlayer()) return true;
         if(Viewers.Contains(OsirisSystem.UserId)) return true;
         return false;
     }
-    public virtual PrionNode ToNode()
+    public bool CanEditPublic()
+    {
+        if(CanEditPrivate()) return true;
+        if(Security >= SecurityStatus.Partial && OsirisSystem.IsPlayer()) return true;
+        return false;
+    }
+    public PrionDict GetPrivateData()
+    {
+        if (!CanView())
+        {
+            OsirisSystem.ReportError("Not authorized to read private data of this blob.");
+            return default;
+        }
+        return PrivateData;
+    }
+    public void SetPrivateData(PrionDict dict)
+    {
+        if (!CanEditPrivate())
+        {
+            OsirisSystem.ReportError("Not authorized to write private data of this blob.");
+            return;
+        }
+        PrivateData = dict;
+    }
+    public PrionDict GetPublicData()
+    {
+        if(Security == SecurityStatus.None && !OsirisSystem.IsPlayer())
+        {
+            OsirisSystem.ReportError("Not authorized to write public data of this blob.");
+            return default;
+        }
+        else return PublicData;
+    }
+    public void SetPublicData(PrionDict dict)
+    {
+        if (!CanEditPublic())
+        {
+            OsirisSystem.ReportError("Not authorized to write public data of this blob.");
+            return;
+        }
+        PrivateData = dict;
+    }
+    public virtual PrionDict ToNode()
     {
         PrionDict dict = new();
         dict.Set("id", Id);
@@ -70,7 +112,7 @@ public class BlobData(Guid id)
         dict.Set("viewers", Viewers);
         if(PrionEnum.TryFromOptions("none, partial, full, editable", (int)Security, out PrionEnum prionEnum, out string error))
         {
-            dict.Set("security_status", prionEnum);
+            dict.Set("security", prionEnum);
         }
         else OsirisSystem.ReportError(error);
         dict.Set("public_data?", PublicData);
@@ -85,7 +127,7 @@ public class BlobData(Guid id)
         data = new(id);
         if(!dict.TryGet("editors", out data.Editors)) return false;
         if(!dict.TryGet("viewers", out data.Viewers)) return false;
-        if(!dict.TryGet("security_status", out PrionEnum prionEnum)) return false;
+        if(!dict.TryGet("security", out PrionEnum prionEnum)) return false;
         data.Security = (SecurityStatus)prionEnum.Index;
         if(dict.TryGet("public_data?", out PrionDict prionDict)) data.PublicData = prionDict;
         if(dict.TryGet("private_data?", out prionDict)) data.PrivateData = prionDict;
