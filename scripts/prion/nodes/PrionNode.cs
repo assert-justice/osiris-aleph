@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Nodes;
 
 namespace Prion.Node;
@@ -121,6 +124,101 @@ public abstract class PrionNode
             res = val;
             return true;
         }
+        return false;
+    }
+    public bool TryGetPath(string pathString, out PrionNode data)
+    {
+        data = default;
+        var path = pathString.Split('/');
+        if(path.Length == 0) return false;
+        PrionNode value = this;
+        foreach (string key in path)
+        {
+            if(key.Length == 0) return false;
+            if(!value.TryGetValue(key, out value)) return false;
+        }
+        data = value;
+        return true;
+    }
+    public bool TryGetPath<T>(string pathString, out T data) where T : PrionNode
+    {
+        data = default;
+        if(!TryGetPath(pathString, out PrionNode node)) return false;
+        if(node is T res)
+        {
+            data = res;
+            return true;
+        }
+        return false;
+    }
+    public bool TryGetPath(string pathString, out string data)
+    {
+        data = default;
+        if(!TryGetPath(pathString, out PrionString prionString)) return false;
+        data = prionString.Value;
+        return true;
+    }
+    public bool TryGetPath(string pathString, out Guid data)
+    {
+        data = default;
+        if(!TryGetPath(pathString, out PrionGuid prionGuid)) return false;
+        data = prionGuid.Value;
+        return true;
+    }
+    public bool TrySetPath(string pathString, PrionNode node, bool canAdd = false, bool canChangeType = false)
+    {
+        var path = pathString.Split('/');
+        if(path.Length == 0) return false;
+        PrionNode value = this;
+        PrionNode lastValue = this;
+        string key = "";
+        for (int idx = 0; idx < path.Length; idx++)
+        {
+            key = path[idx];
+            lastValue = value;
+            if(key.Length == 0) return false;
+            if(!value.TryGetValue(key, out PrionNode nextValue))
+            {
+                if(!canAdd) return false;
+                if(idx == path.Length - 1) return value.TrySetValue(key, ref node);
+                PrionDict dict = new();
+                if(!value.TrySetValue(key, ref dict)) return false;
+                value = dict;
+            }
+            else value = nextValue;
+        }
+        bool res;
+        if(canChangeType) res = true;
+        else
+        { 
+            if(!lastValue.TryGetValue(key, out PrionNode prionNode)) return false;
+            else res = node.GetType() == prionNode.GetType();
+        }
+        if (res)
+        {
+            res = lastValue.TrySetValue(key, ref node);
+        }
+        return res;
+    }
+    public bool TrySetPath(string pathString, string value, bool canAdd = false, bool canChangeType = false)
+    {
+        return TrySetPath(pathString, new PrionString(value), canAdd, canChangeType);
+    }
+    public bool TrySetPath(string pathString, Guid value, bool canAdd = false, bool canChangeType = false)
+    {
+        return TrySetPath(pathString, new PrionGuid(value), canAdd, canChangeType);
+    }
+    protected virtual bool TryGetValue(string key, out PrionNode prionNode)
+    {
+        prionNode = default;
+        return false;
+    }
+    protected virtual bool TrySetValue<T>(string key, ref T prionNode) where T : PrionNode
+    {
+        return false;
+    }
+    protected virtual bool TrySetValue(string key, PrionNode value)
+    {
         return false;
     }
 }

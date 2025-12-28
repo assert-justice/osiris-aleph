@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
 
@@ -54,6 +55,27 @@ public class PrionArray : PrionNode
             if(!node.TryAs(out T val)) return false;
             res.Add(val);
         }
+        return true;
+    }
+    protected override bool TryGetValue(string key, out PrionNode prionNode)
+    {
+        prionNode = default;
+        if(!int.TryParse(key, out int idx)) return false;
+        if(idx < 0 || idx >= Value.Count) return false;
+        prionNode = Value[idx];
+        return true;
+    }
+    protected override bool TrySetValue<T>(string key, ref T prionNode)
+    {
+        if(int.TryParse(key, out int idx))
+        {
+            if(idx < Value.Count)
+            {
+                Value[idx] = prionNode;
+                return true;
+            }
+        }
+        Value.Add(prionNode);
         return true;
     }
 }

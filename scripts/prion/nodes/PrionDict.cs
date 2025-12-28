@@ -144,7 +144,16 @@ public class PrionDict : PrionNode
 		{
 			prionArray.Value.Add(new PrionGuid(guid));
 		}
-		// prionArray.Value.Sort();
 		Set(key, prionArray);
+	}
+	protected override bool TryGetValue(string key, out PrionNode prionNode)
+	{
+		if(!Value.TryGetValue(key, out prionNode)) return false;
+		return true;
+	}
+	protected override bool TrySetValue<T>(string key, ref T prionNode)
+	{
+		Value[key] = prionNode;
+		return true;
 	}
 }
