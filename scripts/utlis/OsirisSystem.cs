@@ -83,6 +83,12 @@ public static class OsirisSystem
 	{
 		return Session.IsSpectator(UserId);
 	}
+	public static bool EmitEvent(Guid targetId, string name, PrionNode payload)
+    {
+        Event e = new(UserId, targetId, name, payload);
+        return Session.TryApplyEvent(e);
+    }
+
 	public static void LoadAllSchemas()
 	{
 		(Type, string)[] schemaFiles = [

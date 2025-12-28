@@ -9,16 +9,15 @@ public class BlobData(Guid id)
     public enum SecurityStatus
     {
         None, // The blob is not listed or visible.
-        Partial, // The blob is listed but only public data can be viewed and edited.
-        Full, // As above, plus the private data can be viewed
+        Visible, // As above, plus the private data can be viewed
         Editable, // As above but the private data can be edited as well as viewed.
     }
     public readonly Guid Id = id;
     public HashSet<Guid> Editors = [];
     public HashSet<Guid> Viewers = [];
     public SecurityStatus Security = SecurityStatus.None;
-    public PrionDict PrivateData = new();
-    public PrionDict PublicData = new();
+    public PrionDict Data = new();
+    Action<Event> EventHandler = e => {};
     public SecurityStatus GetSecurityStatus()
     {
         return Security;
@@ -48,7 +47,7 @@ public class BlobData(Guid id)
         if(!OsirisSystem.IsGm()) OsirisSystem.ReportError("Only GMs can block viewers from blobs.");
         else Viewers.Remove(id);
     }
-    public bool CanEditPrivate()
+    public bool CanEdit()
     {
         if(OsirisSystem.IsGm()) return true;
         if(Security == SecurityStatus.Editable && OsirisSystem.IsPlayer()) return true;
@@ -57,52 +56,28 @@ public class BlobData(Guid id)
     }
     public bool CanView()
     {
-        if(CanEditPrivate()) return true;
-        if(Security == SecurityStatus.Full && OsirisSystem.IsPlayer()) return true;
+        if(CanEdit()) return true;
+        if(Security > SecurityStatus.None) return true;
         if(Viewers.Contains(OsirisSystem.UserId)) return true;
         return false;
     }
-    public bool CanEditPublic()
-    {
-        if(CanEditPrivate()) return true;
-        if(Security >= SecurityStatus.Partial && OsirisSystem.IsPlayer()) return true;
-        return false;
-    }
-    public PrionDict GetPrivateData()
+    public PrionDict GetData()
     {
         if (!CanView())
         {
             OsirisSystem.ReportError("Not authorized to read private data of this blob.");
             return default;
         }
-        return PrivateData;
+        return Data;
     }
-    public void SetPrivateData(PrionDict dict)
+    public void SetData(PrionDict dict)
     {
-        if (!CanEditPrivate())
+        if (!CanEdit())
         {
             OsirisSystem.ReportError("Not authorized to write private data of this blob.");
             return;
         }
-        PrivateData = dict;
-    }
-    public PrionDict GetPublicData()
-    {
-        if(Security == SecurityStatus.None && !OsirisSystem.IsPlayer())
-        {
-            OsirisSystem.ReportError("Not authorized to write public data of this blob.");
-            return default;
-        }
-        else return PublicData;
-    }
-    public void SetPublicData(PrionDict dict)
-    {
-        if (!CanEditPublic())
-        {
-            OsirisSystem.ReportError("Not authorized to write public data of this blob.");
-            return;
-        }
-        PrivateData = dict;
+        Data = dict;
     }
     public virtual PrionDict ToNode()
     {
@@ -115,8 +90,7 @@ public class BlobData(Guid id)
             dict.Set("security", prionEnum);
         }
         else OsirisSystem.ReportError(error);
-        dict.Set("public_data?", PublicData);
-        dict.Set("private_data?", PrivateData);
+        dict.Set("data?", Data);
         return dict;
     }
     public static bool TryFromNode(PrionNode prionNode, out BlobData data)
@@ -129,8 +103,15 @@ public class BlobData(Guid id)
         if(!dict.TryGet("viewers", out data.Viewers)) return false;
         if(!dict.TryGet("security", out PrionEnum prionEnum)) return false;
         data.Security = (SecurityStatus)prionEnum.Index;
-        if(dict.TryGet("public_data?", out PrionDict prionDict)) data.PublicData = prionDict;
-        if(dict.TryGet("private_data?", out prionDict)) data.PrivateData = prionDict;
+        if(dict.TryGet("data?", out PrionDict prionDict)) data.Data = prionDict;
         return true;
+    }
+    public void ApplyEvent(Event eventObj)
+    {
+        EventHandler(eventObj);
+    }
+    public void SetEventHandler(Action<Event> action)
+    {
+        EventHandler = action;
     }
 }

@@ -17,6 +17,7 @@ public class SessionData : IDataClass<SessionData>
     public Dictionary<Guid, ActorData> Actors = [];
     public Dictionary<Guid, HandoutData> Handouts = [];
     public Dictionary<Guid, MapData> Maps = [];
+    public Dictionary<Guid, BlobData> Blobs = [];
     public List<Event> Events = [];
     public HashSet<Guid> EventIndex = [];
     public static bool TryFromNode(PrionNode node, out SessionData data)
@@ -39,6 +40,7 @@ public class SessionData : IDataClass<SessionData>
         {
             if(!ActorData.TryFromNode(item, out ActorData entry)) return false;
             data.Actors.Add(entry.Id, entry);
+            data.Blobs.Add(entry.Id, entry);
         }
         if(!dict.TryGet("handouts", out prionArray)) return false;
         foreach (var item in prionArray.Value)

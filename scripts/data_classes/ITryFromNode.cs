@@ -2,7 +2,7 @@ using Prion.Node;
 
 namespace Osiris.DataClass;
 
-public interface IToNode<T>
+public interface ITryFromNode<T>
 {
     public static abstract bool TryFromNode(PrionNode node, out T data);
 }

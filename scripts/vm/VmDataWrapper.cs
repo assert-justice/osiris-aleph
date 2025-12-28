@@ -1,6 +1,8 @@
 using System;
+using System.Text.Json.Nodes;
 using Jint.Native;
 using Osiris.DataClass;
+using Prion.Node;
 
 namespace Osiris.Scripting;
 
@@ -27,9 +29,15 @@ public abstract class VmDataWrapper<T>(T data)
         // TODO: only allow if in "init" function?
         EventHandlerInternal = action;
     }
-    protected void ApplyEventInternal(Guid targetId, string targetType, JsValue payload)
+    protected void ApplyEventInternal(Guid targetId, string targetType, JsValue payloadJs)
     {
-        Event e = new(OsirisSystem.UserId, targetId, targetType, OsirisSystem.Vm.GetVmObject(payload));
+        var payloadJson = JsonNode.Parse(OsirisSystem.Vm.ToJsonString(payloadJs));
+        if(!PrionNode.TryFromJson(payloadJson, out PrionNode payload, out string error))
+        {
+            OsirisSystem.ReportError(error);
+            return;
+        }
+        Event e = new(OsirisSystem.UserId, targetId, targetType, payload);
         if(!OsirisSystem.Session.TryApplyEvent(e)) return; // TODO: log when this happens?
         InHandler = true;
         EventHandler(this, e);

@@ -6,7 +6,7 @@ using Prion.Schema;
 
 namespace Osiris.DataClass.Tests;
 
-public abstract class BaseTestBlobData<T>(string name) where T : BlobData, IToNode<T>
+public abstract class BaseTestBlobData<T>(string name) where T : BlobData, ITryFromNode<T>
 {
     readonly string Name = name;
     readonly Type DataType = typeof(T);
