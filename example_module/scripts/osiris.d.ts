@@ -14,13 +14,13 @@ declare module "Osiris"{
             setTokenFilename(name: string): void;
             getStats(): object;
             setStats(state: object): void;
-            getState(key: string): string;
-            setState(key: string, value: string): void;
-            applyEvent(event: object): void;
+            // getState(key: string): string;
+            // setState(key: string, value: string): void;
+            // applyEvent(event: object): void;
         }
         function listActors(): Actor[];
         function getActor(id: string): Actor | undefined;
-        function setEventHandler(fn: (actor: Actor, event: object) => void): void;
+        // function setEventHandler(fn: (actor: Actor, event: object) => void): void;
     }
     export namespace AssetLog{
         function addFile(filename: string): void;

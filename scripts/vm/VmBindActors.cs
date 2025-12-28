@@ -15,8 +15,9 @@ class ActorDataWrapper(ActorData data) : VmDataWrapper<ActorData>(data)
     public string getName(){return Data.DisplayName;}
     public void setName(string name)
     {
+        // if(!CanSet("bla")) return;
         if(!InEventHandler) OsirisSystem.ReportError("Cannot set name of actor outside of an event handler.");
-        else Data.DisplayName = name;
+        Data.DisplayName = name;
     }
     public string getPortraitFilename(){return Data.PortraitFilename;}
     public void setPortraitFilename(string name)
@@ -66,13 +67,13 @@ public static class VmBindActors
         VmObject actorModule = new(vm);
         actorModule.AddObject("listActors", new Func<ActorDataWrapper[]>(ListActors));
         actorModule.AddObject("getActor", new Func<Guid,ActorDataWrapper>(GetActor));
-        actorModule.AddObject("setEventHandler", new Action<Action<ActorDataWrapper, JsObject>>(fn =>
-        {
-            ActorDataWrapper.SetEventHandler((a,e) =>
-            {
-                fn(a as ActorDataWrapper, e.Payload.ToJsObject());
-            });
-        }));
+        // actorModule.AddObject("setEventHandler", new Action<Action<ActorDataWrapper, JsObject>>(fn =>
+        // {
+        //     ActorDataWrapper.SetEventHandler((a,e) =>
+        //     {
+        //         fn(a as ActorDataWrapper, e.Payload.ToJsObject());
+        //     });
+        // }));
         module.Add("Actor", actorModule.ToJsObject());
     }
     static ActorDataWrapper[] ListActors()

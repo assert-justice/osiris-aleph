@@ -11,12 +11,14 @@ public class SessionData : IDataClass<SessionData>
 {
     public AssetLogData AssetLog = new();
     public Dictionary<Guid, UserData> Users = [];
+    public HashSet<Guid> Spectators = [];
+    public HashSet<Guid> Players = [];
     public HashSet<Guid> Gms = [];
     public Dictionary<Guid, ActorData> Actors = [];
     public Dictionary<Guid, HandoutData> Handouts = [];
     public Dictionary<Guid, MapData> Maps = [];
     public List<Event> Events = [];
-    public Dictionary<Guid, Event> EventIndex = [];
+    public HashSet<Guid> EventIndex = [];
     public static bool TryFromNode(PrionNode node, out SessionData data)
     {
         data = new();
@@ -30,6 +32,8 @@ public class SessionData : IDataClass<SessionData>
             data.Users.Add(entry.Id, entry);
         }
         if(!dict.TryGet("gms", out data.Gms)) return false;
+        if(!dict.TryGet("players", out data.Players)) return false;
+        if(!dict.TryGet("spectators", out data.Spectators)) return false;
         if(!dict.TryGet("actors", out prionArray)) return false;
         foreach (var item in prionArray.Value)
         {
@@ -63,6 +67,8 @@ public class SessionData : IDataClass<SessionData>
         dict.Set("asset_log", AssetLog.ToNode());
         dict.Set("users", new PrionArray([..Users.Values.Select(u => u.ToNode())]));
         dict.Set("gms", Gms);
+        dict.Set("players", Players);
+        dict.Set("spectators", Spectators);
         dict.Set("actors", new PrionArray([..Actors.Values.Select(u => u.ToNode())]));
         dict.Set("handouts", new PrionArray([..Handouts.Values.Select(u => u.ToNode())]));
         dict.Set("maps", new PrionArray([..Maps.Values.Select(u => u.ToNode())]));
@@ -77,9 +83,22 @@ public class SessionData : IDataClass<SessionData>
     }
     public bool TryApplyEvent(Event eventObj)
     {
-        if(EventIndex.ContainsKey(eventObj.Id)) return false;
+        if(EventIndex.Contains(eventObj.Id)) return false;
         Events.Add(eventObj);
-        EventIndex.Add(eventObj.Id, eventObj);
+        EventIndex.Add(eventObj.Id);
         return true;
+    }
+
+    public bool IsGm(Guid id)
+    {
+        return Gms.Contains(id);
+    }
+    public bool IsPlayer(Guid id)
+    {
+        return Players.Contains(id) || IsGm(id);
+    }
+    public bool IsSpectator(Guid id)
+    {
+        return Spectators.Contains(id) || IsPlayer(id);
     }
 }

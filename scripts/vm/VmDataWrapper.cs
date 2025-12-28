@@ -7,6 +7,11 @@ namespace Osiris.Scripting;
 public abstract class VmDataWrapper<T>(T data)
 {
     protected T Data = data;
+    // protected bool CanSet(string message)
+    // {
+    //     OsirisSystem.ReportError(message);
+    //     return true;
+    // }
     bool InHandler = false;
     protected bool InEventHandler
     {

@@ -73,7 +73,15 @@ public static class OsirisSystem
 	}
 	public static bool IsGm()
 	{
-		return Session.Gms.Contains(UserId);
+		return Session.IsGm(UserId);
+	}
+	public static bool IsPlayer()
+	{
+		return Session.IsPlayer(UserId);
+	}
+	public static bool IsSpectator()
+	{
+		return Session.IsSpectator(UserId);
 	}
 	public static void LoadAllSchemas()
 	{
