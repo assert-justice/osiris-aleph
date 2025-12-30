@@ -90,7 +90,7 @@ public class BlobData(Guid id)
             dict.Set("security", prionEnum);
         }
         else OsirisSystem.ReportError(error);
-        dict.Set("data?", Data);
+        if(Data.Value.Count > 0) dict.Set("data?", Data);
         return dict;
     }
     public static bool TryFromNode(PrionNode prionNode, out BlobData data)

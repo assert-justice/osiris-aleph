@@ -14,9 +14,6 @@ declare module "Osiris"{
             setTokenFilename(name: string): void;
             getStats(): object;
             setStats(state: object): void;
-            // getState(key: string): string;
-            // setState(key: string, value: string): void;
-            // applyEvent(event: object): void;
         }
         function listActors(): Actor[];
         function getActor(id: string): Actor | undefined;
@@ -26,6 +23,14 @@ declare module "Osiris"{
         function addFile(filename: string): void;
         function removeFile(filename: string): boolean;
         function listFiles(): string[];
+    }
+    export namespace Blob{
+        class Blob{
+            constructor(groupName?: string): void;
+            applyEvent(event: object): void;
+            setEventHandler(fn: (event: object) => void): void;
+        }
+        function setGroupEventHandler(groupName?: string, fn: (event: object) => void): void;
     }
     export namespace Map{
         type BlockerStatus = "wall" | "open" | "closed" | "locked";
@@ -40,6 +45,7 @@ declare module "Osiris"{
             setOpaque(value: boolean): void;
             isSolid(): boolean;
             setSolid(value: boolean): void;
+            applyEvent(event: object): void;
         }
         class Layer{
             getName(): string;
@@ -48,6 +54,7 @@ declare module "Osiris"{
             setIsVisible(value: boolean): void;
             getStamps(): Stamp[];
             setStamps(stamps: Stamp[]): void;
+            applyEvent(event: object): void;
         }
         class Map{
             applyEvent(event: object): void;
@@ -55,14 +62,16 @@ declare module "Osiris"{
         class Stamp{
             getImage(): StampImage | undefined;
             getText(): StampImage | undefined;
-            // getActor(): Actor.Actor | undefined;
             getStats(): object | undefined;
+            applyEvent(event: object): void;
         }
-        class StampImage{}
-        class StampText{}
-        // class StampToken extends Stamp{}
         function getCurrentMap(): Map;
         function listMaps(): Map[];
         function setEventHandler(fn: (map: Map, event: object) => void): void;
+    }
+    export namespace System{
+        function emitEvent(event: object, isPublic: boolean = false): void;
+        function isGm(): boolean;
+        function isPlayer(): boolean;
     }
 }
